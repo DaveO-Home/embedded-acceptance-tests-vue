@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Acceptance Testing-Vue</title>
+  </head>
+  <body>
+    <script type='text/javascript'>
+            window.testit = (typeof __karma__ !== 'undefined')
+            // true will generate a fatal error, only jasmine specs are run.
+            window.testOnly = false
+    </script>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+     <script type="text/javascript" src="/dist_test/webpack/app.js"></script>
+  </body>
+</html>

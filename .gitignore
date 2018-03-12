@@ -1,0 +1,26 @@
+.DS_Store
+public/.fusebox
+node_modules/
+nbproject
+public/.editorconfig
+public/dev-bundle.js
+public/package_1.json
+/dist/
+/dist2/
+/public/dist_test/*
+/public/dist/
+public/webpack/test/e2e/reports
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/test/unit/coverage/
+/test/e2e/reports/
+selenium-debug.log
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
