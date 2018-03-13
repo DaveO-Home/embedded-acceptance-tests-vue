@@ -2,7 +2,6 @@
   <div id="welcome" class="hello">
     <img src="./assets/logo.png">
     <h1>{{ msg }}</h1>
-    <div style="color: #ff3333; font-size: 1.5em;">(===>{{ msg2 }}<===)</div>
     <h2>Essential Links</h2>
     <ul>
       <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
@@ -30,8 +29,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Hi! - Acceptance Testing with a Vue.js App',
-      msg2: 'Fix Me, main.css prod bundle is not being loaded by steal??'
+      msg: 'Hi! - Acceptance Testing with a Vue.js App'
     }
   },
   mounted: function () {
