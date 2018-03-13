@@ -104,7 +104,8 @@ gulp.task('build', ['boot'], function () {
                 '../appl/css/site.css',
                 '../../node_modules/tablesorter/dist/css/theme.blue.min.css',
                 '../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css',
-                '../../node_modules/font-awesome/css/font-awesome.css'
+                '../../node_modules/font-awesome/css/font-awesome.css',
+                '../../node_modules/font-awesome/fonts/*'
             ]
         },
         bundleSteal: false,

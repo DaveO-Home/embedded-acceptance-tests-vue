@@ -1,16 +1,17 @@
 
 import 'config'
+import Setup from 'setup'
 import popper from 'popper.js'
 import App from 'app'
-import Router from '../router'
 import Default from 'default'
-import Setup from 'setup'
-import Helpers from 'helpers'
 import 'pager'
-window.Popper = popper
+/* eslint "import/first": [ "warn", "DISABLE-absolute-first" ] */
 /* develblock:start */
+import Router from '../router'
+import Helpers from 'helpers'
 window._bundler = "fusebox"
 /* develblock:end */
+window.Popper = popper
 App.init(Default)
 Setup.init()
 /* develblock:start */

@@ -1,11 +1,13 @@
 
 import 'config'
 import App from 'app'
-import Router from './router'
 import Default from 'default'
 import Setup from 'setup'
+/* develblock:start */
+import Router from './router'
 import Helpers from 'helpers'
 import apptest from 'apptest'
+/* develblock:end */
 
 App.init(Default)
 Setup.init()

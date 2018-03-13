@@ -59,14 +59,14 @@ const fuse = FuseBox.init({
     plugins: [
 //        isProduction && ReplacePlugin({ "process.env.NODE_ENV": JSON.stringify("production") }),
         VueComponentPlugin({
-                style: [
-                    CSSResourcePlugin({
-                        dist: distDir + "/resources",
-                        resolve: resources
-                    }),
-                    CSSPlugin()
-                ]
-            }),
+            style: [
+                CSSResourcePlugin({
+                    dist: distDir + "/resources",
+                    resolve: resources
+                }),
+                CSSPlugin()
+            ]
+        }),
         WebIndexPlugin({
             template: isProduction? "./appl/testapp.html": "./appl/testapp_dev.html",
             target: isProduction? "appl/testapp.html": "appl/testapp_dev.html",

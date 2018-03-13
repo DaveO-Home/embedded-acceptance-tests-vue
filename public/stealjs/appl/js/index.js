@@ -2,12 +2,12 @@
 import 'config'
 import popper from 'popper.js'
 import App from 'app'
-import Router from './router/index.js'
 import Default from 'default'
 import Setup from 'setup'
-import Helpers from 'helpers'
 import 'tablepager'
 //!steal-remove-start
+import Router from './router/index.js'
+import Helpers from 'helpers'
 import apptest from 'apptest'
 //!steal-remove-end
 window.Popper = popper
