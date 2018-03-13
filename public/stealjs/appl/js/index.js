@@ -7,7 +7,9 @@ import Default from 'default'
 import Setup from 'setup'
 import Helpers from 'helpers'
 import 'tablepager'
+//!steal-remove-start
 import apptest from 'apptest'
+//!steal-remove-end
 window.Popper = popper
 //
 App.init(Default)
