@@ -173,10 +173,6 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
 
-   Additionally, Fusebox likes Typescript, so to run HMR, the index.js script needed to be converted to index.ts.  If you want to modify the index module modify the index.ts file.  Also, the entire application is dynamically transpiled to Typescript in Development.  Production is pure javascript so that the block development code removals will work.
-
-   __Note__; You can upgrade Fuse-Box to version 3 without changes to the configuration, however, you must be using Nodejs 8+.
-
 ### III.  **Rollup**
 
 1\. ***Development Server Window*** -
@@ -185,8 +181,6 @@ __A word on developing tests__; You can write and execute tests quicker by using
    * `gulp watch`
 
    The Rollup Development Server, Watch(auto-rebuild) and Page Reload functions are started together.  Simply use one of the following URLs in any browser; `localhost:3080/rollup/appl/testapp_dev.html` or `localhost:3080/dist_test/rollup/appl/testapp_dev.html`.
-
-  Currently Rollup an ES6 bundler has an issue with  can-view-stache and can-component. The dropdown component on the table view page was changed to a Bootstrap component. The event handling is done with can-control. See app.js and table.js. With a modification to the toolstest.js module tests are satisfied and the production build should finish.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
