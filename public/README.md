@@ -206,11 +206,6 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
    Stealjs does not require a dist_test build. It runs development directly from the source(nice!). However, when starting `hmr` a vendor bundle is produced at public/dev-bundle.js for `hmr` performance. The bundle is accessed from the `testapp_dev.html` page, via a `deps-bundle` attribute.
 
-   Finally, because there are five bundlers using the package.json file, a main is not specified.  Stealjs `hmr` dependency bundler needs to know the application entry point.  Since main is not available it looks for `index.js` in the root directory. So a soft link was made to `index.js`.  If not included in the git clone or zip download, you must execute the link, e.g.
-
-* `cd application-tests/public`
-* `ln -s stealjs/appl/js/index.js index.js`
-
 3\. ***Test Driven Development(tdd) Window*** -
 
    * `cd public/steal/build`
