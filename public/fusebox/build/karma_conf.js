@@ -82,7 +82,6 @@ module.exports = function (config) {
         exclude: [
         ],
         preprocessors: {
-            '*/**/*.html': []
         },
         reporters: ['mocha'],
         port: 9876,

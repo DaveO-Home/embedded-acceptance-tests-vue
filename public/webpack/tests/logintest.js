@@ -1,49 +1,54 @@
 define(() => (Start) => {
-    /*
-     * Test Form validation and submission.
-     */
-    describe('Popup Login Form', () => {
-        let modal
-        let closeButton
+        /*
+         * Test Form validation and submission.
+         */
+        describe('Popup Login Form', () => {
+            let modal
+            let closeButton
+            let nameObject
 
-        beforeAll(done => {
-            Start.initMenu()
-            Start.base = true
-            // Somehow we lost the listener-?
-            Start['div .login click']()
-            const loginObject = $('div .login')
-            loginObject.click()
+            beforeAll(done => {
+                Start.initMenu()
+                Start.base = true
+                // Somehow we lost the listener-?
+                Start['div .login click']()
+                const loginObject = $('div .login')
+                loginObject.click()
 
-            // Not bothering with a promise.
-            setTimeout(() => {
-                done()
-            }, 100)
-        })
-
-        it('Login form - verify modal with login loaded', done => {
-            modal = $('#modalTemplate')
-            let nameObject = $('#inputUsername')
-
-            expect(modal[0]).toBeInDOM()
-            expect(nameObject[0]).toExist()
-
-            closeButton = $('button.close-modal')
-
-            closeButton.click(() => {
+                // Not bothering with a promise.
                 setTimeout(() => {
-                    expect(modal[0]).not.toBeInDOM()
-                    expect(modal[0]).not.toExist()
-                }, 100)
+                    modal = $('#modalTemplate')
+                    nameObject = $('#inputUsername')
+                    done()
+                }, 500)
             })
 
-            done()
-        })
+            it('Login form - verify modal with login loaded', function (done) {
+                expect(modal[0]).toBeInDOM()
+                expect(nameObject[0]).toExist()
 
-        it('Login form - verify cancel and removed from DOM', () => {
-            expect(modal[0]).toExist()
-            closeButton.click()
+                closeButton = $('.close-modal')
+                closeButton.click(function (ev) {
+                    ev.preventDefault()
+                    modal.modal('toggle')
+                    return false
+                })
 
-            setTimeout(() => { closeButton.click() }, 500)
+                done()
+            })
+
+            it('Login form - verify cancel and removed from DOM', function (done) {
+                expect(modal[0]).toExist()
+                setTimeout(function () {
+                    closeButton.click()
+
+                    setTimeout(function () {
+                        $('div .login').remove()
+                        expect(modal[0]).not.toBeVisible()
+                        expect(modal[0]).not.toBeInDOM()
+                        done()
+                    }, 750)
+                }, 100)
+            })
         })
     })
-})

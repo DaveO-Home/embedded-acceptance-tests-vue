@@ -5,6 +5,7 @@ export default function (Start) {
     describe('Popup Login Form', () => {
         let modal
         let closeButton
+        let nameObject
 
         beforeAll(done => {
             Start.initMenu()
@@ -16,36 +17,38 @@ export default function (Start) {
 
             // Not bothering with a promise.
             setTimeout(() => {
+                modal = $('#modalTemplate')
+                nameObject = $('#inputUsername')
                 done()
-            }, 100)
+            }, 500)
         })
 
-        it('Login form - verify modal with login loaded', done => {
-            modal = $('#modalTemplate')
-            let nameObject = $('#inputUsername')
-
+        it('Login form - verify modal with login loaded', function (done) {
             expect(modal[0]).toBeInDOM()
             expect(nameObject[0]).toExist()
 
-            closeButton = $('button.close-modal')
-
-            closeButton.click(() => {
-                setTimeout(() => {
-                    expect(modal[0]).not.toBeInDOM()
-                    expect(modal[0]).not.toExist()
-                }, 100)
+            closeButton = $('.close-modal')
+            closeButton.click(function (ev) {
+                ev.preventDefault()
+                modal.modal('toggle')
+                return false
             })
 
             done()
         })
 
-        it('Login form - verify cancel and removed from DOM', () => {
+        it('Login form - verify cancel and removed from DOM', function (done) {
             expect(modal[0]).toExist()
-            closeButton.click()
-
-            setTimeout(() => {
+            setTimeout(function () {
                 closeButton.click()
-            }, 500)
+
+                setTimeout(function () {
+                    $('div .login').remove()
+                    expect(modal[0]).not.toBeVisible()
+                    expect(modal[0]).not.toBeInDOM()
+                    done()
+                }, 750)
+            }, 100)
         })
     })
 }

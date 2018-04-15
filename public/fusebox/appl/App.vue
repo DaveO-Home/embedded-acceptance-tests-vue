@@ -1,7 +1,6 @@
 <template src="./app_bootstrap.html">
 </template>
 <script>
-    //import from 'entry'
     import Start from 'start'
     export default {
         name: 'App',
