@@ -6,6 +6,7 @@
             <small><a href="#" class="login">Log in</a></small>
         </div>
         <div class="navbar navbar-toggler" aria-controls="navbarTools" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="container-fluid">
             <button class="navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTools" >
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -33,9 +34,10 @@
                         </div>
                     </li>
                 </ul>
-            </div>    
+            </div>
+            </div>   
         </div>    
-        <a class="navbar navbar-brand mr-auto" href="#">Test</a>     
+        <a class="pl-2 navbar-brand mr-auto" href="#">Test</a>     
     </nav>
 
     <div class="container-fluid">
@@ -45,7 +47,7 @@
                 <a><strong><i class="fa fa-eye"></i> Views</strong></a>
                 <hr/>
                 <div class="nav flex-column nav-side-menu">
-                    <ul class="nav collapse">
+                    <ul class="nav navbar-collapse">
                         <li class="nav-header nav-item">
                             <a class="nav-link collapsed py-0 show" href="#submenu1sub1" 
                                 data-toggle="collapse" 
@@ -108,21 +110,21 @@
 </span>
 </template>
 <script>
-    import Start from 'start'
+import Start from "start";
 
-    export default {
-        name: 'App',
-        mounted: function () {
-            this.$nextTick(function () {
-                Start.init()
-            })
-        },
-        methods: {
-            loginModal: function (event) {
-                Start['div .login click']()
-            }
-        }
+export default {
+  name: "App",
+  mounted: function() {
+    this.$nextTick(function() {
+      Start.init();
+    });
+  },
+  methods: {
+    loginModal: function(event) {
+      Start["div .login click"]();
     }
+  }
+};
 </script>
 <style scoped>
 #app {
