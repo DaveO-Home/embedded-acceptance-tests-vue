@@ -1,3 +1,4 @@
+import vm from './entry'
 import 'b/config'
 import 'b/setglobals'
 import App from 'b/app'
@@ -5,8 +6,7 @@ import Default from 'b/default'
 import Setup from 'b/setup'
 import 'b/pager'
 //removeIf(production)
-import Router from './router'
-import Helpers from 'b/helpers'
+import apptest from 'b/apptest'
 //endRemoveIf(production)
 App.init(Default)
 
@@ -22,9 +22,8 @@ new Promise((resolve, reject) => {
     fail(`Error ${rejected}`)
 }).then(resolved => {
     if (typeof testit !== "undefined" && testit) {
-        var apptest = require("b/apptest").apptest;
         //Run acceptance tests. - To run only unit tests, comment the apptest call.
-        apptest(Router, Helpers, App);
+        apptest(App, vm);
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         __karma__.start();
     }

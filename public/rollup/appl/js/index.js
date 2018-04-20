@@ -1,11 +1,10 @@
 
+import vm from './entry'
 import 'config'
 import App from 'app'
 import Default from 'default'
 import Setup from 'setup'
 /* develblock:start */
-import Router from './router'
-import Helpers from 'helpers'
 import apptest from 'apptest'
 /* develblock:end */
 
@@ -24,7 +23,7 @@ if (typeof testit !== "undefined" && testit) {
         fail(`Error ${rejected}`)
     }).then(resolved => {
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
-        apptest(Router, Helpers, App)
+        apptest(App, vm)
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
         __karma__.start()
     })

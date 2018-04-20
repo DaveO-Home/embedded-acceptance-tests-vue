@@ -52,7 +52,7 @@ function aliases() {
         helpers: modResolve("appl/js/utils/helpers"),
         menu: modResolve("appl/js/utils/menu.js"),
         pdf: modResolve("appl/js/controller/pdf"),
-        router: modResolve("appl/router"),
+        router: modResolve("appl/js/router"),
         start: modResolve("appl/js/controller/start"),
         setup: modResolve("appl/js/utils/setup"),
         setglobals: modResolve("appl/js/utils/set.globals"),

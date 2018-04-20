@@ -118,8 +118,8 @@ export default {
     ,
     // Custom promise for async call for a resource.
     // If the DOM (#main_container) is populated then the promise is complete.
-    isResolved: function isResolved (resolve, reject, selectorId, counter, length) {
-        const container = window._vue.$el.querySelector(`#${selectorId}`)
+    isResolved: function isResolved (resolve, reject, vm, selectorId, counter, length) {
+        const container = vm.$el.querySelector(`#${selectorId}`)
 
         if (!container) {
             resolve('loaded')
@@ -136,7 +136,7 @@ export default {
                 const time = Math.random() * 100 + 1000
 
                 setTimeout(() => {
-                    isResolved(resolve, reject, selectorId, counter, length)
+                    isResolved(resolve, reject, vm, selectorId, counter, length)
                 }, time)
             }
         }

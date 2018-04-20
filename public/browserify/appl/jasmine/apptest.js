@@ -4,9 +4,12 @@ import toolsTest from 'b/toolstest'
 import contactTest from 'b/contacttest'
 import loginTest from 'b/logintest'
 import Start from 'b/start'
-const vueElement = window._vue.$el
+import Route from '../router'
+import Helpers from 'b/helpers'
 
-exports.apptest = function (Route, Helpers, App) {
+export default function (App, vm) {
+    const vueElement = vm.$el
+
     describe('Application Unit test suite - AppTest', () => {
         beforeAll(() => {
             // Add virtual dom to karma page
@@ -33,7 +36,7 @@ exports.apptest = function (Route, Helpers, App) {
             Route.push({name: 'start'})
             
             new Promise((resolve, reject) => {
-                Helpers.isResolved(resolve, reject, 'data', 0, 1)
+                Helpers.isResolved(resolve, reject, vm, 'data', 0, 1)
             }).catch(rejected => {
                 fail(`The Welcome Page did not load within limited time: ${rejected}`)
             }).then(resolved => {
@@ -54,7 +57,7 @@ exports.apptest = function (Route, Helpers, App) {
             Route.push({name: 'tools'})
 
             new Promise((resolve, reject) => {
-                Helpers.isResolved(resolve, reject, 'data', 0, 1)
+                Helpers.isResolved(resolve, reject, vm, 'data', 0, 1)
             }).catch(rejected => {
                 fail(`The Tools Page did not load within limited time: ${rejected}`)
             }).then(resolved => {
@@ -67,13 +70,13 @@ exports.apptest = function (Route, Helpers, App) {
             })
         })
 
-        routerTest(window._vue.$router.options.routes, 'table', 'tools', null)
+        routerTest(vm.$router.options.routes, 'table', 'tools', null)
 
         it('Is Pdf Loaded', done => {
             Route.push({name: 'test'})
 
             new Promise((resolve, reject) => {
-                Helpers.isResolved(resolve, reject, 'main_container', 0, 1)
+                Helpers.isResolved(resolve, reject, vm, 'main_container', 0, 1)
             }).catch(rejected => {
                 fail(`The Pdf Page did not load within limited time: ${rejected}`)
             }).then(resolved => {
@@ -84,13 +87,13 @@ exports.apptest = function (Route, Helpers, App) {
             })
         })
 
-        routerTest(window._vue.$router.options.routes, 'pdf', 'test', null)
+        routerTest(vm.$router.options.routes, 'pdf', 'test', null)
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.
-        toolsTest(Route, Helpers)
+        toolsTest(Route, Helpers, vm)
         // Form Validation
-        contactTest(Route, Helpers)
+        contactTest(Route, Helpers, vm)
         // Verify modal form
         loginTest(Start)
 

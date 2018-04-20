@@ -15,6 +15,7 @@
     "webpack"
   ],
   "author": "DaveO",
+  "private": true,
   "scripts": {
     "server": "node ../appExpress.js",
     "lint": "eslint --ext .js,.vue --ignore-pattern marked.js --ignore-pattern webcomponents-hi-sd-ce.js webpack/appl webpack/tests",

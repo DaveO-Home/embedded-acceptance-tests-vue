@@ -38,10 +38,10 @@ module.exports = function (config) {
             {pattern: 'node_modules/lodash/trim*js', watched: false, included: false},
             {pattern: 'node_modules/lodash/capitalize.js', watched: false, included: false},
             {pattern: 'node_modules/lodash/startsWith.js', watched: false, included: false},
-            {pattern: 'node_modules/moment/**/*.js', watched: false, included: false},
+            {pattern: 'node_modules/moment/moment.js', watched: false, included: false},
             {pattern: bundler + '/appl/**/*.html', included: false, watched: false},
             {pattern: 'README.md', included: false},
-            //Looking for changes via HMR - tdd should run with Fusebox Hot Moudule Reload.
+            //Looking for changes via HMR - tdd should run with Rollup Hot Moudule Reload.
             //Looking for changes to the client bundle
             {pattern: 'dist_test/' + bundler + '/bundle.js', included: false, watched: true, served: true},
             {pattern: bundler + '/images/favicon.ico', included: false, watched: false},

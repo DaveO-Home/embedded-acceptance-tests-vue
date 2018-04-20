@@ -1,4 +1,5 @@
 
+import vm from '../entry'
 import 'config'
 import Setup from 'setup'
 import popper from 'popper.js'
@@ -7,8 +8,6 @@ import Default from 'default'
 import 'pager'
 /* eslint "import/first": [ "warn", "DISABLE-absolute-first" ] */
 /* develblock:start */
-import Router from '../router'
-import Helpers from 'helpers'
 window._bundler = "fusebox"
 /* develblock:end */
 window.Popper = popper
@@ -27,7 +26,7 @@ new Promise((resolve, reject) => {
     if (typeof testit !== "undefined" && testit) {
         var apptest = require("apptest").apptest
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
-        apptest(Router, Helpers, App)
+        apptest(App, vm)
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
         __karma__.start()
     }

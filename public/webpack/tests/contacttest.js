@@ -1,4 +1,4 @@
-define(() => (Route, Helpers) => {
+define(() => (Route, Helpers, vm) => {
     /*
      * Test Form validation and submission.
      */
@@ -17,7 +17,7 @@ define(() => (Route, Helpers) => {
 
         it('Contact form - verify required fields', done => {
             new Promise((resolve, reject) => {
-                Helpers.isResolved(resolve, reject, 'main_container', 0, 1)
+                Helpers.isResolved(resolve, reject, vm, 'main_container', 0, 1)
             }).catch(rejected => {
                 fail(`Contact Page did not load within limited time: ${rejected}`)
             }).then(resolved => {

@@ -1,3 +1,1 @@
-
-import './js/entry' // Start Vue
-import './js/index' // Loads the App modules and test environment
+import './js/index' // Loads Vue, App modules and test environment
