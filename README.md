@@ -1,6 +1,6 @@
 # Embedded Vue Acceptance Testing with Karma and Jasmine
 
-This demo is comprised of five javascript bundlers each configured to run the tests.  The Bootstrap single page application retains functionality among the bundlers with only minor code change.  The javascript framework used is Vue and instrumentation is done with Gulp and Karma.  So you can pick your poison, Stealjs, Webpack, Browserify, Fusebox or Rollup. The demo was orginally developed using the Canjs framework which can be found at https://github.com/DaveO-Home/embedded-acceptance-tests.
+This demo is comprised of six javascript bundlers each configured to run the tests.  The Bootstrap single page application retains functionality among the bundlers with only minor code change.  The javascript framework used is Vue and instrumentation is done with Gulp and Karma.  So you can pick your poison, Stealjs, Webpack, Browserify, Fusebox, Rollup or Brunch. The demo was orginally developed using the Canjs framework which can be found at https://github.com/DaveO-Home/embedded-acceptance-tests.
 
 __Note__; the demo was not developed to compare software, rather simply to demonstrate how one might embed test code as part of the build process.  And the configuration also shows how to develop using hot module reload and test driven development.
 
@@ -34,7 +34,7 @@ __Note__; the demo was not developed to compare software, rather simply to demon
   npm install
 ```
 
-  To install all required dependencies.
+  To install all required dependencies. Also install the global package for Brunch, `npm install brunch -g`.
 
 **Client:**
 
@@ -57,7 +57,7 @@ To run the production application:
   1. `npm start`  -  This should start a Node Server with port 3080.
   1. Start a browser and enter `localhost:3080/dist/<bundler>/appl/testapp.html`
 
-You can repeat the procedure with "webpack", "browserify", "stealjs" or "rollup". Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
+You can repeat the procedure with "webpack", "browserify", "stealjs", "brunch" or "rollup". Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
 
 Normally you can also run the test bundles(dist_test) from the node express server. However, when switching between development karma testing and running the test(dist_test) application, some resources are not found because of the "base/dist_test" URL. To fix this run `gulp rebuild` from the `<bundler>/build` directory.
 
@@ -155,7 +155,41 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.  Note, you do not need `hmr` active for `tdd`. Also, `tdd` can be run with a headless browser.
 
-### II.  **Fusebox**
+### II.  **Brunch**
+
+1\. ***Watch, Recompile and Reload Window*** -
+
+  * `cd public/brunch/build`
+  * `gulp watch` or `./cook watch` (output formatted better)
+
+At this point you can start a browser and enter `localhost:3080/`. Any changes to the source code(*.js files and other assets such as *.html) should be reflected in the browser auto reload.
+
+__Note__; The test url is `localhost:3080` since Brunch by default uses 'config.paths.public' as the server context. Also, the reload may fail at times, I've noticed that making a second code mod re-rights the ship.
+
+2\. ***Test Driven Development(tdd) Window*** -
+
+  * `cd public/brunch/build`
+  * `gulp tdd` or `./cook tdd`
+
+  While the Brunch watcher is running, tests are re-run when code are changed. 
+  
+  __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
+
+3.\ ***Special Considerations***
+  
+  * Brunch plugin eslint-brunch uses eslint 3. The demo/vue uses version 4.  The `gulp`(production build) command uses a gulp linter, so javascript linting is executed. However, if you wish to use the Brunch eslint-brunch plugin, do the following;
+    * `cd <install>/public/node_modules/eslint-brunch`
+    * `npm install eslint@latest`
+    * `cd <install>/public` and edit the `brunch-config.js` file and uncomment the eslint section.
+  * Using the local custom plugin for stripping development code. The application from the production build will work with the development code embedded, however to strip the code, do the following;
+    * `cd <install>/public/brunch/appl/js/stripcode-brunch`
+    * `npm link`
+    * `cd <install>/public`
+    * `npm link stripcode-brunch`
+    * Edit `brunch-config.js` and uncomment the `stripcode` plugin section.
+    * Edit `package.json` and in devDependencies section add `"stripcode-brunch": "^0.1.1"`  Development Code will be stripped during the production build.
+
+### III.  **Fusebox**
 
 1\. ***Hot Module Reload(HMR) Server Window*** -
 
@@ -173,7 +207,7 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
 
-### III.  **Rollup**
+### IV.  **Rollup**
 
 1\. ***Development Server Window*** -
 
@@ -189,7 +223,7 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### IV. **Stealjs**
+### V. **Stealjs**
 
 1\. ***Development Server Window*** -
 
@@ -213,7 +247,7 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### V. **Webpack**
+### VI. **Webpack**
 
 1\. ***Development HMR Server Window*** -
 
