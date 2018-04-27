@@ -175,7 +175,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
   
   __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-3.\ ***Special Considerations***
+3\. ***Special Considerations***
   
   * Brunch plugin eslint-brunch uses eslint 3. The demo/vue uses version 4.  The `gulp`(production build) command uses a gulp linter, so javascript linting is executed. However, if you wish to use the Brunch eslint-brunch plugin, do the following;
     * `cd <install>/public/node_modules/eslint-brunch`
