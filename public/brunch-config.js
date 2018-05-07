@@ -49,17 +49,16 @@ pluginsObject = {
     out: deployDir + '/components.css'
   },
   copycat: {
-    'fonts': ['node_modules/font-awesome/fonts'],
     'views': ['brunch/appl/views'],
     'templates': ['brunch/appl/templates'],
     './': ['README.md', htmlFile],
     'images': ['brunch/images'],
-    '../fonts': ['node_modules/font-awesome/fonts'],
     verbose: false,
     onlyChanged: true
   }
 };
 
+pluginsObject.copycat[fontLocation] = ['node_modules/font-awesome/fonts']
 exports.plugins = pluginsObject
 
 exports.npm = {

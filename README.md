@@ -56,6 +56,7 @@ To run the production application:
   1. `cd <install>/acceptance_tests`
   1. `npm start`  -  This should start a Node Server with port 3080.
   1. Start a browser and enter `localhost:3080/dist/<bundler>/appl/testapp.html`
+  1. For Brunch the Production Url is `localhost:3080/dist/brunch/testapp.html` or `localhost:3080/dist/brunch`
 
 You can repeat the procedure with "webpack", "browserify", "stealjs", "brunch" or "rollup". Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
 
@@ -187,7 +188,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
     * `cd <install>/public`
     * `npm link stripcode-brunch`
     * Edit `brunch-config.js` and uncomment the `stripcode` plugin section.
-    * Edit `package.json` and in devDependencies section add `"stripcode-brunch": "^0.1.1"`  Development Code will be stripped during the production build.
+    * Edit `package.json` and in devDependencies section add `"stripcode-brunch": "^0.1.1"`. Development Code will be stripped during the production build.
 
 ### III.  **Fusebox**
 
