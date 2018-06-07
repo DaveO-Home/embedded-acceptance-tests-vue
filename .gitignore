@@ -2,9 +2,12 @@
 public/.fusebox
 node_modules/
 nbproject
+public/fusebox/appl/.cache
+public/.cache
 public/.editorconfig
 public/dev-bundle.js
 public/package_1.json
+public/*.dat
 /dist/
 /dist2/
 /public/dist_test/*
