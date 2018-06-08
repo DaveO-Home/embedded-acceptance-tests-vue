@@ -1,4 +1,5 @@
 .DS_Store
+public/rollup/build/bundle.css
 public/.fusebox
 node_modules/
 nbproject

@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import vm from './entry'
+/* eslint-enable no-unused-vars */
 import 'config'
 import 'setglobals'
 import App from 'app'

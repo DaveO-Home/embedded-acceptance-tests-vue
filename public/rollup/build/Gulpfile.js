@@ -27,7 +27,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const stripCode = require("gulp-strip-code");
 const Server = require('karma').Server;
 const uglify = require('gulp-uglify');
-const vue = require('rollup-plugin-vue')
+const vue = require('rollup-plugin-vue').default
 
 const startComment = "develblock:start",
         endComment = "develblock:end",
@@ -224,7 +224,12 @@ gulp.task('rollup-watch', function () {
             vue(),
             postcss(),
             buble(),
-            nodeResolve({browser: true, jsnext: true, main: true}),
+            nodeResolve({
+                browser: true, 
+                jsnext: true, 
+                main: true,
+                extensions: ['.js', '.json']
+            }),
             commonjs(),
             serve({
                 open: false,
@@ -293,8 +298,8 @@ function rollupBuild() {
                 input: '../appl/main.js',
                 output: {
                     format: "iife",
-                    name: "acceptance",
-                },
+                    name: "acceptance"
+                },              
                 plugins: [
                     progress({
                         clearLine: isProduction ? false : true
@@ -339,6 +344,8 @@ function aliases() {
         table: modResolve("appl/js/controller/table"),
         pager: "../../node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js",
         popper: "../../node_modules/popper.js/dist/esm/popper.js",
+        handlebars: "../../node_modules/handlebars/dist/handlebars.min.js",
+        bootstrap: "../../node_modules/bootstrap/dist/js/bootstrap.min.js",
         "apptest": "../appl/jasmine/apptest.js",
         "contacttest": "./contacttest.js",
         "domtest": "./domtest.js",

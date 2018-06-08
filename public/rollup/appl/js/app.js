@@ -2,8 +2,7 @@
 
 import startsWith from 'lodash-es/startsWith'
 import capitalize from 'lodash-es/capitalize'
-//import 'bootstrap'
-//import 'tablesorter'
+import 'bootstrap'
 
 /* develblock:start */
 // Specs can be inserted at initialization(before karma is started).

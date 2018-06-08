@@ -7,6 +7,8 @@ import Setup from 'setup'
 /* develblock:start */
 import apptest from 'apptest'
 /* develblock:end */
+import 'tablesorter'
+import 'pager'
 
 App.init(Default)
 Setup.init()

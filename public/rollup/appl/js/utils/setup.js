@@ -1,4 +1,6 @@
 import Menu from 'menu'
+import Handlebars from 'handlebars'
+
 window.Stache = Handlebars
 
 export default {
