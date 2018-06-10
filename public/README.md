@@ -1,6 +1,6 @@
 # Embedded Vue Acceptance Testing with Karma and Jasmine
 
-This demo is comprised of six javascript bundlers each configured to run the tests.  The Bootstrap single page application retains functionality among the bundlers with only minor code change.  The javascript framework used is Vue and instrumentation is done with Gulp and Karma.  So you can pick your poison, Stealjs, Webpack, Browserify, Fusebox, Rollup or Brunch. The demo was orginally developed using the Canjs framework which can be found at https://github.com/DaveO-Home/embedded-acceptance-tests.
+This demo is comprised of seven javascript bundlers each configured to run the tests.  The Bootstrap single page application retains functionality among the bundlers with only minor code change.  The javascript framework used is Vue and instrumentation is done with Gulp and Karma.  So you can pick your poison, Stealjs, Webpack, Browserify, Fusebox, Rollup, Parcel or Brunch. The demo was orginally developed using the Canjs framework which can be found at https://github.com/DaveO-Home/embedded-acceptance-tests.
 
 __Note__; the demo was not developed to compare software, rather simply to demonstrate how one might embed test code as part of the build process.  And the configuration also shows how to develop using hot module reload and test driven development.
 
@@ -12,7 +12,7 @@ __Note__; the demo was not developed to compare software, rather simply to demon
 
 **Install Assumptions:**
 
-  1. OS Linux and Windows(Tested on Windows10)
+  1. OS Linux or Windows(Tested on Windows10)
   1. Node and npm
   1. Gulp
   1. Google Chrome
@@ -57,8 +57,9 @@ To run the production application:
   1. `npm start`  -  This should start a Node Server with port 3080.
   1. Start a browser and enter `localhost:3080/dist/<bundler>/appl/testapp.html`
   1. For Brunch the Production Url is `localhost:3080/dist/brunch/testapp.html` or `localhost:3080/dist/brunch`
+  1. For Parcel the Production Url is `localhost:3080/dist/parcel/testapp.html`
 
-You can repeat the procedure with "webpack", "browserify", "stealjs", "brunch" or "rollup". Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
+You can repeat the procedure with "webpack", "browserify", "stealjs", "brunch", "parcel" or "rollup". Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
 
 Normally you can also run the test bundles(dist_test) from the node express server. However, when switching between development karma testing and running the test(dist_test) application, some resources are not found because of the "base/dist_test" URL. To fix this run `gulp rebuild` from the `<bundler>/build` directory.
 
@@ -208,7 +209,38 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
 
-### IV.  **Rollup**
+### IV.  **Parcel**
+
+1\. ***Watch, Recompile and Reload Window*** -
+
+  * `cd public/parcel/build`
+  * `gulp watch`
+
+At this point you can start a browser and enter `localhost:3080/dist_test/parcel/testapp_dev.html` (configured to auto open browser tab). Any changes to the source code(*.js and *.css files) should be reflected in the browser auto reload.
+
+2\. ***Test Driven Development(tdd) Window*** -
+
+  * `cd public/parcel/build`
+  * `gulp tdd`
+
+  While the Parcel watcher is running, tests are re-run when code are changed.
+  
+  * Using `export USE_BUNDLER=false` - When using `gulp watch & gulp tdd` together, you can set USE_BUNDLER to false to startup TDD without building first, `gulp watch` does the test build.  Also, by settting `USE_BUNDLER=false` before `gulp`(production build), only testing and linting will execute.
+
+  __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
+
+3\. ***Special Considerations***
+  
+  * Using the local custom plugin for stripping development code. The application from the production build will work with the development code embedded, however to strip the code, do the following;
+    * `cd <install>/public/parcel/appl/js/parcel-plugin-strip`
+    * `npm link`
+    * `cd <install>/public`
+    * `npm link parcel-plugin-strip`
+    * Edit `package.json` and in devDependencies section add `"parcel-plugin-strip": "^0.1.1"`. Development code will be stripped during the production build.
+  * As of parcel 1.8.1, there is a compatibility issue with bootstrap 4.1. This demo is using a CDN to link bootstrap css on the main pages, testapp_dev.html and testapp.html. Another solution is to upgrade cssnano to @next under parcel-bundler.
+  * There is one unresolved issue with parcel/vue in this demo.  Minify for production mode breaks the application, so the production build is not minified.
+
+### V.  **Rollup**
 
 1\. ***Development Server Window*** -
 
@@ -224,7 +256,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### V. **Stealjs**
+### VI. **Stealjs**
 
 1\. ***Development Server Window*** -
 
@@ -248,7 +280,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### VI. **Webpack**
+### VII. **Webpack**
 
 1\. ***Development HMR Server Window*** -
 

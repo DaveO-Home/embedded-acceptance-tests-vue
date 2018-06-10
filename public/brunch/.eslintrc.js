@@ -28,8 +28,8 @@ module.exports = {
       { 'exceptions': [
         'removeIf(production)', 
         'endRemoveIf(production)', 
-        '!steal-remove-start', 
-        '!steal-remove-end'
+        'develblock:start', 
+        'develblock:end'
       ] }],
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-undef': 'error',

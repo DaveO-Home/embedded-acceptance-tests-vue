@@ -1,4 +1,6 @@
 .DS_Store
+public/parcel/build/.cache
+public/.cache
 public/rollup/build/bundle.css
 public/.fusebox
 node_modules/
