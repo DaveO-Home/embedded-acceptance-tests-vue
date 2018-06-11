@@ -4,7 +4,7 @@ import toolsTest from 'toolstest'
 import contactTest from 'contacttest'
 import loginTest from 'logintest'
 import Start from 'start'
-import Route from './stealjs/appl/js/router/index.js'
+import Route from '../js/router/index.js'
 import Helpers from 'helpers'
 
 export default function (App, vm) {
