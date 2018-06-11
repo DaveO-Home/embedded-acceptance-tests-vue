@@ -7,7 +7,7 @@ import Default from 'default'
 import Setup from 'setup'
 import 'tablepager'
 //!steal-remove-start
-import apptest from 'apptest'
+import apptest from '../jasmine/apptest'
 //!steal-remove-end
 window.Popper = popper
 //
