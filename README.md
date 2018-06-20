@@ -196,11 +196,9 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 1\. ***Hot Module Reload(HMR) Server Window*** -
 
    * `cd public/fusebox/build`
-   * `fuse hmr`
+   * `gulp hmr` or `fuse hmr`
 
    At this point you can start a browser and enter `localhost:3080/fusebox/appl/testapp_dev.html` or `localhost:3080/dist_test/fusebox/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload.
-
-   Alternatively, you can start up the HMR server with the gulp command `gulp hmr`, however, you will not see any output.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
@@ -238,7 +236,6 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
     * `npm link parcel-plugin-strip`
     * Edit `package.json` and in devDependencies section add `"parcel-plugin-strip": "^0.1.1"`. Development code will be stripped during the production build.
   * As of parcel 1.8.1, there is a compatibility issue with bootstrap 4.1. This demo is using a CDN to link bootstrap css on the main pages, testapp_dev.html and testapp.html. Another solution is to upgrade cssnano to @next under parcel-bundler.
-  * There is one unresolved issue with parcel/vue in this demo.  Minify for production mode breaks the application, so the production build is not minified.
 
 ### V.  **Rollup**
 

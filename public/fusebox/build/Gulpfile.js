@@ -10,6 +10,7 @@ const exec = require('child_process').exec;
 const gulp = require('gulp');
 const log = require("fancy-log");
 const Server = require('karma').Server;
+const chalk = require('chalk');
 
 let lintCount = 0
 let dist = "dist_test/fusebox"
@@ -51,16 +52,16 @@ gulp.task('pat', ['accept'], function (done) { //, ['accept']
  */
 gulp.task('eslint', ['pat'], () => {
     var stream = gulp.src(["../appl/js/**/*.js"])
-            .pipe(eslint({
-                configFile: 'eslintConf.json',
-                quiet: 1,
-            }))
-            .pipe(eslint.format())
-            .pipe(eslint.result(result => {
-                //Keeping track of # of javascript files linted.
-                lintCount++;
-            }))
-            .pipe(eslint.failAfterError());
+        .pipe(eslint({
+            configFile: 'eslintConf.json',
+            quiet: 1,
+        }))
+        .pipe(eslint.format())
+        .pipe(eslint.result(result => {
+            //Keeping track of # of javascript files linted.
+            lintCount++;
+        }))
+        .pipe(eslint.failAfterError());
 
     stream.on('end', function () {
         log("# javascript files linted: " + lintCount);
@@ -78,13 +79,11 @@ gulp.task('eslint', ['pat'], () => {
 gulp.task('csslint', ['pat'], function () {
     var stream = gulp.src(['../appl/css/site.css'
     ])
-            .pipe(csslint())
-            .pipe(csslint.formatter());
+        .pipe(csslint())
+        .pipe(csslint.formatter());
 
     stream.on('error', function () {
-
         process.exit(1);
-
     });
 });
 
@@ -95,18 +94,25 @@ gulp.task('accept', function (cb) {
     var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=true; export USE_HMR=false; ';
 
     if (isWindows) {
-	osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=true & set USE_HMR=false & ';
+        osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=true & set USE_HMR=false & ';
     }
-    
+
     exec(osCommands + 'node fuse.js', function (err, stdout, stderr) {
-
-        log(stdout);
-        log(stderr);
-        if(err) {
-            log("ERROR", err);
-        }
-        cb();
-
+        log(chalk.cyan('Building Test - please wait......'))
+        let cmd = exec(osCommands + 'node fuse.js');
+        cmd.stdout.on('data', (data) => {
+            if (data && data.length > 0) {
+                console.log(data.trim());
+            }
+        });
+        cmd.stderr.on('data', (data) => {
+            if (data && data.length > 0)
+                console.log(data.trim())
+        });
+        return cmd.on('exit', (code) => {
+            log(chalk.green(`Build successful - ${code}`));
+            cb()
+        });
     });
 });
 
@@ -117,14 +123,23 @@ gulp.task('build', ['boot'], function (cb) { // ['boot'],
     var osCommands = 'cd ..; export NODE_ENV=production; export USE_KARMA=false; export USE_HMR=false; ';
 
     if (isWindows) {
-	osCommands = 'cd ..\\ & set NODE_ENV=production & set USE_KARMA=false & set USE_HMR=false & ';
+        osCommands = 'cd ..\\ & set NODE_ENV=production & set USE_KARMA=false & set USE_HMR=false & ';
     }
-    
-    exec(osCommands + 'node fuse.js', function (err, stdout, stderr) {
 
-        log(stdout);
-        log(stderr);
-        cb(err);
+    log(chalk.cyan('Production Build - please wait......'))
+    let cmd = exec(osCommands + 'node fuse.js');
+    cmd.stdout.on('data', (data) => {
+        if (data && data.length > 0) {
+            console.log(data.trim());
+        }
+    });
+    cmd.stderr.on('data', (data) => {
+        if (data && data.length > 0)
+            console.log(data.trim())
+    });
+    return cmd.on('exit', (code) => {
+        log(chalk.green(`Build successful - ${code}`));
+        cb()
     });
 
 });
@@ -133,9 +148,7 @@ gulp.task('build', ['boot'], function (cb) { // ['boot'],
  * Bootstrap html linter 
  */
 gulp.task('boot', ['eslint', 'csslint'], function (cb) {
-
     exec('gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
-
         log(stdout);
         log(stderr);
 
@@ -149,15 +162,23 @@ gulp.task('fusebox-hmr', function (cb) {
     var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=true; ';
 
     if (isWindows) {
-	osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=true & ';
+        osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=true & ';
     }
-    exec(osCommands + 'node fuse.js', function (err, stdout, stderr) {
 
-        log(stdout);
-        log(stderr);
-        log("ERROR", err)
-        cb();
-
+    log(chalk.cyan('Configuring HMR - please wait......'))
+    let cmd = exec(osCommands + 'node fuse.js');
+    cmd.stdout.on('data', (data) => {
+        if (data && data.length > 0) {
+            console.log(data.trim());
+        }
+    });
+    cmd.stderr.on('data', (data) => {
+        if (data && data.length > 0)
+            console.log(data.trim())
+    });
+    return cmd.on('exit', (code) => {
+        log(chalk.green(`Build successful - ${code}`));
+        cb()
     });
 });
 /*
@@ -167,16 +188,25 @@ gulp.task('fusebox-rebuild', function (cb) {
     var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=false; ';
 
     if (isWindows) {
-	osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=false & ';
+        osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=false & ';
     }
-    
+
     exec(osCommands + 'node fuse.js', function (err, stdout, stderr) {
-
-        log(stdout);
-        log(stderr);
-        log("ERROR", err)
-        cb();
-
+        log(chalk.cyan('Rebuilding - please wait......'))
+        let cmd = exec(osCommands + 'node fuse.js');
+        cmd.stdout.on('data', (data) => {
+            if (data && data.length > 0) {
+                console.log(data.trim());
+            }
+        });
+        cmd.stderr.on('data', (data) => {
+            if (data && data.length > 0)
+                console.log(data.trim())
+        });
+        return cmd.on('exit', (code) => {
+            log(chalk.green(`Build successful - ${code}`));
+            cb()
+        });
     });
 });
 /**
@@ -203,11 +233,11 @@ gulp.task('fb-test', function (done) {
  */
 gulp.task('fusebox-tdd', function (done) { //,['accept']
     initialTask = this.seq.slice(-1)[0];
-    
+
     if (!browsers) {
         global.whichBrowser = ['Chrome', 'Firefox'];
     }
-    
+
     new Server({
         configFile: __dirname + '/karma_conf.js',
     }, done).start();
@@ -244,14 +274,14 @@ gulp.task('acceptance', ['fb-test']);
 
 function copySrc() {
     return gulp
-            .src(['../appl/views/**/*', '../appl/templates/**/*', '../appl/index.html', isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'])
-            .pipe(copy('../../' + dist + '/appl'));
+        .src(['../appl/views/**/*', '../appl/templates/**/*', '../appl/index.html', isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'])
+        .pipe(copy('../../' + dist + '/appl'));
 }
 
 function copyImages() {
     return gulp
-            .src(['../images/*', '../../README.md'])
-            .pipe(copy('../../' + dist + '/appl'));
+        .src(['../images/*', '../../README.md'])
+        .pipe(copy('../../' + dist + '/appl'));
 }
 
 //From Stack Overflow - Node (Gulp) process.stdout.write to file
@@ -259,9 +289,9 @@ if (process.env.USE_LOGFILE == 'true') {
     var fs = require('fs');
     var proc = require('process');
     var origstdout = process.stdout.write,
-            origstderr = process.stderr.write,
-            outfile = 'node_output.log',
-            errfile = 'node_error.log';
+        origstderr = process.stderr.write,
+        outfile = 'node_output.log',
+        errfile = 'node_error.log';
 
     if (fs.exists(outfile)) {
         fs.unlink(outfile);

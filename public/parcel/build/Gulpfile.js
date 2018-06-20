@@ -19,10 +19,10 @@ const chalk = require('chalk');
 const browserSync = require('browser-sync');
 
 const startComment = "develblock:start",
-        endComment = "develblock:end",
-        regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
-                startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
-                endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
+    endComment = "develblock:end",
+    regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
+        startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
+        endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
 
 let lintCount = 0
 let isProduction = process.env.NODE_ENV == 'production'
@@ -45,7 +45,9 @@ gulp.task('build-development', ['copy'], (cb) => {
  * Production Parcel 
  */
 gulp.task('build', ['copyprod'], (cb) => {
-    return parcelBuild(false, cb);
+    parcelBuild(false, cb).then(function () {
+        cb()
+    });
 });
 
 /**
@@ -193,7 +195,7 @@ gulp.task('tddo', done => {
 gulp.task('sync', ['watch-parcel'], () => {
     const server = browserSync.create('devl');
     dist = testDist;
-    server.init({ server: '../../', index: 'index_p.html', port: 3080/*, browser: ['google-chrome']*/});
+    server.init({ server: '../../', index: 'index_p.html', port: 3080/*, browser: ['google-chrome']*/ });
     server.watch('../../' + dist + '/appl.*.*').on('change', server.reload);  //change any file in appl/ to reload app - triggered on watchify results
     return server;
 });
@@ -228,7 +230,7 @@ function parcelBuild(watch, cb) {
         watch: watch,
         cache: !isProduction,
         cacheDir: '.cache',
-        minify: false, // isProduction,
+        minify: isProduction,
         target: 'browser',
         https: false,
         logLevel: 3, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
@@ -242,7 +244,7 @@ function parcelBuild(watch, cb) {
     const bundler = new Bundler(file, options);
     let isBundled = false
 
-    bundler.on('bundled', () => {
+    bundler.on('bundled', (bundle) => {
         isBundled = true
     })
     bundler.on("buildEnd", () => {
@@ -272,11 +274,10 @@ function copyImages() {
 }
 
 function runKarma(done) {
-
-    return new Server({
+    let sPromise = new Server({
         configFile: __dirname + '/karma_conf.js',
         singleRun: true
-    }, function (result) {
+    }, result => {
         var exitCode = !result ? 0 : result;
         if (typeof done === "function") {
             done();
