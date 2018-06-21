@@ -274,7 +274,7 @@ function copyImages() {
 }
 
 function runKarma(done) {
-    let sPromise = new Server({
+    new Server({
         configFile: __dirname + '/karma_conf.js',
         singleRun: true
     }, result => {
