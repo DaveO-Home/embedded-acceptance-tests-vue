@@ -33,7 +33,7 @@ module.exports = function (config) {
             //Looking for changes to the client bundle
             {pattern: 'dist_test/' + bundler + '/bundle.js', included: false, watched: true, served: true},
             {pattern: bundler + '/images/favicon.ico', included: false, watched: false},
-            {pattern: 'node_modules/font-awesome/fonts/*', watched: false, included: false},
+            {pattern: 'node_modules/font-awesome/**/*', watched: false, included: false},
             //Jasmine/Loader tests and starts Karma
             bundler + '/build/karma.bootstrap.js'
         ],

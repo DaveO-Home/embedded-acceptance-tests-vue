@@ -31,14 +31,10 @@ module.exports = {
         { pattern: 'package.json', watched: false, included: false },
         { pattern: 'README.md', included: false },
         //Looking for changes via HMR - tdd should run with Brunch Hot Moudule Reload.
-        { pattern: 'dist_test/' + bundler + '/vendor.js', included: false, watched: false },
         //Looking for changes to the client bundle
         { pattern: 'dist_test/' + bundler + '/acceptance.js', included: false, watched: true, served: true },
-        { pattern: 'dist_test/' + bundler + '/*.css', included: false, watched: false },
-        { pattern: 'dist_test/' + bundler + '/*.map', included: false, watched: false },
-        { pattern: 'dist_test/' + bundler + '/*.map', included: false, watched: false },
+        { pattern: 'dist_test/' + bundler + '/**/*', included: false, watched: false },
         { pattern: 'dist_test/' + 'fonts/*', included: false, watched: false },
-        { pattern: bundler + '/images/favicon.ico', included: false, watched: false },
         //Jasmine/Loader tests and starts Karma
         bundler + '/build/karma.bootstrap.js'
     ],

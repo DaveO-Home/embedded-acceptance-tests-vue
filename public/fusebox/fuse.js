@@ -88,7 +88,8 @@ const fuse = FuseBox.init({
             CSSResourcePlugin({
                 dist: distDir + "/resources",
                 resolve: resources
-            }), CSSPlugin()],
+            }), CSSPlugin()
+        ],
         CSSPlugin(),
         CopyFsPlugin({
             copy: [{from: "appl/views/**/*", to: distDir + "/appl/views"},
