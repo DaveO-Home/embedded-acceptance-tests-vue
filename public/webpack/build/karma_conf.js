@@ -21,6 +21,7 @@ module.exports = function (config) {
             {pattern: bundler + '/appl/**/*.*', included: false, watched: false},
             {pattern: 'package.json', watched: false, included: false},
             {pattern: 'README.md', included: false},
+            {pattern: 'node_modules/font-awesome/**/*', included: false, watched: true},
             {pattern: 'dist_test/webpack/**/*', included: false, watched: true},
             //Test suites
             {pattern: bundler + '/tests/**/*test.js', included: false},

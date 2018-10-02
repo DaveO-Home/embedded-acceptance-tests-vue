@@ -70,7 +70,6 @@ export default {
             }
             const selector = typeof options.selector !== 'undefined' ? options.selector : '#main_container'
             let el = $(selector)
-
             el.empty()
             const fade = helper.getValueOrDefault(options.fade, options.fade)
 

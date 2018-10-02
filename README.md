@@ -298,3 +298,35 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
    * `gulp tdd`
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
+
+4\. ***Webpack 4 is default(Vue Cli-3)*** -
+
+    The demo supports both Webpack 3 and Webpack 4(default). The dependency differences follows;
+
+*Webpack 4 dependencies*:
+
+   * "@intervolga/optimize-cssnano-plugin": "^1.0.6"
+   * "address": "^1.0.3"
+   * "babel-preset-vue": "^2.0.2"
+   * "cache-loader": "^1.2.2"
+   * "case-sensitive-paths-webpack-plugin": "^2.1.2"
+   * "friendly-errors-webpack-plugin": "^1.7.0"
+   * "joi": "^13.7.0"
+   * "lodash.defaultsdeep": "^4.6.0"
+   * "mini-css-extract-plugin": "^0.4.3"
+   * "string.prototype.padend": "^3.0.0"
+   * "string.prototype.padstart": "^3.0.0"
+   * "webpack-chain": "^4.12.0"
+
+*Webpack 4 upgraded dependencies*:
+
+   * "vue-loader": "^14.2.3"
+   * "vue-loader": "^15.4.2"
+   * "webpack": "^3.11.0"
+   * "webpack": "^4.20.2"
+   * "webpack-dev-server": "^2.11.3"
+   * "webpack-dev-server": "^3.1.9"
+   * "webpack-stream": "^4.0.3"
+   * "webpack-stream": "^5.1.1"
+
+Change versions as needed.

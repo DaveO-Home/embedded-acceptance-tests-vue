@@ -1,5 +1,6 @@
 <template>
   <div id="data" class="hello">
+    <link rel="stylesheet" href="components.css">
     <img src="./logo.png">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>

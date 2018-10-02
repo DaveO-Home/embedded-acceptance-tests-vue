@@ -38,7 +38,9 @@ pluginsObject = {
   //   start: 'develblock:start',
   //   end: 'develblock:end'
   // },
-  babel: { presets: ['env'] },
+  babel: {
+    presets: ['env', 'vue']
+  },
   // See README.md for implementation
   // eslint: {
   //   pattern: /^brunch\/appl\/.*\.js?$/,

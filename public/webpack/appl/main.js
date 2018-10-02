@@ -24,7 +24,7 @@ new Promise((resolve, reject) => {
         var apptest = require('apptests')
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
         apptest(App, vm)
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 3000
         __karma__.start()
     }
 })

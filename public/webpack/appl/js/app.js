@@ -13,7 +13,7 @@ if (typeof testit !== 'undefined' && testit) {
         })
 
         it('is Popper defined', () => {
-            expect(typeof Popper === 'function').toBe(true)
+            expect(typeof window.Popper === 'object' || typeof window.Popper === 'function').toBe(true)
         })
     })
 }

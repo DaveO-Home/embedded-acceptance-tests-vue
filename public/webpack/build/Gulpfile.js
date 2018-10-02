@@ -1,36 +1,47 @@
 /**
  * Production build using karma/jasmine acceptance test approval and Development environment with Webpack
  * Successful acceptance tests & lints start the production build.
- * Tasks are run serially, 'pat'(test-build, acceptance-tests) -> 'csslint' -> 'boot' -> 'build(eslint)'
+ * Tasks are run serially, 'pat' -> test-build -> acceptance-tests -> ('csslint', 'bootlint') -> 'build(eslint)'
  */
 const env = require("gulp-env")
 const log = require("fancy-log")
 const rmf = require('rimraf')
 const exec = require('child_process').exec
-const spawn = require('child_process').spawn
+const execSync = require('child_process').execSync
 const gulp = require('gulp')
 const path = require('path')
-const utils = require('./utils')
+const chalk = require('chalk')
 const config = require('../config')
-const eslint = require('gulp-eslint')
 const Server = require('karma').Server
 const csslint = require('gulp-csslint')
 const webpack = require('webpack')
-const portfinder = require('portfinder')
 const webpackStream = require("webpack-stream")
 const WebpackDevServer = require('webpack-dev-server')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-
-const HOST = process.env.HOST
+const package = require('../../package.json')
+const webpackVersion = Number(/\d/.exec(package.devDependencies.webpack)[0])
+const HOST = process.env.HOST || 'localhost'
 const PORT = process.env.PORT && Number(process.env.PORT)
+const isWindows = /^win/.test(process.platform);
 
 let webpackConfig = null
+let service = process.VUE_CLI_SERVICE
 let browsers = process.env.USE_BROWSERS
+
+const getService = () => {
+    if (webpackVersion === 4 && (!service || process.env.VUE_CLI_API_MODE)) {
+        const Service = require('./cli-service/lib/Service')
+        service = new Service(process.env.VUE_CLI_CONTEXT || process.cwd())
+        service.init(process.env.VUE_CLI_MODE || process.env.NODE_ENV)
+        webpackConfig = service.resolveWebpackConfig()
+    }
+    return webpackConfig
+}
 
 if (browsers) {
     global.whichBrowser = browsers.split(",")
 }
+
 /**
  * Default: Production Acceptance Tests 
  */
@@ -53,13 +64,10 @@ gulp.task('csslint', ['pat'], function () {
 /*
  * Build the application to the production distribution 
  */
-gulp.task('build', ['boot'], function (cb) {   
-    return exec('node build', function (err, stdout, stderr) {
-            log(stdout);
-            log(stderr);
-    
-            cb(err);
-        })
+gulp.task('build', ['boot'], function (cb) { 
+    const envn = isWindows ? 'set NODE_ENV=production & ' : 'export NODE_ENV=production; ' 
+    execSync(webpackVersion === 4 ? envn + 'node vue-cli-service.js build' : 'node build', {stdio:'inherit'})
+    return cb()
 });
 /*
  * Bootstrap html linter 
@@ -121,7 +129,7 @@ gulp.task("webpack-rebuild", function () {
     });
     return gulp.src("../appl/main.js")
         .pipe(envs)
-        .pipe(webpackStream(require('./webpack.dev.conf.js')))
+        .pipe(webpackStream(webpackVersion === 4 ? getService : require('./webpack.dev.conf.js')))
         .pipe(envs.reset)
         .pipe(gulp.dest("../../dist_test/webpack"));
 });
@@ -151,7 +159,7 @@ gulp.task("test-build", function () {
     });
     return gulp.src("../appl/main.js")
         .pipe(envs)
-        .pipe(webpackStream(require('./webpack.dev.conf.js')))
+        .pipe(webpackStream(webpackVersion === 4 ? getService() : require('./webpack.dev.conf.js')))
         .pipe(envs.reset)
         .pipe(gulp.dest("../../dist_test/webpack"));
 });
@@ -187,7 +195,7 @@ gulp.task("webpack-watch", function () {
     });
     return gulp.src("../appl/**/*")
         .pipe(envs)
-        .pipe(webpackStream(require('./webpack.dev.conf.js')))
+        .pipe(webpackStream(webpackVersion === 4 ? getService() : require('./webpack.dev.conf.js')))
         .pipe(gulp.dest("../../dist_test/webpack"));
 
 });
@@ -233,46 +241,24 @@ gulp.task("webpack-server", function () {
         quiet: false
     };
 
-    webpackConfig = require('./webpack.dev.conf.js');
+    webpackConfig = webpackVersion === 4 ? getService() : require('./webpack.dev.conf.js') // require('./webpack.dev.conf.js');
     webpackConfig.devtool = 'eval';
     webpackConfig.output.path = path.resolve(config.dev.assetsRoot);
     webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
     webpackConfig.plugins.push(new webpack.NamedModulesPlugin()); // HMR shows correct file names in console on update.
     webpackConfig.plugins.push(new HtmlWebpackPlugin({
         filename: 'testapp_dev.html',
-        template: 'appl/testapp_dev.html',
+        template: webpackVersion === 4 ? '../appl/testapp_dev.html' : 'appl/testapp_dev.html',
         inject: true
     }));
 
     WebpackDevServer.addDevServerEntrypoints(webpackConfig, options);
 
-    // This seems to be not working?
-    //    portfinder.basePort = process.env.PORT || config.dev.port;
-    //    portfinder.getPort((err, port) => {
-    //      if (err) {
-    //        reject(err);
-    //      } else {
-    //        // publish the new Port, necessary for e2e tests
-    //        process.env.PORT = port;
-    //        // add port to devServer config
-    //        webpackConfig.devServer.port = port;
-    //        // Add FriendlyErrorsPlugin
-    //        webpackConfig.plugins.push(new FriendlyErrorsPlugin({
-    //          compilationSuccessInfo: {
-    //            messages: [`Your application is running here: http://${webpackConfig.devServer.host}:${port}`]
-    //          },
-    //          onErrors: config.dev.notifyOnErrors
-    //            ? utils.createNotifierCallback()
-    //            : undefined
-    //        }));
-    //      }
-    //    });
-
     const compiler = webpack(webpackConfig);
     const server = new WebpackDevServer(compiler, options);
 
-    server.listen(PORT || config.dev.port, webpackConfig.devServer.host, function (err) {
-        log('[webpack-server]', `http://${webpackConfig.devServer.host}:${PORT || config.dev.port}/webpack/appl/testapp_dev.html`);
+    server.listen(PORT || config.dev.port, HOST /*|| webpackConfig.devServer.host*/, function (err) {
+        log('[webpack-server]', `http://${/*webpackConfig.devServer.host*/ HOST}:${PORT || config.dev.port}/webpack/appl/testapp_dev.html`);
         if (err) {
             log(err);
         }
