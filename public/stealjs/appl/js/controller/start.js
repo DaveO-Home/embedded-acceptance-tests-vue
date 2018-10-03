@@ -3,7 +3,7 @@
 import App from 'app'
 import Base from 'basecontrol'
 import Menu from 'menu'
-import 'marked'
+import Marked from  'marked'
 let me
 
 export default App.controllers.Start ||
@@ -140,7 +140,7 @@ export default App.controllers.Start ||
         finish (options) {
             me = this
             const mdFunction = data => {
-                me.html = `${App.html} ${_marked(data)}`
+                me.html = `${App.html} ${Marked(data)}`
             }
             $.get(options.urlMd, mdFunction, 'text')
             .fail(err => {

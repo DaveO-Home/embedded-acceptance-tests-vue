@@ -39,6 +39,7 @@
     "helpers": "0.0.6",
     "jquery": "^3.3.1",
     "lodash-es": "^4.17.11",
+    "marked": "^0.5.1",
     "moment": "^2.22.1",
     "pager": "^0.1.3",
     "popper": "^1.0.1",
@@ -193,7 +194,6 @@
       "routertest": "stealjs/appl/jasmine/routertest.js",
       "toolstest": "stealjs/appl/jasmine/toolstest.js",
       "popper": "node_modules/popper.js/dist/umd/popper.min.js",
-      "marked": "stealjs/appl/js/utils/marked.js",
       "handlebars": "node_modules/handlebars/dist/handlebars.min.js",
       "fs": "node_modules/graceful-fs/fs.js",
       "vue": "node_modules/vue/dist/vue.js"

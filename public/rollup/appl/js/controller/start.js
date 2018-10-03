@@ -3,7 +3,7 @@
 import App from 'app'
 import Base from 'basecontrol'
 import Menu from 'menu'
-import '../utils/marked'
+import Marked from 'marked'
 let me
 
 export default App.controllers.Start ||
@@ -141,7 +141,7 @@ export default App.controllers.Start ||
 //            const marked = require('../utils/marked')
             me = this
             const mdFunction = data => {
-                me.html = `${App.html} <div class="mx-auto" style="width: 90%">${_marked(data)}</div>`
+                me.html = `${App.html} <div class="mx-auto" style="width: 90%">${Marked(data)}</div>`
             }
             $.get(options.urlMd, mdFunction, 'text')
             .fail(err => {

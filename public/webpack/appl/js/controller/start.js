@@ -3,6 +3,7 @@
 import App from 'app'
 import Base from 'basecontrol'
 import Menu from 'menu'
+import Marked from 'marked'
 let me
 
 export default App.controllers.Start ||
@@ -137,10 +138,10 @@ export default App.controllers.Start ||
             $('form.form-horizontal').append(me.alert)
         },
         finish (options) {
-            const marked = require('../utils/marked')
+            // const marked = require('../utils/marked')
             me = this
             const mdFunction = data => {
-                me.html = `${App.html} ${marked(data)}`
+                me.html = `${App.html} ${Marked(data)}`
             }
             $.get(options.urlMd, mdFunction, 'text')
             .fail(err => {
