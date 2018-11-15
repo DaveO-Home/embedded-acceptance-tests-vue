@@ -129,7 +129,7 @@ gulp.task("webpack-rebuild", function () {
     });
     return gulp.src("../appl/main.js")
         .pipe(envs)
-        .pipe(webpackStream(webpackVersion === 4 ? getService : require('./webpack.dev.conf.js')))
+        .pipe(webpackStream(webpackVersion === 4 ? getService() : require('./webpack.dev.conf.js')))
         .pipe(envs.reset)
         .pipe(gulp.dest("../../dist_test/webpack"));
 });
