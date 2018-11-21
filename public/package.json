@@ -90,7 +90,7 @@
     "fancy-log": "^1.3.2",
     "file-loader": "^1.1.11",
     "friendly-errors-webpack-plugin": "^1.7.0",
-    "fuse-box": "^3.5.0",
+    "fuse-box": "^3.6.0",
     "gulp": "^3.9.1",
     "gulp-bootlint": "^0.9.0",
     "gulp-copy": "^1.1.0",
