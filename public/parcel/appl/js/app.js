@@ -1,6 +1,5 @@
 /* eslint 'comma-style': [0, 'last'] */
 
-import startsWith from 'lodash-es/startsWith'
 import capitalize from 'lodash-es/capitalize'
 import 'bootstrap'
 
@@ -24,7 +23,7 @@ export default {
     init (options) {
         options = options || {}
         this.initPage(options)
-        
+
         $.fn.fa = function (options) {
             options = $.extend({
                 icon: 'check'

@@ -9,7 +9,7 @@ export default App.controllers.Pdf || (App.controllers.Pdf = Object.assign({ // 
     },
     test (options) {
         const pdfUrl = 'views/prod/Test.pdf'
-        
+    
         this.view({
             local_content: '<iframe id="pdfDO" name="pdfDO" class="col-lg-12" style="height: 750px"></iframe>',
             pdfUrl: pdfUrl,
