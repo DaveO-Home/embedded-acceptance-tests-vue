@@ -20,7 +20,9 @@ var statusReporter = {
     isInError: false
 };
 window.__karma__.loaded = function () {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
     jasmine.getEnv().addReporter(statusReporter);
-    jasmine.getEnv().randomizeTests(false);
+    const config = jasmine.getEnv().configuration()
+    config.random = false;
+    jasmine.getEnv().configure(config)
 };

@@ -2,23 +2,10 @@
 import App from 'app'
 import Helpers from 'helpers'
 
-let base = false
-let baseUrl = ''
-//!steal-remove-start
-if (typeof testit !== 'undefined' && testit) {
-    base = true
-}
-//!steal-remove-end
-
 export default {
     defaults: {
-        base
     },
-    baseUrl,
     init () {
-        if (base) {
-            baseUrl = `base/${window._bundler}/appl/`
-        }
     },
     view (options) {
         const loading = Helpers.getValueOrDefault(options.loading, false)
@@ -50,7 +37,7 @@ export default {
         let template
 
         App.loadView({
-            url: `${options.baseUrl}templates/stache/modal.stache`
+            url: 'templates/stache/modal.stache'
         }, modalFrag => {
             template = Stache.compile(modalFrag)
 
@@ -84,6 +71,5 @@ export default {
     hideModal () {
         // HIDE ANY OPEN MODAL WINDOWS
         $('.modal.in', this.element).modal('hide')
-    },
-    base
+    }
 }

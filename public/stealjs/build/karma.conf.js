@@ -8,6 +8,15 @@ module.exports = function (config) {
     config.set({
         basePath: '../../',
         frameworks: ['jasmine-jquery', 'jasmine'],
+        proxies: {
+            "/views/": "/base/" + bundler + "/appl/views/",
+            "/templates": "/base/" + bundler + "/appl/templates",
+            "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
+            "/README.md": "/base/README.md",
+            "stealjs/appl/": "/base/stealjs/appl/",
+            "can-map/": "/base/node_modules/can-map/",
+            "can-view-callbacks/": "/base/node_modules/can-view-callbacks/"
+        },
         // list of files / patterns to load in the browser
         files: [
             //Webcomponents for Firefox - used for link tag with import attribute.

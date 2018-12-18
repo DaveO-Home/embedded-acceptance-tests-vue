@@ -217,7 +217,7 @@ gulp.task('tdd-browserify', ['build-development'], function (done) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
     }, done).start();
 });
 /**
@@ -228,7 +228,7 @@ gulp.task('tddo', function (done) {
         global.whichBrowsers = ["Opera"];
     }
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
     }, done).start();
 });
 
@@ -364,7 +364,7 @@ function copyFonts() {
 
 function runKarma(done) {   
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;

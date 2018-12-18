@@ -27,7 +27,7 @@ gulp.task('pat', function (done) {
     }
 
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;
@@ -84,7 +84,7 @@ gulp.task('csslint', ['pat'], function () {
 gulp.task('build', ['boot'], function () {
 
     return stealTools.build({
-        //configMain: "stealjs/appl/js/config",
+        configMain: "package.json!npm",
         main: "stealjs/appl/main",
         baseURL: "../../"
     }, {
@@ -219,6 +219,7 @@ gulp.task('web-server', function (cb) {
 });
 
 gulp.task('default', ['pat', 'eslint', 'csslint', 'boot', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'boot', 'build']);
 gulp.task('tdd', ['steal-tdd']);
 gulp.task('test', ['steal-test']);
 gulp.task('firefox', ['steal-firefox']);
@@ -229,7 +230,7 @@ gulp.task('server', ['web-server']);
 function runKarma(done, singleRun, watch) {
 
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: singleRun,
         watch: typeof watch === "undefined" || !watch ? false : true
     }, done()).start();

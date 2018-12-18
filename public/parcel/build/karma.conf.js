@@ -1,5 +1,5 @@
-var bundler = "rollup";
-var startupHtml = bundler + '/appl/testapp_karma.html';
+var bundler = "parcel";
+var startupHtml = 'dist_test/' + bundler + '/testapp_dev.html';
 // Karma configuration
 module.exports = function (config) {
     //whichBrowser to use from gulp task.
@@ -12,6 +12,13 @@ module.exports = function (config) {
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['jasmine-jquery', 'jasmine'],
+        proxies: {
+            "/views/": "/base/" + bundler + "/appl/views/",
+            "/templates": "/base/" + bundler + "/appl/templates",
+            "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
+            "/README.md": "/base/README.md",
+            "parcel/appl/": "/base/" + bundler + "/pacel/appl/"
+        },
         // list of files / patterns to load in the browser
         files: [
             //Webcomponents for Firefox - used for link tag with import attribute.
@@ -21,19 +28,14 @@ module.exports = function (config) {
             //Jasmine tests
             bundler + '/tests/unit_tests*.js',
             //'node_modules/promise-polyfill/promise.js',
-            {pattern: 'node_modules/jquery/**/*.js', watched: false, served: true, included: false},
-            {pattern: 'node_modules/bootstrap/**/*.js', watched: false, included: false},
-            {pattern: 'node_modules/popper.js/dist/umd/*', watched: false, included: false},
-            {pattern: 'node_modules/handlebars/dist/handlebars.min.js', watched: false, included: true, served: true},
             {pattern: bundler + '/appl/**/*.*', included: false, watched: false},
             {pattern: 'node_modules/**/package.json', watched: false, included: false},
-            {pattern: 'node_modules/tablesorter/**/*.js', watched: false, served: true, included: false},
             {pattern: 'README.md', included: false},
-            //Looking for changes via HMR - tdd should run with Rollup Hot Moudule Reload.
-            //Looking for changes to the client bundle
-            {pattern: 'dist_test/' + bundler + '/bundle.js', included: false, watched: true, served: true},
+            // Looking for changes via HMR - tdd should run with Sync Hot Moudule Reload.
+            // Looking for changes to the client bundle
+            {pattern: 'dist_test/' + bundler + '/main.*.*', included: false, watched: true, served: true},
             {pattern: bundler + '/images/favicon.ico', included: false, watched: false},
-            {pattern: 'node_modules/font-awesome/**/*', watched: false, included: false},
+            {pattern: 'dist_test/' + bundler + '/fontawesome*.*', included: false, watched: false},
             //Jasmine/Loader tests and starts Karma
             bundler + '/build/karma.bootstrap.js'
         ],
@@ -49,7 +51,7 @@ module.exports = function (config) {
         ],
         /* Karma uses <link href="/base/appl/testapp_dev.html" rel="import"> -- you will need webcomponents polyfill to use browsers other than Chrome.
          * This test demo will work with Chrome/ChromeHeadless by default - Webcomponents included above, so FirefoxHeadless should work also. 
-         * Other browsers may work with tdd.
+         * Other browsers may work with test and tdd.
          */
         browsers: global.whichBrowsers,
         customLaunchers: {

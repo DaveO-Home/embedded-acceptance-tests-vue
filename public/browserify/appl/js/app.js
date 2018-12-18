@@ -19,21 +19,12 @@ if (typeof testit !== 'undefined' && testit) {
 }
 /* develblock:end */
 
-const baseScriptsUrl = '~/'
-
-const pathName = window.location.pathname
-
-let baseUrl = `${pathName.substring(0, pathName.substring(1, pathName.length).lastIndexOf('/') + 1)}`
-
 export default {
     controllers: [],
-    bUrl: baseUrl,
     init (options) {
         options = options || {}
         this.initPage(options)
-        if (pathName === '/context.html' || (typeof window.testit !== 'undefined' && testit)) {
-            this.bUrl = baseUrl = `/base/${window._bundler}/appl`
-        }
+        
         $.fn.fa = function (options) {
             options = $.extend({
                 icon: 'check'
@@ -53,22 +44,13 @@ export default {
         })
     },
     toUrl (url) {
-        // Node Express exception
-        if (startsWith(baseUrl, '/appl/')) {
-            baseUrl = '/appl'
-        }
-
-        if (url && url.indexOf('~/') === 0) {
-            url = baseUrl + url.substring(2)
-        }
-
         return url
     },
     toScriptsUrl (url) {
-        return this.toUrl(`${baseScriptsUrl}/${url}`)
+        return url
     },
     toViewsUrl (url) {
-        return startsWith(url, 'views/') ? this.toScriptsUrl(url) : this.toUrl(url)
+        return url
     },
     loadController (controllerName, controller, fnLoad, fnError) {
         const me = this
@@ -96,7 +78,7 @@ export default {
     },
     loadView (options, fnLoad) {
         if (options && fnLoad) {
-            const resolvedUrl = this.toViewsUrl(options.url)
+            const resolvedUrl = options.url
             const currentController = this.controllers[capitalize(options.controller)]
 
             if (options.url) {
@@ -120,7 +102,7 @@ export default {
     renderTools (options, render) {
         const currentController = this.controllers[capitalize(options.controller)]
         let template
-        const jsonUrl = `${baseUrl}/templates/tools_ful.json`
+        const jsonUrl = "templates/tools_ful.json"
 
         $.get(options.templateUrl + options.template, source => {
             template = Stache.compile(source)
@@ -133,7 +115,7 @@ export default {
                     const osKeys = ['Combined', 'Category1', 'Category2']
                     const values = ['ful', 'cat1', 'cat2']
                     const tbodyTemplate = template
-                    const toolsUrl = `${baseUrl}/templates/tools_`
+                    const toolsUrl = "templates/tools_"
 
                     let selectedJobType = getValue(sender.target.innerText, osKeys, values)
                     if (typeof selectedJobType === 'undefined') {

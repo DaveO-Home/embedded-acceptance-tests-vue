@@ -8,13 +8,11 @@ export default App.controllers['Table'] || (App.controllers['Table'] = Object.as
     name: 'table',
     tools (data) {
         const toolsUrl = 'templates/stache/'
-        if (this.base || window.testit) {
-            this.baseUrl = `base/${window._bundler}/appl/`
-        }
+        
         this.view({
             controller: 'table',
             action: 'tools',
-            templateUrl: this.baseUrl + toolsUrl,
+            templateUrl: toolsUrl,
             template: 'tools.stache',
             list: true,
             loading: true,
@@ -58,7 +56,6 @@ export default App.controllers['Table'] || (App.controllers['Table'] = Object.as
         $(id).trigger('pageAndSize', defaultPage)
         $($('#dropdown1 a')[0]).fa({ icon: 'check' })
     },
-    base: false,
     '#dropdown1 a click': function (sender, e) {
         e.preventDefault()
         this.dropdownEvent(sender)

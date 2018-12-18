@@ -32,7 +32,7 @@ gulp.task('pat', ['accept'], function (done) { //, ['accept']
     }
 
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: true
     }, function (result) {
 
@@ -217,7 +217,7 @@ gulp.task('fb-test', function (done) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;
@@ -239,7 +239,7 @@ gulp.task('fusebox-tdd', function (done) { //,['accept']
     }
 
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
     }, done).start();
 });
 
@@ -251,7 +251,7 @@ gulp.task('tddo', function (done) {
         global.whichBrowser = ['Opera'];
     }
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
     }, done).start();
 });
 
@@ -266,6 +266,7 @@ gulp.task('copy_images', function () {
 });
 
 gulp.task('default', ['pat', 'eslint', 'csslint', 'boot', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'boot', 'build']);
 gulp.task('test', ['pat']);
 gulp.task('tdd', ['fusebox-tdd']);
 gulp.task('hmr', ['fusebox-hmr']);

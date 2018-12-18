@@ -92,7 +92,7 @@ exports.server = {
   stripSlashes: true
 }
 
-pluginsObject.karma = require('./brunch/build/karma_conf')
+pluginsObject.karma = require('./brunch/build/karma.conf')
 pluginsObject.karma.singleRun = singleRun
 
 exports.overrides = {

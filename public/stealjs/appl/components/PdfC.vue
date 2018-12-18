@@ -9,7 +9,7 @@ import App from 'app'
 // Setting up for optional Karma/Jasmine
 
 App.init()
-const url = `${App.bUrl}${'/views/prod/Test.pdf'}`
+const url = 'views/prod/Test.pdf'
 
 export default {
   name: 'PdfC',

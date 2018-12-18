@@ -1,4 +1,5 @@
-var bundler = "webpack";
+var bundler = "fusebox";
+var startupHtml = bundler + '/appl/testapp_karma.html';
 // Karma configuration
 module.exports = function (config) {
     //whichBrowser to use from gulp task.
@@ -8,26 +9,39 @@ module.exports = function (config) {
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '../../',
+        // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['jasmine-jquery', 'jasmine'],
+        proxies: {
+            "/views/": "/base/" + bundler + "/appl/views/",
+            "/templates": "/base/" + bundler + "/appl/templates",
+            "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
+            "/README.md": "/base/README.md",
+            "fusebox/appl/": "/base/" + bundler + "/fusebox/appl/"
+        },
         // list of files / patterns to load in the browser
         files: [
-            //Webcomponents for Firefox - used for link tag with rel="import" attribute.
+            //Webcomponents for Firefox - used for link tag with import attribute.
             {pattern: bundler + "/tests/webcomponents-hi-sd-ce.js", watched: false},
             //Application and Acceptance specs.
-            bundler + '/appl/testapp_karma.html',
+            startupHtml,
             //Jasmine tests
             bundler + '/tests/unit_tests*.js',
+            //'node_modules/promise-polyfill/promise.js',
             {pattern: bundler + '/appl/**/*.*', included: false, watched: false},
             {pattern: 'package.json', watched: false, included: false},
             {pattern: 'README.md', included: false},
-            {pattern: 'node_modules/font-awesome/**/*', included: false, watched: true},
-            {pattern: 'dist_test/webpack/**/*', included: false, watched: true},
-            //Test suites
-            {pattern: bundler + '/tests/**/*test.js', included: false},
-            //end Test suites
-            {pattern: bundler + '/images/favicon.ico', included: false},
-            //Jasmine/setup for tests and may start Karma
+            //Looking for changes via HMR - tdd should run with Fusebox Hot Moudule Reload.
+            {pattern: 'dist_test/' + bundler + '/vendor.js', included: false, watched: false},
+            //Looking for changes to the client bundle
+            {pattern: 'dist_test/' + bundler + '/acceptance.js', included: false, watched: true, served: true},
+            {pattern: bundler + '/images/favicon.ico', included: false, watched: false},
+            {pattern: 'node_modules/bootstrap/dist/css/bootstrap.min.css', watched: false, included: true, served: true},
+            {pattern: 'node_modules/tablesorter/dist/css/theme.blue.min.css', watched: false, included: true, served: true},
+            {pattern: 'node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css', watched: false, included: true, served: true},
+            {pattern: 'node_modules/font-awesome/css/font-awesome.css', watched: false, included: false},
+            {pattern: 'node_modules/font-awesome/**/*', watched: false, included: false},
+            //Jasmine/Loader tests and starts Karma
             bundler + '/build/karma.bootstrap.js'
         ],
         bowerPackages: [
@@ -38,8 +52,7 @@ module.exports = function (config) {
             'karma-opera-launcher',
             'karma-jasmine',
             'karma-jasmine-jquery',
-            'karma-mocha-reporter',
-            'karma-webpack'
+            'karma-mocha-reporter'
         ],
         /* Karma uses <link href="/base/appl/testapp_dev.html" rel="import"> -- you will need webcomponents polyfill to use browsers other than Chrome.
          * This test demo will work with Chrome/ChromeHeadless by default - Webcomponents included above, so FirefoxHeadless should work also. 
@@ -47,15 +60,6 @@ module.exports = function (config) {
          */
         browsers: global.whichBrowser,
         customLaunchers: {
-            ChromeWithoutSecurity: {
-                base: 'Chrome',
-                flags: ['--disable-web-security']
-            },
-            ChromeCustom: {
-                base: 'ChromeHeadless',
-                flags: ['--disable-web-security', '--disable-translate', '--disable-extensions'],
-                debug: false
-            },
             FirefoxHeadless: {
                 base: 'Firefox',
                 flags: ['--headless']
@@ -66,17 +70,13 @@ module.exports = function (config) {
         ],
         preprocessors: {
         },
-        webpackMiddleware: {
-            noInfo: false,
-            stats: 'errors-only'
-        },
-        autoWatchBatchDelay: 1000,
         reporters: ['mocha'],
         port: 9876,
         colors: true,
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
         logLevel: config.LOG_INFO,
         autoWatch: true,
+        // Continuous Integration mode
         singleRun: false,
         loggers: [{
                 type: 'console'
@@ -84,19 +84,14 @@ module.exports = function (config) {
         ],
         client: {
             captureConsole: true,
-            karmaHTML: {
-                source: [
-                    {src: './appl/testapp_dev.html', tag: 'index'},
-                ],
-                auto: true
-            },
             clearContext: false,
-            runInParent: true,
+            runInParent: true, 
             useIframe: true,
             jasmine: {
                 random: false
             }
         },
-        concurrency: 5
-    })
-}
+        // how many browser should be started simultaneous
+        concurrency: 5 //Infinity
+    });
+};

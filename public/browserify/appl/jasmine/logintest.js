@@ -9,7 +9,6 @@ export default function (Start) {
 
         beforeAll(done => {
             Start.initMenu()
-            Start.base = true
             // Somehow we lost the listener-?
             Start['div .login click']()
             const loginObject = $('div .login')
