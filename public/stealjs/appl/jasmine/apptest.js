@@ -102,5 +102,7 @@ export default function (App, vm) {
                 fail('Testing only, build will not proceed')
             })
         }
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000
+        __karma__.start()
     })
 }

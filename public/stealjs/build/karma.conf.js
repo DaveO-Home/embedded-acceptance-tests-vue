@@ -14,8 +14,7 @@ module.exports = function (config) {
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
             "stealjs/appl/": "/base/stealjs/appl/",
-            "can-map/": "/base/node_modules/can-map/",
-            "can-view-callbacks/": "/base/node_modules/can-view-callbacks/"
+            "index.js": "/base/stealjs/appl/main.js"
         },
         // list of files / patterns to load in the browser
         files: [
@@ -50,7 +49,7 @@ module.exports = function (config) {
             {pattern: 'node_modules/marked/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/handlebars/dist/**/*.js', watched: false, included: false},
             {pattern: 'README.md', included: false},
-            {pattern: 'index.js', included: false, served: false, watched: false},
+            {pattern: 'index.js', served: false, included: false, watched: false},
             {pattern: bundler + '/appl/**/*.html', included: false},
             {pattern: 'dev-bundle.js', watched: false, included: false},
             //Test suites
