@@ -1,4 +1,5 @@
 
+import '../css/css'
 import vm from '../entry'
 import 'config'
 import popper from 'popper.js'
@@ -17,5 +18,7 @@ Setup.init()
 // Code between the ..start and ..end tags will be removed by the BlockStrip plugin during the production build.
 // testit is true if running under Karma - see testapp_dev.html
 // Run acceptance tests.
-apptest(App, vm)
+if (typeof testit !== 'undefined' && testit) {
+	apptest(App, vm)
+}
 //!steal-remove-end

@@ -18,6 +18,9 @@ export default function (Start) {
             setTimeout(() => {
                 modal = $('#modalTemplate')
                 nameObject = $('#inputUsername')
+                modal.on('shown.bs.modal', function(html){
+                    modal.modal("toggle"); // primes the toggle - so click will close the modal.
+                });
                 done()
             }, 500)
         })
@@ -27,27 +30,19 @@ export default function (Start) {
             expect(nameObject[0]).toExist()
 
             closeButton = $('.close-modal')
-            closeButton.click(function (ev) {
-                ev.preventDefault()
-                modal.modal('toggle')
-                return false
-            })
-
             done()
         })
 
         it('Login form - verify cancel and removed from DOM', function (done) {
             expect(modal[0]).toExist()
+            closeButton.click()
+            
             setTimeout(function () {
-                closeButton.click()
-
-                setTimeout(function () {
-                    $('div .login').remove()
-                    expect(modal[0]).not.toBeVisible()
-                    expect(modal[0]).not.toBeInDOM()
-                    done()
-                }, 750)
-            }, 100)
+                $('div .login').remove()
+                expect(modal[0]).not.toBeVisible()
+                expect(modal[0]).not.toBeInDOM()
+                done()
+            }, 750)
         })
     })
 }

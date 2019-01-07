@@ -1,6 +1,6 @@
 /**
  * Successful acceptance tests & lints start the production build.
- * Tasks are run serially, 'pat' -> ('eslint', 'csslint') -> 'boot' -> 'build'
+ * Tasks are run serially, 'pat' -> ('eslint', 'csslint') -> 'bootlint' -> 'build'
  */
 
 const chalk = require('chalk')
@@ -11,6 +11,7 @@ const exec = require('child_process').exec;
 const log = require("fancy-log");
 const stealTools = require('steal-tools');
 const Server = require('karma').Server;
+const del = require('del');
 
 let lintCount = 0;
 let browsers = process.env.USE_BROWSERS;
@@ -81,7 +82,7 @@ gulp.task('csslint', ['pat'], function () {
 /*
  * Build the application to the production distribution 
  */
-gulp.task('build', ['boot'], function () {
+gulp.task('build', ['clean', 'bootlint'], function () {
 
     return stealTools.build({
         configMain: "package.json!npm",
@@ -100,12 +101,12 @@ gulp.task('build', ['boot'], function () {
                 '../appl/assets/**/*',
                 '../appl/templates/**/*',
                 '../../README.md',
-                '../../node_modules/bootstrap/dist/css/bootstrap.min.css',
-                '../appl/css/site.css',
-                '../../node_modules/tablesorter/dist/css/theme.blue.min.css',
-                '../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css',
-                '../../node_modules/font-awesome/css/font-awesome.css',
-                '../../node_modules/font-awesome/fonts/*'
+                // '../../node_modules/bootstrap/dist/css/bootstrap.min.css',
+                // '../appl/css/site.css',
+                // '../../node_modules/tablesorter/dist/css/theme.blue.min.css',
+                // '../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css',
+                // '../../node_modules/font-awesome/css/font-awesome.css',
+                // '../../node_modules/font-awesome/fonts/*'
             ]
         },
         bundleSteal: false,
@@ -117,9 +118,72 @@ gulp.task('build', ['boot'], function () {
     });
 });
 /*
+ * Build the application to the production distribution without testing
+ */
+gulp.task('build-only', ['clean-only'], function () {
+
+    return stealTools.build({
+        configMain: "package.json!npm",
+        main: "stealjs/appl/main",
+        baseURL: "../../"
+    }, {
+        sourceMaps: false,
+        bundleAssets: {
+            infer: true,
+            glob: [
+                '../images/favicon.ico',
+                '../appl/testapp.html',
+                '../appl/index.html',
+                '../index.html',
+                '../appl/views/**/*',
+                '../appl/assets/**/*',
+                '../appl/templates/**/*',
+                '../../README.md',
+                // '../../node_modules/bootstrap/dist/css/bootstrap.min.css',
+                // '../appl/css/site.css',
+                // '../../node_modules/tablesorter/dist/css/theme.blue.min.css',
+                // '../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css',
+                // '../../node_modules/font-awesome/css/font-awesome.css',
+                // '../../node_modules/font-awesome/fonts/*'
+            ]
+        },
+        bundleSteal: false,
+        dest: "dist",
+        removeDevelopmentCode: true,
+        minify: false,
+        maxBundleRequests: 5,
+        maxMainRequests: 5
+    });
+});
+/**
+ * Remove previous build
+ */
+gulp.task('clean', ['bootlint'], done => {
+    isProduction = true;
+    dist = '../../dist/';
+    return del([
+        dist + 'stealjs/**/*',
+        dist + 'bundles/**/*',
+        dist + '../../dist/steal.production.js'
+    ], { dryRun: false, force: true }, done);
+});
+/**
+ * Remove previous build
+ */
+gulp.task('clean-only', done => {
+    isProduction = true;
+    dist = '../../dist/';
+    return del([
+        dist + 'stealjs/**/*',
+        dist + 'bundles/**/*',
+        dist + '../../dist/steal.production.js'
+    ], { dryRun: false, force: true }, done);
+});
+
+/*
  * Bootstrap html linter 
  */
-gulp.task('boot', ['eslint', 'csslint'], function (cb) {
+gulp.task('bootlint', ['eslint', 'csslint'], function (cb) {
 
     exec('gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
         log(stdout);
@@ -218,8 +282,9 @@ gulp.task('web-server', function (cb) {
     });
 });
 
-gulp.task('default', ['pat', 'eslint', 'csslint', 'boot', 'build']);
-gulp.task('prod', ['pat', 'eslint', 'csslint', 'boot', 'build']);
+gulp.task('default', ['pat', 'eslint', 'csslint', 'bootlint', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'bootlint', 'build']);
+gulp.task('prd', ['build-only']);
 gulp.task('tdd', ['steal-tdd']);
 gulp.task('test', ['steal-test']);
 gulp.task('firefox', ['steal-firefox']);

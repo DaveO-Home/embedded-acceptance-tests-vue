@@ -2,10 +2,10 @@ module.exports = options => ({
   uglifyOptions: {
     compress: {
       // turn off flags with small gains to speed up minification
-      arrows: false,
+      // arrows: false,
       collapse_vars: false, // 0.3kb
       comparisons: false,
-      computed_props: false,
+      // computed_props: false,
       hoist_funs: false,
       hoist_props: false,
       hoist_vars: false,
@@ -32,7 +32,7 @@ module.exports = options => ({
       evaluate: true
     },
     mangle: {
-      safari10: true
+      // safari10: true
     }
   },
   sourceMap: options.productionSourceMap,

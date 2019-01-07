@@ -61,7 +61,7 @@ export default {
 
             try {
                 //!steal-remove-start
-                if (testit) {
+                if (typeof testit !== 'undefined' && testit) {
                     expect(appController).not.toBe(null)
                     expect(typeof fnLoad === 'function').toBe(true)
                 }
