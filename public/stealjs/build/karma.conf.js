@@ -14,7 +14,9 @@ module.exports = function (config) {
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
             "stealjs/appl/": "/base/stealjs/appl/",
-            "index.js": "/base/stealjs/appl/main.js"
+            "index.js": "/base/stealjs/appl/main.js",
+	    "jquery.js": "/base/node_modules/jquery/dist/jquery.min.js",
+            "bootstrap.js": "/base/node_modules/bootstrap/dist/js/bootstrap.min.js"
         },
         // list of files / patterns to load in the browser
         files: [
@@ -40,6 +42,7 @@ module.exports = function (config) {
             {pattern: 'node_modules/vue-*/**/*.js', watched: false, included: false},
             {pattern: bundler + '/appl/*.js', included: false},
             {pattern: bundler + '/appl/js/**/*.js', included: false},
+            {pattern: bundler + '/appl/css/*.js', included: false},
             {pattern: 'node_modules/**/package.json', watched: false, included: false},
             {pattern: 'node_modules/jquery/**/*.js', watched: false, served: true, included: false},
             {pattern: 'node_modules/tablesorter/**/*.js', watched: false, served: true, included: false},
