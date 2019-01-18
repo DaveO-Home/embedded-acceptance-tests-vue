@@ -15,7 +15,7 @@ module.exports = function (config) {
             "/README.md": "/base/README.md",
             "stealjs/appl/": "/base/stealjs/appl/",
             "index.js": "/base/stealjs/appl/main.js",
-	    "jquery.js": "/base/node_modules/jquery/dist/jquery.min.js",
+	        "jquery.js": "/base/node_modules/jquery/dist/jquery.min.js",
             "bootstrap.js": "/base/node_modules/bootstrap/dist/js/bootstrap.min.js"
         },
         // list of files / patterns to load in the browser
@@ -103,7 +103,7 @@ module.exports = function (config) {
         port: 9876,
         colors: true,
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_WARN,
+        logLevel: config.LOG_ERROR,
         autoWatch: true,
         singleRun: false,
         loggers: [{
