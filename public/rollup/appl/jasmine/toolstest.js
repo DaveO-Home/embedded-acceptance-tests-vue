@@ -1,4 +1,4 @@
-export default function (Route, Helpers, vm) {
+export default function (Route, Helpers, vm, timer) {
     /*
      * Test that new data are loaded when the select value changes.
      */
@@ -33,12 +33,16 @@ export default function (Route, Helpers, vm) {
                 spyToolsEvent = spyOnEvent(selectorItem, 'select')
                 selectorItem.click()
                 Helpers.fireEvent(selectorItem, 'select')
-                // Note: if page does not refresh, increase the Timeout time.
-                // Using setTimeout instead of Promise.
-                setTimeout(function () {
+                // Note: if page does not refresh, increase the timer time.
+                // Using RxJs instead of Promise.
+                const numbers = timer(50, 50);
+                const observable = numbers.subscribe(timer => {
                     afterValue = tools.find('tbody').find('tr:nth-child(1)').find('td:nth-child(2)').text()
-                    done()
-                }, 750)
+                    if (afterValue !== beforeValue || timer === 20) {
+                        observable.unsubscribe();
+                        done();
+                    }
+                })
             })
         })
 

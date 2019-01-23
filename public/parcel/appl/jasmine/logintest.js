@@ -1,4 +1,4 @@
-export default function (Start) {
+export default function (Start, timer) {
     /*
      * Test Form validation and submission.
      */
@@ -14,15 +14,20 @@ export default function (Start) {
             const loginObject = $('div .login')
             loginObject.click()
 
-            // Not bothering with a promise.
-            setTimeout(() => {
-                modal = $('#modalTemplate')
-                nameObject = $('#inputUsername')
-                modal.on('shown.bs.modal', function(html){
-                    modal.modal("toggle"); // primes the toggle - so click will close the modal.
-                });
-                done()
-            }, 500)
+            // Note: if page does not refresh, increase the timer time.
+            // Using RxJs instead of Promise.
+            const numbers = timer(50, 50);
+            const observable = numbers.subscribe(timer => {
+                modal = $("#modalTemplate");
+                if ((typeof modal[0] !== "undefined" && modal[0].length !== 0) || timer === 10) {
+                    nameObject = $("#inputUsername");
+                    modal.on('shown.bs.modal', function (html) {
+                        modal.modal("toggle");
+                    });
+                    observable.unsubscribe();
+                    done();
+                }
+            });
         })
 
         it('Login form - verify modal with login loaded', function (done) {
@@ -37,12 +42,16 @@ export default function (Start) {
             expect(modal[0]).toExist()
             closeButton.click()
 
-            setTimeout(function () {
-                $('div .login').remove()
-                expect(modal[0]).not.toBeVisible()
-                expect(modal[0]).not.toBeInDOM()
-                done()
-            }, 750)
+            const numbers = timer(50, 50);
+            const observable = numbers.subscribe(timer => {
+                if (modal[0].length === 0 || timer === 20) {
+                    expect(modal[0]).not.toBeVisible();
+                    expect(modal[0]).not.toBeInDOM();
+                    $("div .login").remove(); // Just cleaning up page for tdd
+                    observable.unsubscribe();
+                    done();
+                }
+            });
         })
     })
 }

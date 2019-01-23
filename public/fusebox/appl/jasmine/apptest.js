@@ -6,6 +6,7 @@ import loginTest from 'logintest'
 import Start from 'start'
 import Route from '../router'
 import Helpers from 'helpers'
+import { timer } from 'rxjs'
 
 exports.apptest = function (App, vm) {
     const vueElement = vm.$el
@@ -91,11 +92,11 @@ exports.apptest = function (App, vm) {
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.
-        toolsTest(Route, Helpers, vm)
+        toolsTest(Route, Helpers, vm, timer)
         // Form Validation
         contactTest(Route, Helpers, vm)
         // Verify modal form
-        loginTest(Start)
+        loginTest(Start, timer)
 
         if (testOnly) {
             it('Testing only', () => {

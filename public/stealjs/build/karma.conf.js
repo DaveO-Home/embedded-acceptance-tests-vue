@@ -49,6 +49,7 @@ module.exports = function (config) {
             {pattern: 'package.json', watched: false, included: false},
             {pattern: 'node_modules/lodash-es/**/*js', watched: false, included: false},
             {pattern: 'node_modules/moment/**/*.js', watched: false, included: false},
+            {pattern: 'node_modules/rxjs/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/marked/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/handlebars/dist/**/*.js', watched: false, included: false},
             {pattern: 'README.md', included: false},
