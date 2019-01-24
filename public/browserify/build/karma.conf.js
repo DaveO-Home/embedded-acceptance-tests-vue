@@ -79,9 +79,6 @@ module.exports = function (config) {
             clearContext: false,
             runInParent: true,
             useIframe: true,
-            jasmine: {
-                random: false
-            }
         },
         concurrency: 5
     });

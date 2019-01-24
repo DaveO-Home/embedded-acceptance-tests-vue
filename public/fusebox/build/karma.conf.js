@@ -88,9 +88,6 @@ module.exports = function (config) {
             clearContext: false,
             runInParent: true, 
             useIframe: true,
-            jasmine: {
-                random: false
-            }
         },
         // how many browser should be started simultaneous
         concurrency: 5 //Infinity
