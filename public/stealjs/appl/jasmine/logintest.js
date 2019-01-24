@@ -44,7 +44,8 @@ export default function (Start, timer) {
 
             var numbers = timer(50, 50);
                 var observable = numbers.subscribe(timer => {
-                    if (modal[0].length === 0 || timer === 20) {
+                    const modal2 = $("#modalTemplate");
+                    if (typeof modal2[0] === 'undefined' || timer === 25) {
                         expect(modal[0]).not.toBeVisible();
                         expect(modal[0]).not.toBeInDOM();
                         $("div .login").remove(); // Just cleaning up page for tdd

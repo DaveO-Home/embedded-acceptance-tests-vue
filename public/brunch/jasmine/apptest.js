@@ -6,7 +6,7 @@ import loginTest from './logintest'
 import Start from '../appl/js/controller/start'
 import Route from '../appl/router'
 import Helpers from '../appl/js/utils/helpers'
-import { timer } from 'rxjs'
+const { timer } = require('rxjs');
 
 exports.apptest = function (App, vm) {
     const vueElement = vm.$el

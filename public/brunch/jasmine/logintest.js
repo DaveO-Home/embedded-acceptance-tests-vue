@@ -20,7 +20,7 @@ export default function (Start, timer) {
             const numbers = timer(50, 50);
             const observable = numbers.subscribe(timer => {
                 modal = $("#modalTemplate");
-                if ((typeof modal[0] !== "undefined" && modal[0].length !== 0) || timer === 15) {
+                if ((typeof modal !== "undefined" && modal[0].length !== 0) || timer === 20) {
                     nameObject = $("#inputUsername");
                     modal.on('shown.bs.modal', function (html) {
                         modal.modal("toggle");
@@ -45,7 +45,8 @@ export default function (Start, timer) {
 
             const numbers = timer(50, 50);
             const observable = numbers.subscribe(timer => {
-                if (modal[0].length === 0 || timer === 20) {
+                const modal2 = $("#modalTemplate");
+                if (typeof modal2[0] === 'undefined' || timer === 20) {
                     expect(modal[0]).not.toBeVisible();
                     expect(modal[0]).not.toBeInDOM();
                     $("div .login").remove(); // Just cleaning up page for tdd

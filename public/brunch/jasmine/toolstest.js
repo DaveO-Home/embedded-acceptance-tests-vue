@@ -1,4 +1,4 @@
-export default function (Route, Helpers, vm, timer) {
+export default function (Route, Helpers, vm) {
     /*
      * Test that new data are loaded when the select value changes.
      */
