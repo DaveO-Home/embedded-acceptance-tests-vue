@@ -27,7 +27,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const stripCode = require("gulp-strip-code");
 const Server = require('karma').Server;
 const uglify = require('gulp-uglify');
-const vue = require('rollup-plugin-vue').default
+const vue = require('rollup-plugin-vue');
 
 const startComment = "develblock:start",
         endComment = "develblock:end",
