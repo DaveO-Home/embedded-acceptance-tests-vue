@@ -19,20 +19,19 @@
 
     USER tester
     EXPOSE 3080
-    WORKDIR /home/tester/embedded-acceptance-tests-vue
-    ENV NPM_CONFIG_LOGLEVEL info
+
+    ENV NPM_CONFIG_LOGLEVEL notice
     ENV NODE_ENV development
-    ENV HOME /home/tester
 
     # Once the docker container(test_env) is built, you can try any of the frontends 
     # with a manual install(npm install).
     # It is recommended to remove the existing node_modules directories to conserve space.
-    RUN git clone https://github.com/DaveO-Home/embedded-acceptance-tests.git 
-    RUN git clone https://github.com/DaveO-Home/embedded-acceptance-tests-vue.git 
-    RUN git clone https://github.com/DaveO-Home/embedded-acceptance-tests-react.git 
-    RUN git clone https://github.com/DaveO-Home/embedded-acceptance-tests-ng.git
+    RUN cd ~; git clone https://github.com/DaveO-Home/embedded-acceptance-tests.git 
+    RUN cd ~; git clone https://github.com/DaveO-Home/embedded-acceptance-tests-vue.git 
+    RUN cd ~; git clone https://github.com/DaveO-Home/embedded-acceptance-tests-react.git 
+    RUN cd ~; git clone https://github.com/DaveO-Home/embedded-acceptance-tests-ng.git
 
     # Change to correspond with desired repo - defaults to vue
-    RUN cd ./embedded-acceptance-tests-vue; npm install 
-    RUN cd ./embedded-acceptance-tests-vue/public; npm install 
+    RUN cd ~/embedded-acceptance-tests-vue; npm install 
+    RUN cd ~/embedded-acceptance-tests-vue/public; npm install 
 
