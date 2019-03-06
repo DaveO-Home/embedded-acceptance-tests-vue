@@ -1,9 +1,9 @@
 /**
  * Successful acceptance tests & lints start the production build.
- * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
+ * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint') -> 'bootlint' -> 'build'
  */
 
-const { src, dest, series, parallel, task} = require('gulp');
+const gulp = require('gulp');
 const Server = require('karma').Server;
 const eslint = require('gulp-eslint');
 const csslint = require('gulp-csslint');
@@ -38,34 +38,34 @@ if (browsers) {
 /**
  * Build Development bundle from package.json 
  */
-const build_development = function (cb) {
+gulp.task('build-development', ['copy'], (cb) => {
     return parcelBuild(false, cb); // setting watch = false
-};
+});
 /**
  * Production Parcel 
  */
-const build = function (cb) {
-    process.env.NODE_ENV = 'production';
-    isProduction = true;
+gulp.task('build', ['copyprod'], (cb) => {
     parcelBuild(false, cb).then(function () {
         cb()
     });
-};
+});
+
 /**
  * Default: Production Acceptance Tests 
  */
-const pat = function (done) {
+gulp.task('pat', ['build-development'], done => {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
+
     return runKarma(done);
-};
+});
 /*
  * javascript linter
  */
-const esLint = function (cb) {
+gulp.task('eslint', ['pat'], () => {
     dist = prodDist;
-    var stream = src(["../appl/js/**/*.js"])
+    var stream = gulp.src(["../appl/js/**/*.js"])
         .pipe(eslint({
             configFile: 'eslintConf.json',
             quiet: 0
@@ -77,52 +77,51 @@ const esLint = function (cb) {
         }))
         .pipe(eslint.failAfterError());
 
+    stream.on('end', () => {
+        log(chalk.cyan("# javascript files linted: " + lintCount));
+    });
+
     stream.on('error', () => {
         process.exit(1);
     });
 
-    return stream.on('end', () => {
-        log(chalk.cyan("# javascript files linted: " + lintCount));
-        cb()
-    });
-};
+    return stream;
+});
 /*
  * css linter
  */
-const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'])
+gulp.task('csslint', ['pat'], () => {
+    var stream = gulp.src(['../appl/css/site.css'])
         .pipe(csslint())
         .pipe(csslint.formatter());
 
     stream.on('error', () => {
         process.exit(1);
     });
-    return stream.on('end', () => {
-        cb()
-    });
-};
+});
+
 /*
  * Bootstrap html linter 
  */
-bootLint = function (cb) {
-    return exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
+gulp.task('bootlint', ['eslint', 'csslint'], cb => {
+    exec('gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
         log(stdout);
         log(stderr);
         cb(err);
     });
-};
+});
 /**
  * Remove previous build
  */
-const clean = function (done) {
+gulp.task('clean', ['bootlint'], done => {
     isProduction = true;
     dist = prodDist;
     return del([
         '../../' + prodDist + '/**/*'
     ], { dryRun: false, force: true }, done);
-};
+});
 
-const cleant = function (done) {
+gulp.task('cleant', done => {
     let dryRun = false
     if (bundleTest && bundleTest === "false") {
         dryRun = true
@@ -132,97 +131,91 @@ const cleant = function (done) {
     return del([
         '../../' + testDist + '/**/*'
     ], { dryRun: dryRun, force: true }, done);
-};
+});
 /**
  * Resources and content copied to dist directory - for production
  */
-const copyprod = function () {
+gulp.task('copyprod', ['bootlint', 'copyprod_images'], () => {
     return copySrc();
-};
-
-const copyprod_images = function () {
+});
+// gulp.task('copyprod_images', ['bootlint', 'copyprod_node_css'], () => {
+gulp.task('copyprod_images', ['bootlint', 'clean'], () => {
     isProduction = true;
     dist = prodDist;
     return copyImages();
-};
+});
+
 /**
  * Resources and content copied to dist_test directory - for development
  */
-const copy_test = function () {
+gulp.task('copy', ['copy_images'], () => {
     return copySrc();
-};
-
-const copy_images = function () {
+});
+gulp.task('copy_images', ['cleant'], () => {
     isProduction = false;
     dist = testDist;
     return copyImages();
-};
+});
+
 /**
  * Run karma/jasmine tests once and exit without rebuilding(requires a previous build)
  */
-const r_test = function (done) {
+gulp.task('r-test', done => {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    runKarma(done);
-};
+    runKarma();
+});
+
 /**
  * Continuous testing - test driven development.  
  */
-// gulp.task('tdd-parcel', ['build-development'], done => {
-const tdd_parcel = function (done) {
+gulp.task('tdd-parcel', ['build-development'], done => {
     if (!browsers) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
     new Server({
         configFile: __dirname + '/karma.conf.js',
     }, done).start();
-};
+});
 /**
  * Karma testing under Opera. -- needs configuation  
  */
-const tddo = function (done) {
+gulp.task('tddo', done => {
     if (!browsers) {
         global.whichBrowsers = ["Opera"];
     }
     new Server({
         configFile: __dirname + '/karma.conf.js',
     }, done).start();
-};
+});
 /**
  * Using BrowserSync Middleware for HMR  
  */
-const sync = function () {
+gulp.task('sync', ['watch-parcel'], () => {
     const server = browserSync.create('devl');
     dist = testDist;
     server.init({ server: '../../', index: 'index_p.html', port: 3080/*, browser: ['google-chrome']*/ });
     server.watch('../../' + dist + '/appl.*.*').on('change', server.reload);  //change any file in appl/ to reload app - triggered on watchify results
     return server;
-};
+});
 
-const watcher = function (done) {
+gulp.task('watcher', ['sync'], done => {
     log(chalk.green("Watcher & BrowserSync Started - Waiting...."));
     return done()
-};
+});
 
-const watch_parcel = function (cb) {
+gulp.task('watch-parcel', ['copy'], cb => {
     return parcelBuild(true, cb)
-};
+});
 
-const runTestCopy = parallel(copy_test, copy_images)
-const runTest = series(cleant, runTestCopy, build_development)
-const runProdCopy = parallel(copyprod, copyprod_images)
-const runProd = series(runTest, pat, parallel(esLint, cssLint, bootLint), clean, runProdCopy, build)
-runProd.displayName = "prod"
-
-task(runProd)
-exports.default = runProd
-exports.test = series(runTest, pat)
-exports.tdd = series(runTest, tdd_parcel)
-exports.watch = series(runTestCopy, watch_parcel, sync, watcher)
-exports.acceptance = r_test
-exports.rebuild = series(runTestCopy, runTest)
-// exports.development = parallel(series(runTestCopy, watch_parcel, sync, watcher), series(runTestCopy, build_development, tdd_parcel))
+gulp.task('default', ['pat', 'eslint', 'csslint', 'bootlint', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'bootlint', 'build']);
+gulp.task('acceptance', ['r-test']);
+gulp.task('tdd', ['tdd-parcel']);
+gulp.task('test', ['pat']);
+gulp.task('watch', ['watcher']);
+gulp.task('rebuild', ['build-development']);  //remove karma config for node express
 
 function parcelBuild(watch, cb) {
     if (bundleTest && bundleTest === "false") {
@@ -238,7 +231,6 @@ function parcelBuild(watch, cb) {
         watch: watch,
         cache: !isProduction,
         cacheDir: '.cache',
-        // cssnano needs to be upgraded/downgraded? to minimize
         minify: isProduction,
         target: 'browser',
         https: false,
@@ -270,13 +262,15 @@ function parcelBuild(watch, cb) {
 }
 
 function copySrc() {
-    return src(['../appl/view*/**/*', '../appl/temp*/**/*', '../appl/assets/**/*'/*, isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'*/])
+    return gulp
+        .src(['../appl/view*/**/*', '../appl/temp*/**/*'/*, isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'*/])
         .pipe(flatten({ includeParents: -2 })
-            .pipe(dest('../../' + dist + '/')))
+            .pipe(gulp.dest('../../' + dist + '/')))
 }
 
 function copyImages() {
-    return src(['../images/*', '../../README.m*', '../appl/assets/**/*'])
+    return gulp
+        .src(['../images/*', '../../README.m*'])
         .pipe(copy('../../' + dist + '/appl'));
 }
 
@@ -290,7 +284,6 @@ function runKarma(done) {
             done();
         }
         if (exitCode > 0) {
-            console.log('You may need to remove the ../parcel/build/.cache directory')
             process.exit(exitCode);
         }
     }).start();

@@ -18,7 +18,7 @@ __Note__; the demo was not developed to compare software, rather simply to demon
 
   1. OS Linux or Windows(Tested on Windows10)
   1. Node and npm
-  1. Gulp
+  1. Gulp4 is default - If your global Gulp is version 3, you can execute npx gulp from the build directories.
   1. Google Chrome
   1. Firefox
 
@@ -137,6 +137,8 @@ __A word on developing tests__; You can write and execute tests quicker by using
   * `gulp watch`
   * Develop or modify a test.
   * In another window execute `gulp acceptance` from the `build` directory to view the modified or new test results.
+
+  __Also Note__; All of the development tasks(`hmr, server, watch`) etc, can be run from one window using the `gulp development` task.
 
 ### I.  **Browserify**
 

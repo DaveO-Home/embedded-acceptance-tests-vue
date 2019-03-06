@@ -1,14 +1,16 @@
 /**
  * Successful acceptance tests & lints start the production build.
- * Tasks are run serially, 'accept' -> 'pat' -> ('eslint', 'csslint', 'bootlint') -> 'build'
+ * Tasks are run serially, 'pat' -> 'accept' -> ('eslint', 'csslint') -> 'boot' -> 'build'
  */
-const { src, dest, series, parallel, task } = require('gulp');
-const chalk = require('chalk');
+const copy = require('gulp-copy');
 const csslint = require('gulp-csslint');
+const env = require("gulp-env");
 const eslint = require('gulp-eslint');
 const exec = require('child_process').exec;
+const gulp = require('gulp');
 const log = require("fancy-log");
 const Server = require('karma').Server;
+const chalk = require('chalk');
 
 let lintCount = 0
 let dist = "dist_test/fusebox"
@@ -19,11 +21,12 @@ if (browsers) {
     global.whichBrowser = browsers.split(",");
 }
 var isWindows = /^win/.test(process.platform);
-
+var initialTask;
 /**
  * Default: Production Acceptance Tests 
  */
-const pat = function (done) {
+gulp.task('pat', ['accept'], function (done) { //, ['accept']
+
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
@@ -32,18 +35,23 @@ const pat = function (done) {
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
     }, function (result) {
+
         var exitCode = !result ? 0 : result;
+
         done();
+
         if (exitCode > 0) {
             process.exit(exitCode);
         }
+
     }).start();
-};
+
+});
 /*
  * javascript linter
  */
-const esLint = function (cb) {
-    var stream = src(["../appl/js/**/*.js"])
+gulp.task('eslint', ['pat'], () => {
+    var stream = gulp.src(["../appl/js/**/*.js"])
         .pipe(eslint({
             configFile: 'eslintConf.json',
             quiet: 1,
@@ -55,19 +63,21 @@ const esLint = function (cb) {
         }))
         .pipe(eslint.failAfterError());
 
+    stream.on('end', function () {
+        log("# javascript files linted: " + lintCount);
+    });
+
     stream.on('error', function () {
         process.exit(1);
     });
 
-    return stream.on('end', function () {
-        log("# javascript files linted: " + lintCount);
-    });
-};
+    return stream;
+});
 /*
  * css linter
  */
-const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'
+gulp.task('csslint', ['pat'], function () {
+    var stream = gulp.src(['../appl/css/site.css'
     ])
         .pipe(csslint())
         .pipe(csslint.formatter());
@@ -75,15 +85,12 @@ const cssLint = function (cb) {
     stream.on('error', function () {
         process.exit(1);
     });
+});
 
-    return stream.on('end', function () {
-        cb();
-    });
-};
 /*
  * Build the application to run karma acceptance tests
  */
-const accept = function (cb) {
+gulp.task('accept', function (cb) {
     var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=true; export USE_HMR=false; ';
 
     if (isWindows) {
@@ -107,11 +114,12 @@ const accept = function (cb) {
             cb()
         });
     });
-};
+});
+
 /*
  * Build the application to the production distribution 
  */
-const build = function (cb) {
+gulp.task('build', ['boot'], function (cb) { // ['boot'],
     var osCommands = 'cd ..; export NODE_ENV=production; export USE_KARMA=false; export USE_HMR=false; ';
 
     if (isWindows) {
@@ -133,26 +141,24 @@ const build = function (cb) {
         log(chalk.green(`Build successful - ${code}`));
         cb()
     });
-};
+
+});
+
 /*
  * Bootstrap html linter 
  */
-const bootLint = function (cb) {
-    return exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
-        log(stdout)
-        log(stderr)
-        if (err) {
-            log("ERROR", err);
-        } else {
-            log(chalk.green('Bootstrap linting a success'))
-        }
-        cb()
+gulp.task('boot', ['eslint', 'csslint'], function (cb) {
+    exec('gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
+        log(stdout);
+        log(stderr);
+
+        cb(err);
     });
-};
+});
 /*
  * Build the application to run karma acceptance tests with hmr
  */
-const fusebox_hmr = function (cb) {
+gulp.task('fusebox-hmr', function (cb) {
     var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=true; ';
 
     if (isWindows) {
@@ -174,11 +180,11 @@ const fusebox_hmr = function (cb) {
         log(chalk.green(`Build successful - ${code}`));
         cb()
     });
-};
+});
 /*
  * Build the application to run node express so font-awesome is resolved
  */
-const fusebox_rebuild = function (cb) {
+gulp.task('fusebox-rebuild', function (cb) {
     var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=false; ';
 
     if (isWindows) {
@@ -202,11 +208,11 @@ const fusebox_rebuild = function (cb) {
             cb()
         });
     });
-};
+});
 /**
  * Run karma/jasmine tests once and exit
  */
-const fb_test = function (done) {
+gulp.task('fb-test', function (done) {
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
@@ -220,11 +226,14 @@ const fb_test = function (done) {
             process.exit(exitCode);
         }
     }).start();
-};
+});
+
 /**
  * Continuous testing - test driven development.  
  */
-const fusebox_tdd = function (done) {
+gulp.task('fusebox-tdd', function (done) { //,['accept']
+    initialTask = this.seq.slice(-1)[0];
+
     if (!browsers) {
         global.whichBrowser = ['Chrome', 'Firefox'];
     }
@@ -232,30 +241,49 @@ const fusebox_tdd = function (done) {
     new Server({
         configFile: __dirname + '/karma.conf.js',
     }, done).start();
-};
+});
+
 /**
  * Karma testing under Opera. -- needs configuation  
  */
-const tddo = function (done) {
+gulp.task('tddo', function (done) {
     if (!browsers) {
         global.whichBrowser = ['Opera'];
     }
     new Server({
         configFile: __dirname + '/karma.conf.js',
     }, done).start();
-};
+});
 
-runProd = series(accept, pat, parallel(esLint, cssLint, bootLint), build)
-runProd.displayName = 'prod'
+/**
+ * Resources and content copied to dist_test directory - for development
+ */
+gulp.task('copy', ['copy_images'], function () {
+    return copySrc();
+});
+gulp.task('copy_images', function () {
+    return copyImages();
+});
 
-task(runProd)
-exports.default = runProd
-exports.test = series(accept, pat)
-exports.tdd = fusebox_tdd
-exports.hmr = fusebox_hmr
-exports.rebuild = fusebox_rebuild
-exports.acceptance = fb_test
-exports.development = parallel(fusebox_hmr, series(accept, fusebox_tdd))
+gulp.task('default', ['pat', 'eslint', 'csslint', 'boot', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'boot', 'build']);
+gulp.task('test', ['pat']);
+gulp.task('tdd', ['fusebox-tdd']);
+gulp.task('hmr', ['fusebox-hmr']);
+gulp.task('rebuild', ['fusebox-rebuild']);   //remove karma config to run node express
+gulp.task('acceptance', ['fb-test']);
+
+function copySrc() {
+    return gulp
+        .src(['../appl/views/**/*', '../appl/templates/**/*', '../appl/index.html', isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'])
+        .pipe(copy('../../' + dist + '/appl'));
+}
+
+function copyImages() {
+    return gulp
+        .src(['../images/*', '../../README.md'])
+        .pipe(copy('../../' + dist + '/appl'));
+}
 
 //From Stack Overflow - Node (Gulp) process.stdout.write to file
 if (process.env.USE_LOGFILE == 'true') {

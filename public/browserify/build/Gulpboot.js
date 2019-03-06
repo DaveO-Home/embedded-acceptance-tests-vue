@@ -1,8 +1,8 @@
-const gulp = require('gulp');
+const { src } = require('gulp');
 const bootlint = require('gulp-bootlint');
 const log = require("fancy-log")
 
-gulp.task('bootlint', () => {
+const bootLint = function (cb) {
     var fileIssues = [],
             options = {
                 stoponerror: true,
@@ -28,15 +28,12 @@ gulp.task('bootlint', () => {
                 }
             };
 
-    var stream = gulp.src(["../appl/app_bootstrap.html"])
-            .pipe(bootlint(options));
-    
+    var stream =src(["../appl/app_bootstrap.html"])
+            .pipe(bootlint(options));   
     stream.on('error', function() {
         process.exit(1);
     });
-    
-    return stream;
-    
-});
+    return stream;    
+};
 
-gulp.task('default', ['bootlint']);
+exports.default = bootLint;

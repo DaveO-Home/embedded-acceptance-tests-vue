@@ -3,12 +3,12 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat' -> test-build -> acceptance-tests -> ('csslint', 'bootlint') -> 'build(eslint)'
  */
-const { src, dest, series, parallel, task } = require('gulp')
 const env = require("gulp-env")
 const log = require("fancy-log")
 const rmf = require('rimraf')
 const exec = require('child_process').exec
 const execSync = require('child_process').execSync
+const gulp = require('gulp')
 const path = require('path')
 const chalk = require('chalk')
 const config = require('../config')
@@ -45,61 +45,56 @@ if (browsers) {
 /**
  * Default: Production Acceptance Tests 
  */
-// gulp.task('pat', ["acceptance-tests"], function (done) {
-const pat = function (done) {
+gulp.task('pat', ["acceptance-tests"], function (done) {
     done();
-};
+});
 /*
  * css linter
  */
-const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'])
+gulp.task('csslint', ['pat'], function () {
+    var stream = gulp.src(['../appl/css/site.css'])
         .pipe(csslint())
         .pipe(csslint.formatter());
 
-    return stream.on('error', function (err) {
+    stream.on('error', function (err) {
         log(err);
         process.exit(1);
-    }).on('end', function () {
-        cb()
     });
-};
+});
 /*
  * Build the application to the production distribution 
  */
-const build = function (cb) {
-    const envn = isWindows ? 'set NODE_ENV=production & ' : 'export NODE_ENV=production; '
-    execSync(webpackVersion === 4 ? envn + 'node vue-cli-service.js build' : 'node build', { stdio: 'inherit' })
+gulp.task('build', ['boot'], function (cb) { 
+    const envn = isWindows ? 'set NODE_ENV=production & ' : 'export NODE_ENV=production; ' 
+    execSync(webpackVersion === 4 ? envn + 'node vue-cli-service.js build' : 'node build', {stdio:'inherit'})
     return cb()
-};
+});
 /*
  * Bootstrap html linter 
  */
-const bootLint = function (cb) {
+gulp.task('boot', ['csslint'], function (cb) {
     log("Starting Gulpboot.js")
-    return exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
+    return exec('gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
         log(stdout);
         log(stderr);
         cb(err);
     });
-};
+});
 /**
  * Run karma/jasmine tests once and exit
  * Set environment variable USE_BUILD=false to bypass the build
  */
-// gulp.task('acceptance-tests', ['test-build'], function (done) {
-const acceptance_tests = function (done) {
+gulp.task('acceptance-tests', ['test-build'], function (done) {
     karmaServer(done);
-};
+});
 /**
  * Run karma/jasmine tests once and exit
  */
-// gulp.task('jasmine-tests', ['test-env'], function (done) {
-const jasmine_tests = function (done) {
+gulp.task('jasmine-tests', ['test-env'], function (done) {
     karmaServer(done);
-};
+});
 
-const test_env = function () {
+gulp.task("test-env", function () {
     var envs = env.set({
         NODE_ENV: "development",
         USE_WATCH: "false",
@@ -109,13 +104,14 @@ const test_env = function () {
         PUBLIC_PATH: "/base/dist_test/webpack/"   //This sets config to run under Karma
     });
 
-    return src("../appl/main.js")
+    return gulp.src("../appl/main.js")
         .pipe(envs);
-}
+})
+
 /*
  * Build Test without Karma settings for npm Express server (npm start)
  */
-const webpack_rebuild = function (cb) {
+gulp.task("webpack-rebuild", function () {
     var envs = env.set({
         NODE_ENV: "development",
         USE_WATCH: "false",
@@ -131,19 +127,16 @@ const webpack_rebuild = function (cb) {
             log(err)
         }
     });
-    return src("../appl/main.js")
+    return gulp.src("../appl/main.js")
         .pipe(envs)
         .pipe(webpackStream(webpackVersion === 4 ? getService() : require('./webpack.dev.conf.js')))
         .pipe(envs.reset)
-        .pipe(dest("../../dist_test/webpack"))
-        .on("end", function () {
-            cb()
-        });
-};
+        .pipe(gulp.dest("../../dist_test/webpack"));
+});
 /*
  * Build the test bundle
  */
-const test_build = function (cb) {
+gulp.task("test-build", function () {
     var useBuild = process.env.USE_BUILD === "false" ? "false" : "true";
     var envs = env.set({
         NODE_ENV: "development",
@@ -155,7 +148,7 @@ const test_build = function (cb) {
     });
 
     if (process.env.USE_BUILD == 'false') {  //Let Webpack do the build if only doing unit-tests
-        return src("../appl/main.js")
+        return gulp.src("../appl/main.js")
             .pipe(envs);
     }
 
@@ -164,20 +157,16 @@ const test_build = function (cb) {
             log(err)
         }
     });
-    return src("../appl/main.js")
+    return gulp.src("../appl/main.js")
         .pipe(envs)
         .pipe(webpackStream(webpackVersion === 4 ? getService() : require('./webpack.dev.conf.js')))
         .pipe(envs.reset)
-        .pipe(dest("../../dist_test/webpack"))
-        .on("end", function () {
-            cb()
-        });
-};
+        .pipe(gulp.dest("../../dist_test/webpack"));
+});
 /**
  * Continuous testing - test driven development.  
  */
-// gulp.task('webpack-tdd', ["test-build"], function (done) {
-const webpack_tdd = function (done) {
+gulp.task('webpack-tdd', ["test-build"], function (done) {
     if (!browsers) {
         global.whichBrowser = ['Chrome', 'Firefox'];
     }
@@ -185,12 +174,12 @@ const webpack_tdd = function (done) {
     new Server({
         configFile: __dirname + '/karma.conf.js'
     }, done).start();
-};
+});
 /*
  * Webpack recompile to 'dist_test' on code change
  * run watch in separate window. Used with karma tdd.
  */
-const webpack_watch = function (cb) {
+gulp.task("webpack-watch", function () {
     let envs = env.set({
         NODE_ENV: "development",
         USE_WATCH: "true",
@@ -204,17 +193,14 @@ const webpack_watch = function (cb) {
             log(err)
         }
     });
-    return src("../appl/**/*")
+    return gulp.src("../appl/**/*")
         .pipe(envs)
         .pipe(webpackStream(webpackVersion === 4 ? getService() : require('./webpack.dev.conf.js')))
-        .pipe(dest("../../dist_test/webpack"))
-        .on("end", function () {
-            cb();
-        });
+        .pipe(gulp.dest("../../dist_test/webpack"));
 
-};
+});
 
-const set_watch_env = function (cb) {
+gulp.task('set-watch-env', function () {
     var envs = env.set({
         NODE_ENV: "development",
         USE_WATCH: "true",
@@ -223,12 +209,9 @@ const set_watch_env = function (cb) {
         PUBLIC_PATH: "/base/dist_test/webpack/"
     });
 
-    return src("./appl/index.js")
-        .pipe(envs)
-        .on("end", function () {
-            cb()
-        });
-};
+    return gulp.src("./appl/index.js")
+        .pipe(envs);
+});
 /*
  * Webpack development server - use with normal development
  * Rebuilds bundles in dist_test on code change.
@@ -237,7 +220,7 @@ const set_watch_env = function (cb) {
  * - hot module recompile/replace
  * - reload served web page.
  */
-const webpack_server = function (cb) {
+gulp.task("webpack-server", function () {
     env.set({
         NODE_ENV: "development",
         USE_WATCH: "true",
@@ -279,32 +262,17 @@ const webpack_server = function (cb) {
         if (err) {
             log(err);
         }
-        cb()
     });
-};
+});
 
-// gulp.task('default', ['pat', 'csslint', 'boot', 'build']);
-// gulp.task('prod', ['pat', 'csslint', 'boot', 'build']);
-// gulp.task('tdd', ['webpack-tdd']);
-// gulp.task('test', ['acceptance-tests']);
-// gulp.task('watch', ['webpack-watch']);
-// gulp.task('hmr', ['webpack-server']);
-// gulp.task('rebuild', ['webpack-rebuild']);   //removes karma config for node express.
-// gulp.task('acceptance', ['jasmine-tests']);
-
-const lintRun = parallel(cssLint, bootLint)
-const prodRun = series(test_build, acceptance_tests, lintRun, build)
-prodRun.displayName = 'prod'
-
-task(prodRun)
-exports.default = prodRun
-exports.test = series(test_build, acceptance_tests)
-exports.tdd = series(test_build, webpack_tdd)
-exports.rebuild = webpack_rebuild
-exports.acceptance = series(test_env, jasmine_tests)
-exports.watch = webpack_watch
-exports.hmr = webpack_server
-exports.development = parallel(webpack_watch, webpack_server, webpack_tdd)
+gulp.task('default', ['pat', 'csslint', 'boot', 'build']);
+gulp.task('prod', ['pat', 'csslint', 'boot', 'build']);
+gulp.task('tdd', ['webpack-tdd']);
+gulp.task('test', ['acceptance-tests']);
+gulp.task('watch', ['webpack-watch']);
+gulp.task('hmr', ['webpack-server']);
+gulp.task('rebuild', ['webpack-rebuild']);   //removes karma config for node express.
+gulp.task('acceptance', ['jasmine-tests']);
 
 function karmaServer(done) {
     if (!browsers) {

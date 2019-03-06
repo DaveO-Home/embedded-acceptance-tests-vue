@@ -1,26 +1,30 @@
 /**
  * Successful acceptance tests & lints start the production build.
- * Tasks are run serially, 'pat' -> 'accept' -> ('eslint', 'csslint', 'bootlint') -> 'build'
+ * Tasks are run serially, 'pat' -> 'accept' -> ('eslint', 'csslint') -> 'boot' -> 'build'
  */
-const { src, dest, series, parallel, task } = require('gulp');
-const chalk = require('chalk');
 const csslint = require('gulp-csslint');
+const env = require("gulp-env");
 const eslint = require('gulp-eslint');
 const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
+const gulp = require('gulp');
 const log = require("fancy-log");
+const Server = require('karma').Server;
+const chalk = require('chalk');
 
-const realtime = true
 let lintCount = 0
 let dist = "dist_test/brunch"
+let isProduction = false
 let browsers = process.env.USE_BROWSERS
 if (browsers) {
     global.whichBrowser = browsers.split(",");
 }
 var isWindows = /^win/.test(process.platform);
+var initialTask;
 /**
  * Default: Production Acceptance Tests 
  */
-const pat = function (done) {
+gulp.task('pat',/* ['accept'],*/ function (done) {
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
@@ -32,40 +36,39 @@ const pat = function (done) {
     }
     log(chalk.cyan('E2E Testing - please wait......'))
 
-    if (realtime) {
-        let cmd = exec(osCommands + 'npm run bt');
-        cmd.stdout.on('data', (data) => {
-            if (data && data.length > 0) {
-                console.log(data.trim());
-            }
-        });
-        cmd.stderr.on('data', (data) => {
-            if (data && data.length > 0)
-                console.log(data.trim())
-        });
-        return cmd.on('exit', (code) => {
-            done()
-            console.log(`Child exited with code ${code}`);
-        });
-    }
-    else
-        // This waits for completion before output
-        return exec(osCommands + 'npm run bt', function (err, stdout, stderr) {
-            log(stdout)
-            log(stderr)
-            if (err) {
-                log("ERROR", err);
-            } else {
-                log(chalk.green('Success'))
-            }
-            done()
-        });
-};
+    // This displays output in realtime - output distorted
+    // let cmd = exec(osCommands + 'npm run bt');
+    // cmd.stdout.on('data', (data) => {
+    //     if(data && data.length > 0) {
+    //         console.log(data);
+    //     }
+    // });
+    // cmd.stderr.on('data', (data) => {
+    //     if (data && data.length > 0)
+    //         console.log(data)
+    // });
+    // return cmd.on('exit', (code) => {
+    //     done()
+    //     console.log(`Child exited with code ${code}`);
+    // });
+
+    // This waits for completion before output - clean output
+    return exec(osCommands + 'npm run bt', function (err, stdout, stderr) {
+        log(stdout)
+        log(stderr)
+        if (err) {
+            log("ERROR", err);
+        } else {
+            log(chalk.green('Success'))
+        }
+        done()
+    });
+});
 /*
  * javascript linter
  */
-const esLint = function (cb) {
-    var stream = src(["../appl/js/**/*.js"])
+gulp.task('eslint', ['pat'], () => {
+    var stream = gulp.src(["../appl/js/**/*.js"])
         .pipe(eslint({
             configFile: 'eslintConf.json',
             quiet: 1,
@@ -77,19 +80,19 @@ const esLint = function (cb) {
         }))
         .pipe(eslint.failAfterError());
 
+    stream.on('end', function () {
+        log("# javascript files linted: " + lintCount);
+    });
     stream.on('error', function () {
         process.exit(1);
     });
-    return stream.on('end', function () {
-        log("# javascript files linted: " + lintCount);
-        cb()
-    });
-};
+    return stream;
+});
 /*
  * css linter
  */
-const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'
+gulp.task('csslint', ['pat'], function () {
+    var stream = gulp.src(['../appl/css/site.css'
     ])
         .pipe(csslint())
         .pipe(csslint.formatter());
@@ -97,15 +100,12 @@ const cssLint = function (cb) {
     stream.on('error', function () {
         process.exit(1);
     });
-    return stream.on('end', function () {
-        cb()
-    });
-};
+});
 
 /*
  * Build the application to the production distribution 
  */
-const build = function (cb) { // ['boot'],
+gulp.task('build', ['boot'], function (cb) { // ['boot'],
     var osCommands = 'cd ..; export NODE_ENV=production; export USE_KARMA=false; export USE_HMR=false; ';
 
     if (isWindows) {
@@ -122,12 +122,13 @@ const build = function (cb) { // ['boot'],
         }
         cb()
     });
-};
+});
+
 /*
  * Bootstrap html linter 
  */
-const bootLint = function (cb) {
-    return exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
+gulp.task('boot', ['eslint', 'csslint'], function (cb) {
+    return exec('gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
         log(stdout)
         log(stderr)
         if (err) {
@@ -137,19 +138,19 @@ const bootLint = function (cb) {
         }
         cb()
     });
-};
+});
 /*
  * Build the application to run karma acceptance tests with hmr
  */
-const brunch_watch = function (cb) {
-    var osCommands = 'cd ../..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=true; USE_WATCH=true; ';
+gulp.task('brunch-watch', function (cb) {
+    var osCommands = 'cd ../..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=true; ';
 
     if (isWindows) {
-        osCommands = 'cd ..\\..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=true & set USE_WATCH=true & ';
+        osCommands = 'cd ..\\..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=true & ';
     }
     let cmd = exec(osCommands + 'npm run bw');
     cmd.stdout.on('data', (data) => {
-        if (data && data.length > 0) {
+        if(data && data.length > 0) {
             console.log(data);
         }
     });
@@ -161,18 +162,18 @@ const brunch_watch = function (cb) {
         cb()
         console.log(`Watch exited with code ${code}`);
     });
-};
+});
 /*
  * Build the application to run node express so font-awesome is resolved
  */
-const brunch_rebuild = function (cb) {
+gulp.task('brunch-rebuild', function (cb) {
     var osCommands = 'cd ../..; export NODE_ENV=development; unset USE_TDD; export USE_KARMA=false; export USE_HMR=false; ';
 
     if (isWindows) {
         osCommands = 'cd ..\\..\\ & set NODE_ENV=development & set USE_TDD & set USE_KARMA=false & set USE_HMR=false & ';
     }
     log(chalk.cyan('Re-building Development - please wait......'))
-    return exec(osCommands + 'brunch build', function (err, stdout, stderr) {
+    exec(osCommands + 'brunch build', function (err, stdout, stderr) {
         log(stdout)
         log(stderr)
         if (err) {
@@ -182,12 +183,12 @@ const brunch_rebuild = function (cb) {
         }
         cb()
     });
-};
+});
 
 /**
  * Continuous testing - test driven development.  
  */
-const brunch_tdd = function (done) {
+gulp.task('brunch-tdd', function (done) { //,['accept']
     if (!browsers) {
         global.whichBrowser = ["Chrome", "Firefox"];
     }
@@ -200,7 +201,7 @@ const brunch_tdd = function (done) {
     log(chalk.cyan('Test Driven Development - please wait......'))
     let cmd = exec(osCommands + 'npm run bt');
     cmd.stdout.on('data', (data) => {
-        if (data && data.length > 0) {
+        if(data && data.length > 0) {
             console.log(data);
         }
     });
@@ -212,19 +213,15 @@ const brunch_tdd = function (done) {
         done()
         console.log(`Test Driven Development exited with code ${code}`);
     });
-};
+});
 
-const runProd = series(pat, parallel(esLint, cssLint, bootLint), build)
-runProd.displayName = "prod"
-
-task(runProd)
-exports.default = runProd
-exports.test = pat;
-exports.tdd = brunch_tdd
-exports.watch = brunch_watch
-exports.rebuild = brunch_rebuild
-exports.acceptance = pat
-exports.development = parallel(brunch_watch, brunch_tdd)
+gulp.task('default', ['pat', 'eslint', 'csslint', 'boot', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'boot', 'build']);
+gulp.task('test', ['pat']);
+gulp.task('tdd', ['brunch-tdd']);
+gulp.task('watch', ['brunch-watch']);
+gulp.task('rebuild', ['brunch-rebuild']);
+gulp.task('acceptance', ['pat']);
 
 //From Stack Overflow - Node (Gulp) process.stdout.write to file
 if (process.env.USE_LOGFILE == 'true') {

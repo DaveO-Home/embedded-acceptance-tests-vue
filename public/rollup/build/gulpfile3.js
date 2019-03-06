@@ -1,8 +1,7 @@
 /**
  * Successful acceptance tests & lints start the production build.
- * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
+ * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint') -> 'bootlint' -> 'build'
  */
-const { src, dest, series, parallel, task } = require('gulp');
 const alias = require('rollup-plugin-alias');
 const buble = require('rollup-plugin-buble');
 const commonjs = require('rollup-plugin-commonjs');
@@ -10,6 +9,7 @@ const copy = require("gulp-copy");
 const csslint = require('gulp-csslint');
 const eslint = require('gulp-eslint');
 const exec = require('child_process').exec;
+const gulp = require('gulp');
 const gulpRollup = require('gulp-rollup');
 const livereload = require('rollup-plugin-livereload');
 const log = require('fancy-log');
@@ -30,10 +30,10 @@ const uglify = require('gulp-uglify');
 const vue = require('rollup-plugin-vue');
 
 const startComment = "develblock:start",
-    endComment = "develblock:end",
-    regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
-        startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
-        endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
+        endComment = "develblock:end",
+        regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
+                startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
+                endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
 
 let lintCount = 0
 let isProduction = process.env.NODE_ENV == 'production'
@@ -48,179 +48,167 @@ if (browsers) {
 /**
  * Build Development bundle from package.json 
  */
-const build_development = function (cb) {
-    rollupBuild(cb);
-};
+gulp.task('build-development', ['copy'], function () {
+    //var initialTask = this.seq.slice(-1)[0];
+    return rollupBuild();
+});
 /**
  * Production Rollup 
  */
-const build = function (done) {
-    rollupBuild(done);
-};
+gulp.task('build', ['copyprod'], function () {
+
+    return rollupBuild();
+});
 /**
  * Default: Production Acceptance Tests 
  */
-const pat = function (done) {
+gulp.task('pat', ['build-development'], function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
+
     runKarma(done);
-};
+});
 /*
  * javascript linter
  */
-const esLint = function (cb) {
+gulp.task('eslint', ['pat'], () => {
     dist = prodDist;
-    var stream = src(["../appl/js/**/*.js"])
-        .pipe(eslint({
-            configFile: 'eslintConf.json',
-            quiet: 1
-        }))
-        .pipe(eslint.format())
-        .pipe(eslint.result(result => {
-            //Keeping track of # of javascript files linted.
-            lintCount++;
-        }))
-        .pipe(eslint.failAfterError());
+    var stream = gulp.src(["../appl/js/**/*.js"])
+            .pipe(eslint({
+                configFile: 'eslintConf.json',
+                quiet: 1
+            }))
+            .pipe(eslint.format())
+            .pipe(eslint.result(result => {
+                //Keeping track of # of javascript files linted.
+                lintCount++;
+            }))
+            .pipe(eslint.failAfterError());
+
+    stream.on('end', function () {
+        log("# javascript files linted: " + lintCount);
+    });
 
     stream.on('error', function () {
         process.exit(1);
     });
 
-    return stream.on('end', function () {
-        log("# javascript files linted: " + lintCount);
-        cb()
-    });
-};
+    return stream;
+});
 /*
  * css linter
  */
-const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'])
-        .pipe(csslint())
-        .pipe(csslint.formatter());
+gulp.task('csslint', ['pat'], function () {
+    var stream = gulp.src(['../appl/css/site.css'])
+            .pipe(csslint())
+            .pipe(csslint.formatter());
 
     stream.on('error', function () {
         process.exit(1);
     });
-    return stream.on('end', function () {
-        cb();
-    });
-};
+});
 /*
  * Bootstrap html linter 
  */
-const bootLint = function (cb) {
+gulp.task('bootlint', ['eslint', 'csslint'], function (cb) {
 
-    exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
+    exec('gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
         log(stdout);
         log(stderr);
         cb(err);
     });
-};
+});
 /**
  * Remove previous build
  */
-const clean = function (done) {
+gulp.task('clean', ['bootlint'], function (done) {
     isProduction = true;
     dist = prodDist;
     return rmf(`../../${prodDist}/**/*`, err => {
         done(err)
     })
-};
-/**
- * Remove previous test build
- */
-const cleant = function (done) {
-    isProduction = false;
-    dist = testDist;
-    return rmf(`../../${dist}/**/*`, err => {
-        done(err)
-    })
-};
+});
 /**
  * Resources and content copied to dist directory - for production
  */
-const copyprod = function () {
+gulp.task('copyprod', ['bootlint', 'copyprod_images'], function () {
     copyIndex();
     return copySrc();
-};
-
-const copyprod_images = function () {
+});
+gulp.task('copyprod_images', ['bootlint', 'copyprod_node_css'], function () {
     return copyImages();
-};
-
-const copyprod_node_css = function () {
+});
+gulp.task('copyprod_node_css', ['bootlint', 'copyprod_css'], function () {
     return copyNodeCss();
-};
-
-const copyprod_css = function () {
+});
+gulp.task('copyprod_css', ['bootlint', 'copyprod_fonts'], function () {
     return copyCss();
-};
-
-const copyprod_fonts = function () {
+});
+gulp.task('copyprod_fonts', ["bootlint", "clean"], function () {
     isProduction = true;
     dist = prodDist;
     return copyFonts();
-};
+});
 /**
  * Resources and content copied to dist_test directory - for development
  */
-const copy_test = function () {
+gulp.task('copy', ['copy_images'], function () {
     return copySrc();
-};
-
-const copy_images = function () {
+});
+gulp.task('copy_images', ['copy_node_css'], function () {
     copyIndex();
     return copyImages();
-};
-
-const copy_node_css = function () {
+});
+gulp.task('copy_node_css', ['copy_css'], function () {
     return copyNodeCss();
-};
-
-const copy_css = function () {
+});
+gulp.task('copy_css', ['copy_fonts'], function () {
     return copyCss();
-};
-
-const copy_fonts = function () {
+});
+gulp.task('copy_fonts', function () {
     isProduction = false;
     dist = testDist;
     return copyFonts();
-};
+});
 /**
  * Run karma/jasmine tests once and exit without rebuilding(requires a previous build)
  */
-const r_test = function (done) {
+gulp.task('r-test', function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    runKarma(done);
-};
+
+    runKarma();
+});
 /**
  * Continuous testing - test driven development.  
  */
-const rollup_tdd = function (done) {
+gulp.task('tdd-rollup', ['build-development'], function (done) {
+
     if (!browsers) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
     new Server({
         configFile: __dirname + '/karma.conf.js',
     }, done).start();
-};
+
+});
 /**
  * Karma testing under Opera. -- needs configuation  
  */
-const tddo = function (done) {
+gulp.task('tddo', function (done) {
+
     if (!browsers) {
         global.whichBrowsers = ["Opera"];
     }
     new Server({
         configFile: __dirname + '/karma.conf.js',
     }, done).start();
-};
 
-const rollup_watch = function (cb) {
+});
+
+gulp.task('rollup-watch', function () {
     const watchOptions = {
         allowRealFiles: true,
         input: '../appl/main.js',
@@ -237,8 +225,8 @@ const rollup_watch = function (cb) {
             postcss(),
             buble(),
             nodeResolve({
-                browser: true,
-                jsnext: true,
+                browser: true, 
+                jsnext: true, 
                 main: true,
                 extensions: ['.js', '.json']
             }),
@@ -280,76 +268,60 @@ const rollup_watch = function (cb) {
             case "END":
                 if (!starting)
                     log("Watch Shutdown Normally");
-                cb();
                 starting = false;
                 break;
             case "ERROR":
                 log("Unexpected Error", event);
-                cb();
                 break;
             case "FATAL":
                 log("Rollup Watch interrupted by Fatal Error", event);
-                cb();
                 break;
             default:
-                cb();
                 break;
         }
     });
-};
+});
 
-const testCopyRun = series(copy_fonts, parallel(copy_test, copy_images, copy_node_css, copy_css))
-const testRun = series(cleant, testCopyRun, build_development)
-const lintRun = parallel(esLint, cssLint, bootLint)
-const prodCopyRun = series(copyprod_fonts, parallel(copyprod, copyprod_images, copyprod_node_css, copyprod_css))
-const prodRun = series(cleant, testCopyRun, build_development, pat, lintRun, clean, prodCopyRun, build)
-prodRun.displayName = 'prod'
+gulp.task('default', ['pat', 'eslint', 'csslint', 'bootlint', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'bootlint', 'build']);
+gulp.task('acceptance', ['r-test']);
+gulp.task('tdd', ['tdd-rollup']);
+gulp.task('test', ['pat']);
+gulp.task('watch', ['rollup-watch']);
+gulp.task('rebuild', ['build-development']);  //remove karma config for node express
 
-task(prodRun)
-exports.default = prodRun
-exports.test = series(testRun, pat)
-exports.tdd = series(testRun, rollup_tdd)
-exports.watch = rollup_watch
-exports.rebuild = testRun
-exports.acceptance = r_test
-exports.development = parallel(rollup_watch, rollup_tdd)
-
-function rollupBuild(cb) {
-    return src(['../appl/**/*.js'])
-        //.pipe(removeCode({production: isProduction}))
-        .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
-        .pipe(gulpRollup({
-            allowRealFiles: true,
-            input: '../appl/main.js',
-            output: {
-                format: "iife",
-                name: "acceptance"
-            },
-            plugins: [
-                progress({
-                    clearLine: isProduction ? false : true
-                }),
-                replaceEnv({
-                    'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
-                    'process.env.VUE_ENV': JSON.stringify('browser')
-                }),
-                alias(aliases()),
-                vue(),
-                postcss(),
-                buble(),
-                nodeResolve({ browser: true, jsnext: true, main: true }),
-                commonjs()
-            ],
-        }))
-        .pipe(rename('bundle.js'))
-        .pipe(isProduction ? uglify() : noop())
-        .pipe(sourcemaps.init({ loadMaps: !isProduction }))
-        .pipe(isProduction ? noop() : sourcemaps.write('maps'))
-        .pipe(dest('../../' + dist))
-        .on('error', log)
-        .on('end', function () {
-            cb();
-        });
+function rollupBuild() {
+    return gulp.src(['../appl/**/*.js'])
+            //.pipe(removeCode({production: isProduction}))
+            .pipe(isProduction ? stripCode({pattern: regexPattern}) : noop())
+            .pipe(gulpRollup({
+                allowRealFiles: true,
+                input: '../appl/main.js',
+                output: {
+                    format: "iife",
+                    name: "acceptance"
+                },              
+                plugins: [
+                    progress({
+                        clearLine: isProduction ? false : true
+                    }),
+                    replaceEnv({
+                        'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+                        'process.env.VUE_ENV': JSON.stringify('browser')
+                    }),
+                    alias(aliases()),
+                    vue(),
+                    postcss(),
+                    buble(),
+                    nodeResolve({browser: true, jsnext: true, main: true}),
+                    commonjs()
+                ],
+            })).on('error', log)
+            .pipe(rename('bundle.js'))
+            .pipe(isProduction ? uglify() : noop())
+            .pipe(sourcemaps.init({loadMaps: !isProduction}))
+            .pipe(isProduction ? noop() : sourcemaps.write('maps'))
+            .pipe(gulp.dest('../../' + dist));
 }
 
 function modResolve(dir) {
@@ -387,37 +359,45 @@ function aliases() {
 }
 
 function copySrc() {
-    return src(['../appl/views/**/*', '../appl/templates/**/*', '../appl/index.html', '../appl/assets/**/*', isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return gulp
+            .src(['../appl/views/**/*', '../appl/templates/**/*', '../appl/index.html', '../appl/assets/**/*', isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'])
+            .pipe(copy('../../' + dist + '/appl'));
 }
 
 function copyIndex() {
-    return src(['../index.html'])
-        .pipe(copy('../../' + dist + '/rollup'));
+    return gulp
+            .src(['../index.html'])
+            .pipe(copy('../../' + dist + '/rollup'));
 }
 
 function copyImages() {
-    return src(['../images/*', '../../README.md'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return gulp
+            .src(['../images/*', '../../README.md'])
+            .pipe(copy('../../' + dist + '/appl'));
 }
 
 function copyCss() {
-    return src(['../appl/css/site.css'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return gulp
+            .src(['../appl/css/site.css'])
+            .pipe(copy('../../' + dist + '/appl'));
 }
 
 function copyNodeCss() {
-    return src(['../../node_modules/bootstrap/dist/css/bootstrap.min.css', "../../node_modules/font-awesome/css/font-awesome.css",
-        "../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", "../../node_modules/tablesorter/dist/css/theme.blue.min.css"])
-        .pipe(copy('../../' + dist + '/appl'));
+    return gulp
+            .src(['../../node_modules/bootstrap/dist/css/bootstrap.min.css', "../../node_modules/font-awesome/css/font-awesome.css",
+                "../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", "../../node_modules/tablesorter/dist/css/theme.blue.min.css"])
+            .pipe(copy('../../' + dist + '/appl'));
 }
 
 function copyFonts() {
-    return src(['../../node_modules/font-awesome/fonts/*'])
-        .pipe(copy('../../' + dist + '/appl'));
+
+    return gulp
+            .src(['../../node_modules/font-awesome/fonts/*'])
+            .pipe(copy('../../' + dist + '/appl'));
 }
 
 function runKarma(done) {
+
     new Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
@@ -430,6 +410,7 @@ function runKarma(done) {
             process.exit(exitCode);
         }
     }).start();
+
 }
 //per stackoverflow - Converting milliseconds to minutes and seconds with Javascript
 function millisToMinutesAndSeconds(millis) {
@@ -445,9 +426,9 @@ function millisToMinutesAndSeconds(millis) {
 if (process.env.USE_LOGFILE == 'true') {
     var fs = require('fs');
     var origstdout = process.stdout.write,
-        origstderr = process.stderr.write,
-        outfile = 'node_output.log',
-        errfile = 'node_error.log';
+            origstderr = process.stderr.write,
+            outfile = 'node_output.log',
+            errfile = 'node_error.log';
 
     if (fs.exists(outfile)) {
         fs.unlink(outfile);

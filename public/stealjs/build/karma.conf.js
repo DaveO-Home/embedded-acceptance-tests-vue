@@ -13,10 +13,10 @@ module.exports = function (config) {
             "/templates": "/base/" + bundler + "/appl/templates",
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
-            "stealjs/appl/": "/base/stealjs/appl/",
-            "index.js": "/base/stealjs/appl/main.js",
-	        "jquery.js": "/base/node_modules/jquery/dist/jquery.min.js",
-            "bootstrap.js": "/base/node_modules/bootstrap/dist/js/bootstrap.min.js"
+            "/stealjs/appl/": "/base/stealjs/appl/",
+            "/index.js": "/base/stealjs/appl/main.js",
+	        "/jquery.js": "/base/node_modules/jquery/dist/jquery.min.js",
+            "/bootstrap.js": "/base/node_modules/bootstrap/dist/js/bootstrap.min.js"
         },
         // list of files / patterns to load in the browser
         files: [
