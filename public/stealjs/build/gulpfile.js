@@ -108,7 +108,7 @@ const build = function (cb) {
             bundleSteal: false,
             dest: "dist",
             removeDevelopmentCode: true,
-            minify: false,
+            minify: true,
             maxBundleRequests: 5,
             maxMainRequests: 5
         }).then(function () {
