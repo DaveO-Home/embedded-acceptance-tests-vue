@@ -28,7 +28,7 @@ export default function (App, vm) {
 
         afterAll(() => {
             $(vueElement).remove()
-        }, 5000)
+        })
 
         it('Is Welcome Page Loaded', done => {
             /*

@@ -325,6 +325,15 @@ function rollupBuild(cb) {
                 format: "iife",
                 name: "acceptance"
             },
+            onwarn: function (warning) {
+                if (warning.code === 'THIS_IS_UNDEFINED' ||
+                    warning.code === 'CIRCULAR_DEPENDENCY') {
+                    return;
+                }
+                console.warn(warning.message);
+            },
+            treeshake: true,
+            // perf: isProduction === true, 
             plugins: [
                 progress({
                     clearLine: isProduction ? false : true
