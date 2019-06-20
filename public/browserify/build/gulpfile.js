@@ -301,13 +301,13 @@ function getNPMPackageIds() {
     var ids = JSON.parse('{' +
         '"aw": "font-awesome",' +
         '"bo": "bootstrap",' +
-        //        '"vu": "vue",' +
+        // '"vu": "vue",' +
         '"vr": "vue-router",' +
         '"jq": "jquery",' +
         '"lo": "lodash",' +
         '"hb": "handlebars",' +
         '"mo": "moment",' +
-        //        '"pd": "pdfjs-dist",' +
+        // '"pd": "pdfjs-dist",' +
         '"po": "popper.js",' +
         '"tb": "tablesorter"}');
     return ids;

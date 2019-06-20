@@ -28,6 +28,7 @@ const stripCode = require("gulp-strip-code");
 const Server = require('karma').Server;
 const uglify = require('gulp-uglify');
 const vue = require('rollup-plugin-vue');
+const image = require('rollup-plugin-img');
 
 const startComment = "develblock:start",
     endComment = "develblock:end",
@@ -243,6 +244,11 @@ const rollup_watch = function (cb) {
                 extensions: ['.js', '.json']
             }),
             commonjs(),
+            image({
+                extensions: /\.(png|jpg|jpeg|gif|svg)$/, // support png|jpg|jpeg|gif|svg, and it's alse the default value
+                limit: 8192,  // default 8192(8k)
+                exclude: 'node_modules/**'
+              }),
             serve({
                 open: false,
                 verbose: true,
@@ -332,7 +338,7 @@ function rollupBuild(cb) {
                 }
                 console.warn(warning.message);
             },
-            treeshake: true,
+            treeshake: false,
             // perf: isProduction === true, 
             plugins: [
                 progress({
@@ -346,8 +352,13 @@ function rollupBuild(cb) {
                 vue(),
                 postcss(),
                 buble(),
-                nodeResolve({ browser: true, jsnext: true, main: true }),
-                commonjs()
+                nodeResolve(/*{ browser: true, jsnext: true, main: true }*/),
+                commonjs(),
+                image({
+                    extensions: /\.(png|jpg|jpeg|gif|svg)$/, // support png|jpg|jpeg|gif|svg, and it's alse the default value
+                    limit: 8192,  // default 8192(8k)
+                    exclude: 'node_modules/**'
+                  })
             ],
         }))
         .pipe(rename('bundle.js'))

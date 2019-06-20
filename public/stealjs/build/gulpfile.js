@@ -97,20 +97,18 @@ const build = function (cb) {
                     '../appl/assets/**/*',
                     '../appl/templates/**/*',
                     '../../README.md',
-                    // '../../node_modules/bootstrap/dist/css/bootstrap.min.css',
-                    // '../appl/css/site.css',
-                    // '../../node_modules/tablesorter/dist/css/theme.blue.min.css',
-                    // '../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css',
-                    // '../../node_modules/font-awesome/css/font-awesome.css',
-                    // '../../node_modules/font-awesome/fonts/*'
                 ]
             },
             bundleSteal: false,
             dest: "dist",
             removeDevelopmentCode: true,
             minify: true,
+            debug: true,
             maxBundleRequests: 5,
-            maxMainRequests: 5
+            maxMainRequests: 5,
+            uglifyOptions: {
+                mangle: false // mangle breaks bundle
+            }
         }).then(function () {
             cb()
         });

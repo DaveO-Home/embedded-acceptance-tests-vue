@@ -63,7 +63,7 @@
                                     </li>
                                     <li class="nav-item" >
                                         <router-link to="/pdf/test">
-                                            <i class="fa fa-fw fa-file-pdf-o"></i> PDF View
+                                            <i class="fa fa-fw fa-file-pdf"></i> PDF View
                                         </router-link>
 
                                     </li>
@@ -76,7 +76,7 @@
                                     <li class="nav-header nav-item">Vue</li>
                                     <li class="nav-item">
                                         <router-link to="/welcome">
-                                            <i class="fa fa-fw fa-hand-paper-o"></i> Vue Welcome
+                                            <i class="fa fa-fw fa-hand-paper"></i> Vue Welcome
                                         </router-link>
                                     </li>
                                 </ul>
