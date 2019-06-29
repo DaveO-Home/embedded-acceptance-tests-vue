@@ -238,7 +238,6 @@ function parcelBuild(watch, cb) {
         watch: watch,
         cache: !isProduction,
         cacheDir: '.cache',
-        // cssnano needs to be upgraded/downgraded? to minimize
         minify: isProduction,
         target: 'browser',
         https: false,
