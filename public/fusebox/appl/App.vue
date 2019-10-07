@@ -1,20 +1,19 @@
-<template src="./app_bootstrap.html">
-</template>
+<template src="./app_bootstrap.html" />
 <script>
-    import Start from 'start'
+    import Start from "start";
     export default {
-        name: 'App',
+        name: "App",
         mounted: function () {
             this.$nextTick(function () {
-                Start.init()
-            })
+                Start.init();
+            });
         },
         methods: {
-            loginModal: function (event) {
-                Start['div .login click']()
+            loginModal: function () {
+                Start["div .login click"]();
             }
         }
-    }
+    };
 </script>
 <style>
 #app {

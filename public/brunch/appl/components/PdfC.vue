@@ -1,29 +1,35 @@
 
 <template>
-   <iframe id="data" name="pdfDO" v-bind:src="pdfUrl" class="col-lg-12" style="height: 750px"></iframe>
+  <iframe
+    id="data"
+    name="pdfDO"
+    :src="pdfUrl"
+    class="col-lg-12"
+    style="height: 750px"
+  />
 </template>
 <script>
 
-import Setup from '../js/utils/setup'
-import App from '../js/app'
+import Setup from "../js/utils/setup";
+import App from "../js/app";
 // Setting up for optional Karma/Jasmine
-App.init()
-const url = `${App.bUrl}${'/views/prod/Test.pdf'}`
+App.init();
+const url = `${App.bUrl}${"/views/prod/Test.pdf"}`;
 
 export default {
-  name: 'PdfC',
+  name: "PdfC",
   data () {
     return {
       pdfUrl: url
-    }
+    };
   },
   mounted: function () {
     this.$nextTick(function () {
-      if (App.controllers['Start']) {
-          App.controllers['Start'].initMenu()
+      if (App.controllers["Start"]) {
+          App.controllers["Start"].initMenu();
       }
-      Setup.init()
-    })
+      Setup.init();
+    });
   }
-}
+};
 </script>

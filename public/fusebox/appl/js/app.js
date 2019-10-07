@@ -1,155 +1,155 @@
 /* eslint "comma-style": [0, "last"] */
 
-import capitalize from 'lodash/capitalize'
-import 'bootstrap'
-import 'tablesorter'
+import capitalize from "lodash/capitalize";
+import "bootstrap";
+import "tablesorter";
 /* develblock:start */
 // Specs can be inserted at initialization(before karma is started).
-if (typeof testit !== 'undefined' && testit) {
-    describe('Popper Defined - required for Bootstrap', () => {
-        it('is JQuery defined', () => {
-            expect(typeof $ === 'function').toBe(true)
-        })
+if (typeof testit !== "undefined" && testit) {
+    describe("Popper Defined - required for Bootstrap", () => {
+        it("is JQuery defined", () => {
+            expect(typeof $ === "function").toBe(true);
+        });
 
-        it('is Popper defined', () => {
-            expect(typeof Popper === 'function').toBe(true)
-        })
-    })
+        it("is Popper defined", () => {
+            expect(typeof Popper === "function").toBe(true);
+        });
+    });
 }
 /* develblock:end */
 
 export default {
     controllers: [],
     init (options) {
-        options = options || {}
-        this.initPage(options)
+        options = options || {};
+        this.initPage(options);
 
         $.fn.fa = function (options) {
             options = $.extend({
-                icon: 'check'
-            }, options)
+                icon: "check"
+            }, options);
             return this.each(function () {
-                const $element = $(this.target ? this.target : this)
-                const icon = `<i class='fa fa-${options.icon}'> </i>`
-                $(icon).appendTo($element)
-            })
-        }
+                const $element = $(this.target ? this.target : this);
+                const icon = `<i class='fa fa-${options.icon}'> </i>`;
+                $(icon).appendTo($element);
+            });
+        };
     },
     initPage () {
-        $('[data-toggle=collapse]').click(function (e) {
+        $("[data-toggle=collapse]").click(function (e) {
             // Don't change the hash
-            e.preventDefault()
-            $(this).find('i').toggleClass('fa-chevron-right fa-chevron-down')
-        })
+            e.preventDefault();
+            $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
+        });
     },
     toUrl (url) {
-        return url
+        return url;
     },
     toScriptsUrl (url) {
-        return url
+        return url;
     },
     toViewsUrl (url) {
-        return url
+        return url;
     },
     loadController (controllerName, controller, fnLoad, fnError) {
-        const me = this
+        const me = this;
 
         if (this.controllers[controllerName]) {
-            fnLoad(me.controllers[controllerName])
+            fnLoad(me.controllers[controllerName]);
         } else {
-            const appController = controller
+            const appController = controller;
 
             try {
                 /* develblock:start */
                 if (testit) {
-                    expect(appController).not.toBe(null)
-                    expect(typeof fnLoad === 'function').toBe(true)
+                    expect(appController).not.toBe(null);
+                    expect(typeof fnLoad === "function").toBe(true);
                 }
                 /* develblock:end */
-                me.controllers[capitalize(controllerName)] = appController
+                me.controllers[capitalize(controllerName)] = appController;
 
-                fnLoad(me.controllers[controllerName])
+                fnLoad(me.controllers[controllerName]);
             } catch (e) {
-                console.error(e)
-                fnError()
+                console.error(e);
+                fnError();
             }
         }
     },
     loadView (options, fnLoad) {
         if (options && fnLoad) {
-            const resolvedUrl = this.toViewsUrl(options.url)
-            const currentController = this.controllers[capitalize(options.controller)]
+            const resolvedUrl = this.toViewsUrl(options.url);
+            const currentController = this.controllers[capitalize(options.controller)];
 
             if (options.url) {
                 $.get(resolvedUrl, fnLoad)
                     .done((data, err) => {
-                        if (typeof currentController !== 'undefined' && currentController.finish) {
-                            currentController.finish(options)
+                        if (typeof currentController !== "undefined" && currentController.finish) {
+                            currentController.finish(options);
                         }
-                        if (err !== 'success') {
-                            console.error(err)
+                        if (err !== "success") {
+                            console.error(err);
                         }
-                    })
+                    });
             } else if (options.local_content) {
-                fnLoad(options.local_content)
-                if (typeof currentController !== 'undefined' && currentController.finish) {
-                    currentController.finish(options)
+                fnLoad(options.local_content);
+                if (typeof currentController !== "undefined" && currentController.finish) {
+                    currentController.finish(options);
                 }
             }
         }
     },
-    renderTools (options, render) {
-        const currentController = this.controllers[capitalize(options.controller)]
-        let template
-        const jsonUrl = 'templates/tools_ful.json'
+    renderTools (options) {
+        const currentController = this.controllers[capitalize(options.controller)];
+        let template;
+        const jsonUrl = "templates/tools_ful.json";
 
         $.get(options.templateUrl + options.template, source => {
-            template = Stache.compile(source)
+            template = Stache.compile(source);
 
             $.get(jsonUrl, data => {
-                currentController.html = $('<div>').append(template(data)).attr('id', 'stuff').html()
-                $('#stuff').remove()
+                currentController.html = $("<div>").append(template(data)).attr("id", "stuff").html();
+                $("#stuff").remove();
 
                 const updateTable = sender => {
-                    const osKeys = ['Combined', 'Category1', 'Category2']
-                    const values = ['ful', 'cat1', 'cat2']
-                    const tbodyTemplate = template
-                    const toolsUrl = 'templates/tools_'
+                    const osKeys = ["Combined", "Category1", "Category2"];
+                    const values = ["ful", "cat1", "cat2"];
+                    const tbodyTemplate = template;
+                    const toolsUrl = "templates/tools_";
 
-                    let selectedJobType = getValue(sender.target.innerText, osKeys, values)
-                    if (typeof selectedJobType === 'undefined') {
-                        return
+                    let selectedJobType = getValue(sender.target.innerText, osKeys, values);
+                    if (typeof selectedJobType === "undefined") {
+                        return;
                     }
                     $.get(`${toolsUrl + selectedJobType}.json`, data => {
-                        if (selectedJobType === 'ful') {
-                            data.all = false
+                        if (selectedJobType === "ful") {
+                            data.all = false;
                         }
-                        const tbody = tbodyTemplate(data)
-                        $('.tablesorter tbody').html(tbody).trigger('update')
-                        $('#dropdown1 a i').each(function () { this.remove() })
-                        $(sender).fa({ icon: 'check' })
-                    }, 'json').fail((data, err) => {
-                        console.error(`Error fetching fixture data: ${err}`)
-                    })
+                        const tbody = tbodyTemplate(data);
+                        $(".tablesorter tbody").html(tbody).trigger("update");
+                        $("#dropdown1 a i").each(function () { this.remove(); });
+                        $(sender).fa({ icon: "check" });
+                    }, "json").fail((data, err) => {
+                        console.error(`Error fetching fixture data: ${err}`);
+                    });
                     function getValue (item, keys, values) {
                         for (let idx = 0; idx < keys.length; idx++) {
-                            if (keys[idx] === item) return values[idx]
+                            if (keys[idx] === item) return values[idx];
                         }
                     }
-                }
-                currentController.dropdownEvent = updateTable
-            }, 'json').fail((data, err) => {
-                console.error(`Error fetching json data: ${err}`)
-            })
-        }, 'text')
+                };
+                currentController.dropdownEvent = updateTable;
+            }, "json").fail((data, err) => {
+                console.error(`Error fetching json data: ${err}`);
+            });
+        }, "text")
             .fail((data, err) => {
-                console.error(`Error Loading Template: ${err}`)
-                console.warn(data)
-            })
+                console.error(`Error Loading Template: ${err}`);
+                console.warn(data);
+            });
     },
     getValue (item, keys, values) {
         for (let idx = 0; idx < keys.length; idx++) {
-            if (keys[idx] === item) return values[idx]
+            if (keys[idx] === item) return values[idx];
         }
     }
-}
+};

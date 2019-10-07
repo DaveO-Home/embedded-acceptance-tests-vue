@@ -1,6 +1,7 @@
 
-import 'package.json!npm'
-import steal from "@steal"
+import "package.json!npm";
+import steal from "@steal";
+import App from "app";
 
 //!steal-remove-start
 /*
@@ -17,6 +18,6 @@ steal.import("live-reload").then(reload => {
 });
 //!steal-remove-end
 
-if(typeof testit !== 'undefined') {
-    window._bundler = 'stealjs'
+if(typeof testit !== "undefined") {
+    window._bundler = "stealjs";
 }

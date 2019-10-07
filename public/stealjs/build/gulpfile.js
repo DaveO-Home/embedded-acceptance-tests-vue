@@ -2,14 +2,14 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat' -> ('eslint', 'csslint', 'boot') -> 'build'
  */
-const { src, dest, series, parallel, task } = require('gulp');
-const chalk = require('chalk')
-const csslint = require('gulp-csslint');
-const eslint = require('gulp-eslint');
-const exec = require('child_process').exec;
+const { src, dest, series, parallel, task } = require("gulp");
+const chalk = require("chalk");
+const csslint = require("gulp-csslint");
+const eslint = require("gulp-eslint");
+const exec = require("child_process").exec;
 const log = require("fancy-log");
-const stealTools = require('steal-tools');
-const Server = require('karma').Server;
+const stealTools = require("steal-tools");
+const Server = require("karma").Server;
 
 let lintCount = 0;
 let browsers = process.env.USE_BROWSERS;
@@ -22,11 +22,11 @@ let isWindows = /^win/.test(process.platform);
  */
 const pat = function (done) {
     if (!browsers) {
-        global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"]
+        global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
 
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;
@@ -41,9 +41,9 @@ const pat = function (done) {
  * javascript linter
  */
 const esLint = function (cb) {
-    var stream = src(["../appl/js/**/*.js"])
+    var stream = src(["../appl/**/*.js", "../appl/**/*.vue"])
         .pipe(eslint({
-            configFile: 'eslintConf.json',
+            configFile: "../../.eslintrc.js", // 'eslintConf.json',
             quiet: 1
         }))
         .pipe(eslint.format())
@@ -53,11 +53,11 @@ const esLint = function (cb) {
         }))
         .pipe(eslint.failAfterError());
 
-    stream.on('error', function () {
+    stream.on("error", function () {
         process.exit(1);
     });
-    return stream.on('end', function () {
-        log("# javascript files linted: " + lintCount);
+    return stream.on("end", function () {
+        log(chalk.blue.bold("# js & vue files linted: " + lintCount));
         cb();
     });
 };
@@ -65,14 +65,14 @@ const esLint = function (cb) {
  * css linter
  */
 const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'])
+    var stream = src(["../appl/css/site.css"])
         .pipe(csslint())
         .pipe(csslint.formatter());
 
-    stream.on('error', function () {
+    stream.on("error", function () {
         process.exit(1);
     });
-    return stream.on('end', function () {
+    return stream.on("end", function () {
         cb();
     });
 };
@@ -85,39 +85,39 @@ const build = function (cb) {
         main: "stealjs/appl/main",
         baseURL: "../../"
     }, {
-            sourceMaps: false,
-            bundleAssets: {
-                infer: true,
-                glob: [
-                    '../images/favicon.ico',
-                    '../appl/testapp.html',
-                    '../appl/index.html',
-                    '../index.html',
-                    '../appl/views/**/*',
-                    '../appl/assets/**/*',
-                    '../appl/templates/**/*',
-                    '../../README.md',
-                ]
-            },
-            bundleSteal: false,
-            dest: "dist",
-            removeDevelopmentCode: true,
-            minify: true,
-            debug: true,
-            maxBundleRequests: 5,
-            maxMainRequests: 5,
-            uglifyOptions: {
-                mangle: false // mangle breaks bundle
-            }
-        }).then(function () {
-            cb()
-        });
+        sourceMaps: false,
+        bundleAssets: {
+            infer: true,
+            glob: [
+                "../images/favicon.ico",
+                "../appl/testapp.html",
+                "../appl/index.html",
+                "../index.html",
+                "../appl/views/**/*",
+                "../appl/assets/**/*",
+                "../appl/templates/**/*",
+                "../../README.md",
+            ]
+        },
+        bundleSteal: false,
+        dest: "dist",
+        removeDevelopmentCode: true,
+        minify: true,
+        debug: true,
+        maxBundleRequests: 5,
+        maxMainRequests: 5,
+        uglifyOptions: {
+            mangle: false // mangle breaks bundle
+        }
+    }).then(function () {
+        cb();
+    });
 };
 /*
  * Bootstrap html linter 
  */
 const bootLint = function (cb) {
-    exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
+    exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
         log(stdout);
         log(stderr);
         cb(err);
@@ -151,7 +151,7 @@ const steal_test = function (done) {
  */
 const steal_tdd = function (done) {
     if (!browsers) {
-        global.whichBrowsers = ['Firefox', 'Chrome'];
+        global.whichBrowsers = ["Firefox", "Chrome"];
     }
     return runKarma(done, false, true);
 };
@@ -159,9 +159,9 @@ const steal_tdd = function (done) {
  * Startup live reload monitor. 
  */
 const live_reload = function (cb) {
-    var osCommands = 'cd ../..; npx steal-tools live-reload'; // node_modules/.bin/steal-tools live-reload';
+    var osCommands = "cd ../..; npx steal-tools live-reload"; // node_modules/.bin/steal-tools live-reload';
     if (isWindows) {
-        osCommands = 'cd ..\\.. & .\\node_modules\\.bin\\steal-tools live-reload'
+        osCommands = "cd ..\\.. & .\\node_modules\\.bin\\steal-tools live-reload";
     }
 
     return exec(osCommands, function (err, stdout, stderr) {
@@ -184,40 +184,41 @@ const vendor = function (cb) {
     stealTools.bundle({
         config: "../../package.json!npm"
     }, {
-            filter: ["node_modules/**/*", "package.json"],
-            //dest: __dirname + "/../dist_test"
-        }).then(() => {
-            cb();
-        });
+        filter: ["node_modules/**/*", "package.json"],
+        //dest: __dirname + "/../dist_test"
+    }).then(() => {
+        cb();
+    });
 };
 /*
  * Startup live reload monitor. 
  */
 const web_server = function (cb) {
-    log.warn(chalk.cyan("Express started"))
-    return exec('npm run server', function (err, stdout, stderr) {
+    log.warn(chalk.cyan("Express started"));
+    return exec("npm run server", function (err, stdout, stderr) {
         log(stdout);
         log(stderr);
         cb(err);
     });
 };
 
-const runLint = parallel(esLint, cssLint, bootLint)
+const runLint = parallel(esLint, cssLint, bootLint);
 
-exports.default = series(pat, runLint, build)
-exports.prod = series(pat, runLint, build)
-exports.prd = build
-exports.test = steal_test
-exports.tdd = steal_tdd
-exports.firefox = steal_firefox
-exports.chrome = steal_chrome
-exports.hmr = series(vendor, live_reload)
-exports.server = web_server
-exports.development = parallel(series(vendor, live_reload), web_server, steal_tdd)
+exports.default = series(pat, runLint, build);
+exports.prod = series(pat, runLint, build);
+exports.prd = build;
+exports.test = steal_test;
+exports.tdd = steal_tdd;
+exports.firefox = steal_firefox;
+exports.chrome = steal_chrome;
+exports.hmr = series(vendor, live_reload);
+exports.server = web_server;
+exports.development = parallel(series(vendor, live_reload), web_server, steal_tdd);
+exports.lint = parallel(esLint, cssLint, bootLint);
 
 function runKarma(done, singleRun, watch) {
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
         singleRun: singleRun,
         watch: typeof watch === "undefined" || !watch ? false : true
     }, result => {
@@ -231,29 +232,19 @@ function runKarma(done, singleRun, watch) {
     }).start();
 }
 
-//From Stack Overflow - Node (Gulp) process.stdout.write to file
-if (process.env.USE_LOGFILE == 'true') {
-    var fs = require('fs');
-    var proc = require('process');
-    var origstdout = process.stdout.write,
-        origstderr = process.stderr.write,
-        outfile = 'production_build.log',
-        errfile = 'production_error.log';
+// From Stack Overflow - Node (Gulp) process.stdout.write to file
+if (process.env.USE_LOGFILE == "true") {
+    var fs = require("fs");
+    var util = require("util");
+    var logFile = fs.createWriteStream("log.txt", { flags: "w" });
+    // Or "w" to truncate the file every time the process starts.
+    var logStdout = process.stdout;
 
-    if (fs.exists(outfile)) {
-        fs.unlink(outfile);
-    }
-    if (fs.exists(errfile)) {
-        fs.unlink(errfile);
-    }
-
-    process.stdout.write = function (chunk) {
-        fs.appendFile(outfile, chunk.replace(/\x1b\[[0-9;]*m/g, ''));
-        origstdout.apply(this, arguments);
+    // eslint-disable-next-line no-console
+    console.log = function () {
+        logFile.write(util.format.apply(null, arguments) + "\n");
+        logStdout.write(util.format.apply(null, arguments) + "\n");
     };
-
-    process.stderr.write = function (chunk) {
-        fs.appendFile(errfile, chunk.replace(/\x1b\[[0-9;]*m/g, ''));
-        origstderr.apply(this, arguments);
-    };
+    // eslint-disable-next-line no-console
+    console.error = console.log;
 }

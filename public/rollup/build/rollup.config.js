@@ -1,31 +1,31 @@
-const alias = require('rollup-plugin-alias');
-const buble = require('rollup-plugin-buble');
-const builtins = require('rollup-plugin-node-builtins');
-const commonjs = require('rollup-plugin-commonjs');
-const nodeResolve = require('rollup-plugin-node-resolve');
-const path = require('path')
-const postcss = require('rollup-plugin-postcss');
-const progress = require('rollup-plugin-progress');
-const replaceEnv = require('rollup-plugin-replace')
-const vue = require('rollup-plugin-vue')
+const alias = require("rollup-plugin-alias");
+const buble = require("rollup-plugin-buble");
+const builtins = require("rollup-plugin-node-builtins");
+const commonjs = require("rollup-plugin-commonjs");
+const nodeResolve = require("rollup-plugin-node-resolve");
+const path = require("path");
+const postcss = require("rollup-plugin-postcss");
+const progress = require("rollup-plugin-progress");
+const replaceEnv = require("rollup-plugin-replace");
+const vue = require("rollup-plugin-vue");
 
-let isProduction = false
+let isProduction = false;
 
 export default {
     allowRealFiles: true,
-    input: '../appl/main.js',
+    input: "../appl/main.js",
     output: {
         format: "iife",
         name: "acceptance",
     },
-    format: 'iife',
+    format: "iife",
     plugins: [
         progress({
             clearLine: isProduction ? false : true
         }),
         replaceEnv({
-            'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
-            'process.env.VUE_ENV': JSON.stringify('browser')
+            "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
+            "process.env.VUE_ENV": JSON.stringify("browser")
         }),
         alias(aliases()),
         builtins(),
@@ -35,12 +35,12 @@ export default {
         nodeResolve({browser: true, jsnext: true, main: true}),
         commonjs()
     ],
-    dest: '../../dist_test/rollup/bundle.js'
-}
+    dest: "../../dist_test/rollup/bundle.js"
+};
 
 
 function modResolve(dir) {
-    return path.join(__dirname, '..', dir)
+    return path.join(__dirname, "..", dir);
 }
 
 function aliases() {
@@ -66,6 +66,6 @@ function aliases() {
         "routertest": "./routertest.js",
         "toolstest": "./toolstest.js",
         "vue": "../../node_modules/vue/dist/vue.js",
-        '@': modResolve('appl'),
+        "@": modResolve("appl"),
     };
 }

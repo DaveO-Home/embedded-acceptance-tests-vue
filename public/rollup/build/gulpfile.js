@@ -29,6 +29,7 @@ const Server = require('karma').Server;
 const uglify = require('gulp-uglify');
 const vue = require('rollup-plugin-vue');
 const image = require('rollup-plugin-img');
+const chalk = require("chalk");
 
 const startComment = "develblock:start",
     endComment = "develblock:end",
@@ -72,9 +73,9 @@ const pat = function (done) {
  */
 const esLint = function (cb) {
     dist = prodDist;
-    var stream = src(["../appl/js/**/*.js"])
+    var stream = src(["../appl/**/*.js", "../appl/**/*.vue"])
         .pipe(eslint({
-            configFile: 'eslintConf.json',
+            configFile: "../../.eslintrc.js", // 'eslintConf.json',
             quiet: 1
         }))
         .pipe(eslint.format())
@@ -89,7 +90,7 @@ const esLint = function (cb) {
     });
 
     return stream.on('end', function () {
-        log("# javascript files linted: " + lintCount);
+        log(chalk.blue.bold("# js & vue files linted: " + lintCount));
         cb()
     });
 };
@@ -319,6 +320,7 @@ exports.watch = rollup_watch
 exports.rebuild = testRun
 exports.acceptance = r_test
 exports.development = parallel(rollup_watch, rollup_tdd)
+exports.lint = parallel(esLint, cssLint, bootLint)
 
 function rollupBuild(cb) {
     return src(['../appl/**/*.js'])
@@ -458,31 +460,19 @@ function millisToMinutesAndSeconds(millis) {
     return ((seconds == 60 ? (minutes + 1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds) + (minutes === 0 ? " seconds" : "minutes"));
 
 }
-/*
- * From Stack Overflow - Node (Gulp) process.stdout.write to file
- * @type type
- */
-if (process.env.USE_LOGFILE == 'true') {
-    var fs = require('fs');
-    var origstdout = process.stdout.write,
-        origstderr = process.stderr.write,
-        outfile = 'node_output.log',
-        errfile = 'node_error.log';
+// From Stack Overflow - Node (Gulp) process.stdout.write to file
+if (process.env.USE_LOGFILE == "true") {
+    var fs = require("fs");
+    var util = require("util");
+    var logFile = fs.createWriteStream("log.txt", { flags: "w" });
+    // Or "w" to truncate the file every time the process starts.
+    var logStdout = process.stdout;
 
-    if (fs.exists(outfile)) {
-        fs.unlink(outfile);
-    }
-    if (fs.exists(errfile)) {
-        fs.unlink(errfile);
-    }
-
-    process.stdout.write = function (chunk) {
-        fs.appendFile(outfile, chunk.replace(/\x1b\[[0-9;]*m/g, ''));
-        origstdout.apply(this, arguments);
+    // eslint-disable-next-line no-console
+    console.log = function () {
+        logFile.write(util.format.apply(null, arguments) + "\n");
+        logStdout.write(util.format.apply(null, arguments) + "\n");
     };
-
-    process.stderr.write = function (chunk) {
-        fs.appendFile(errfile, chunk.replace(/\x1b\[[0-9;]*m/g, ''));
-        origstderr.apply(this, arguments);
-    };
+    // eslint-disable-next-line no-console
+    console.error = console.log;
 }

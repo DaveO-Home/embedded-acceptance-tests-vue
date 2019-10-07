@@ -1,7 +1,7 @@
 
 export default {
-    template: 'handlebars',
+    template: "handlebars",
     errorNotify: false,
     errorLog: false,
     bundler: window._bundler
-}
+};

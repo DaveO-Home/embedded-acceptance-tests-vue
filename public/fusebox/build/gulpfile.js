@@ -2,18 +2,18 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'accept' -> 'pat' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
-const { src, dest, series, parallel, task } = require('gulp');
-const chalk = require('chalk');
-const csslint = require('gulp-csslint');
-const eslint = require('gulp-eslint');
-const exec = require('child_process').exec;
+const { src, dest, series, parallel, task } = require("gulp");
+const chalk = require("chalk");
+const csslint = require("gulp-csslint");
+const eslint = require("gulp-eslint");
+const exec = require("child_process").exec;
 const log = require("fancy-log");
-const Server = require('karma').Server;
+const Server = require("karma").Server;
 
-let lintCount = 0
-let dist = "dist_test/fusebox"
-let isProduction = false
-let browsers = process.env.USE_BROWSERS
+let lintCount = 0;
+let dist = "dist_test/fusebox";
+let isProduction = false;
+let browsers = process.env.USE_BROWSERS;
 
 if (browsers) {
     global.whichBrowser = browsers.split(",");
@@ -29,7 +29,7 @@ const pat = function (done) {
     }
 
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;
@@ -43,10 +43,11 @@ const pat = function (done) {
  * javascript linter
  */
 const esLint = function (cb) {
-    var stream = src(["../appl/js/**/*.js"])
+    var stream = src(["../appl/**/*.js", "../appl/**/*.vue"])
         .pipe(eslint({
-            configFile: 'eslintConf.json',
+            configFile: "../../.eslintrc.js", // 'eslintConf.json',
             quiet: 1,
+            fix: false
         }))
         .pipe(eslint.format())
         .pipe(eslint.result(result => {
@@ -55,28 +56,28 @@ const esLint = function (cb) {
         }))
         .pipe(eslint.failAfterError());
 
-    stream.on('error', function () {
+    stream.on("error", function () {
         process.exit(1);
     });
 
-    return stream.on('end', function () {
-        log("# javascript files linted: " + lintCount);
+    return stream.on("end", function () {
+        log(chalk.blue.bold("# js & vue files linted: " + lintCount));
     });
 };
 /*
  * css linter
  */
 const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'
+    var stream = src(["../appl/css/site.css"
     ])
         .pipe(csslint())
         .pipe(csslint.formatter());
 
-    stream.on('error', function () {
+    stream.on("error", function () {
         process.exit(1);
     });
 
-    return stream.on('end', function () {
+    return stream.on("end", function () {
         cb();
     });
 };
@@ -84,27 +85,27 @@ const cssLint = function (cb) {
  * Build the application to run karma acceptance tests
  */
 const accept = function (cb) {
-    var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=true; export USE_HMR=false; ';
+    var osCommands = "cd ..; export NODE_ENV=development; export USE_KARMA=true; export USE_HMR=false; ";
 
     if (isWindows) {
-        osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=true & set USE_HMR=false & ';
+        osCommands = "cd ..\\ & set NODE_ENV=development & set USE_KARMA=true & set USE_HMR=false & ";
     }
 
-    exec(osCommands + 'node fuse.js', function (err, stdout, stderr) {
-        log(chalk.cyan('Building Test - please wait......'))
-        let cmd = exec(osCommands + 'node fuse.js');
-        cmd.stdout.on('data', (data) => {
+    exec(osCommands + "node fuse.js", function (err, stdout, stderr) {
+        log(chalk.cyan("Building Test - please wait......"));
+        let cmd = exec(osCommands + "node fuse.js");
+        cmd.stdout.on("data", (data) => {
             if (data && data.length > 0) {
                 console.log(data.trim());
             }
         });
-        cmd.stderr.on('data', (data) => {
+        cmd.stderr.on("data", (data) => {
             if (data && data.length > 0)
-                console.log(data.trim())
+                console.log(data.trim());
         });
-        return cmd.on('exit', (code) => {
+        return cmd.on("exit", (code) => {
             log(chalk.green(`Build successful - ${code}`));
-            cb()
+            cb();
         });
     });
 };
@@ -112,94 +113,94 @@ const accept = function (cb) {
  * Build the application to the production distribution 
  */
 const build = function (cb) {
-    var osCommands = 'cd ..; export NODE_ENV=production; export USE_KARMA=false; export USE_HMR=false; ';
+    var osCommands = "cd ..; export NODE_ENV=production; export USE_KARMA=false; export USE_HMR=false; ";
 
     if (isWindows) {
-        osCommands = 'cd ..\\ & set NODE_ENV=production & set USE_KARMA=false & set USE_HMR=false & ';
+        osCommands = "cd ..\\ & set NODE_ENV=production & set USE_KARMA=false & set USE_HMR=false & ";
     }
 
-    log(chalk.cyan('Production Build - please wait......'))
-    let cmd = exec(osCommands + 'node fuse.js');
-    cmd.stdout.on('data', (data) => {
+    log(chalk.cyan("Production Build - please wait......"));
+    let cmd = exec(osCommands + "node fuse.js");
+    cmd.stdout.on("data", (data) => {
         if (data && data.length > 0) {
             console.log(data.trim());
         }
     });
-    cmd.stderr.on('data', (data) => {
+    cmd.stderr.on("data", (data) => {
         if (data && data.length > 0)
-            console.log(data.trim())
+            console.log(data.trim());
     });
-    return cmd.on('exit', (code) => {
+    return cmd.on("exit", (code) => {
         log(chalk.green(`Build successful - ${code}`));
-        cb()
+        cb();
     });
 };
 /*
  * Bootstrap html linter 
  */
 const bootLint = function (cb) {
-    return exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
-        log(stdout)
-        log(stderr)
+    return exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
+        log(stdout);
+        log(stderr);
         if (err) {
             log("ERROR", err);
         } else {
-            log(chalk.green('Bootstrap linting a success'))
+            log(chalk.green("Bootstrap linting a success"));
         }
-        cb()
+        cb();
     });
 };
 /*
  * Build the application to run karma acceptance tests with hmr
  */
 const fusebox_hmr = function (cb) {
-    var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=true; ';
+    var osCommands = "cd ..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=true; ";
 
     if (isWindows) {
-        osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=true & ';
+        osCommands = "cd ..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=true & ";
     }
 
-    log(chalk.cyan('Configuring HMR - please wait......'))
-    let cmd = exec(osCommands + 'node fuse.js');
-    cmd.stdout.on('data', (data) => {
+    log(chalk.cyan("Configuring HMR - please wait......"));
+    let cmd = exec(osCommands + "node fuse.js");
+    cmd.stdout.on("data", (data) => {
         if (data && data.length > 0) {
             console.log(data.trim());
         }
     });
-    cmd.stderr.on('data', (data) => {
+    cmd.stderr.on("data", (data) => {
         if (data && data.length > 0)
-            console.log(data.trim())
+            console.log(data.trim());
     });
-    return cmd.on('exit', (code) => {
+    return cmd.on("exit", (code) => {
         log(chalk.green(`Build successful - ${code}`));
-        cb()
+        cb();
     });
 };
 /*
  * Build the application to run node express so font-awesome is resolved
  */
 const fusebox_rebuild = function (cb) {
-    var osCommands = 'cd ..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=false; ';
+    var osCommands = "cd ..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=false; ";
 
     if (isWindows) {
-        osCommands = 'cd ..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=false & ';
+        osCommands = "cd ..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=false & ";
     }
 
-    exec(osCommands + 'node fuse.js', function (err, stdout, stderr) {
-        log(chalk.cyan('Rebuilding - please wait......'))
-        let cmd = exec(osCommands + 'node fuse.js');
-        cmd.stdout.on('data', (data) => {
+    exec(osCommands + "node fuse.js", function (err, stdout, stderr) {
+        log(chalk.cyan("Rebuilding - please wait......"));
+        let cmd = exec(osCommands + "node fuse.js");
+        cmd.stdout.on("data", (data) => {
             if (data && data.length > 0) {
                 console.log(data.trim());
             }
         });
-        cmd.stderr.on('data', (data) => {
+        cmd.stderr.on("data", (data) => {
             if (data && data.length > 0)
-                console.log(data.trim())
+                console.log(data.trim());
         });
-        return cmd.on('exit', (code) => {
+        return cmd.on("exit", (code) => {
             log(chalk.green(`Build successful - ${code}`));
-            cb()
+            cb();
         });
     });
 };
@@ -211,7 +212,7 @@ const fb_test = function (done) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;
@@ -226,11 +227,11 @@ const fb_test = function (done) {
  */
 const fusebox_tdd = function (done) {
     if (!browsers) {
-        global.whichBrowser = ['Chrome', 'Firefox'];
+        global.whichBrowser = ["Chrome", "Firefox"];
     }
 
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
     }, done).start();
 };
 /**
@@ -238,48 +239,39 @@ const fusebox_tdd = function (done) {
  */
 const tddo = function (done) {
     if (!browsers) {
-        global.whichBrowser = ['Opera'];
+        global.whichBrowser = ["Opera"];
     }
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
     }, done).start();
 };
 
-runProd = series(accept, pat, parallel(esLint, cssLint, bootLint), build)
-runProd.displayName = 'prod'
+runProd = series(accept, pat, parallel(esLint, cssLint, bootLint), build);
+runProd.displayName = "prod";
 
-task(runProd)
-exports.default = runProd
-exports.test = series(accept, pat)
-exports.tdd = fusebox_tdd
-exports.hmr = fusebox_hmr
-exports.rebuild = fusebox_rebuild
-exports.acceptance = fb_test
-exports.development = parallel(fusebox_hmr, series(accept, fusebox_tdd))
+task(runProd);
+exports.default = runProd;
+exports.test = series(accept, pat);
+exports.tdd = fusebox_tdd;
+exports.hmr = fusebox_hmr;
+exports.rebuild = fusebox_rebuild;
+exports.acceptance = fb_test;
+exports.development = parallel(fusebox_hmr, series(accept, fusebox_tdd));
+exports.lint = parallel(esLint, cssLint, bootLint);
 
-//From Stack Overflow - Node (Gulp) process.stdout.write to file
-if (process.env.USE_LOGFILE == 'true') {
-    var fs = require('fs');
-    var proc = require('process');
-    var origstdout = process.stdout.write,
-        origstderr = process.stderr.write,
-        outfile = 'node_output.log',
-        errfile = 'node_error.log';
+// From Stack Overflow - Node (Gulp) process.stdout.write to file
+if (process.env.USE_LOGFILE == "true") {
+    var fs = require("fs");
+    var util = require("util");
+    var logFile = fs.createWriteStream("log.txt", { flags: "w" });
+    // Or "w" to truncate the file every time the process starts.
+    var logStdout = process.stdout;
 
-    if (fs.exists(outfile)) {
-        fs.unlink(outfile);
-    }
-    if (fs.exists(errfile)) {
-        fs.unlink(errfile);
-    }
-
-    process.stdout.write = function (chunk) {
-        fs.appendFile(outfile, chunk.replace(/\x1b\[[0-9;]*m/g, ''));
-        origstdout.apply(this, arguments);
+    // eslint-disable-next-line no-console
+    console.log = function () {
+        logFile.write(util.format.apply(null, arguments) + "\n");
+        logStdout.write(util.format.apply(null, arguments) + "\n");
     };
-
-    process.stderr.write = function (chunk) {
-        fs.appendFile(errfile, chunk.replace(/\x1b\[[0-9;]*m/g, ''));
-        origstderr.apply(this, arguments);
-    };
+    // eslint-disable-next-line no-console
+    console.error = console.log;
 }
