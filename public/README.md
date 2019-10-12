@@ -1,14 +1,50 @@
 # Embedded Vue Acceptance Testing with Karma and Jasmine
 
-This demo is comprised of seven javascript bundlers each configured to run the tests.  The Bootstrap single page application retains functionality among the bundlers with only minor code change.  The javascript framework used is Vue and instrumentation is done with Gulp and Karma.  So you can pick your poison, Stealjs, Webpack, Browserify, Fusebox, Rollup, Parcel or Brunch. The demo was orginally developed using the Canjs framework which can be found at https://github.com/DaveO-Home/embedded-acceptance-tests, a React version can be found at https://github.com/DaveO-Home/embedded-acceptance-tests-react and an Angular version at https://github.com/DaveO-Home/embedded-acceptance-tests-ng.
+The basic idea is to build a production application ensuring consistent and stable code using JavaScript, CSS and bootstrap linting and automated unit and e2e testing. This will be in part, assisted by the development tools, detailed in the [Development Overview](#development) and bundle sections.
 
-__Note__; the demo was not developed to compare software, rather simply to demonstrate how one might embed test code as part of the build process.  And the configuration also shows how to develop using hot module reload and test driven development.
+[Production Build](#production-build)
 
-**Warning**: If the application fails to install with your current node/npm versions, execute ```npm clean cache --force```, and use at least ```node``` version 9 and ```npm``` version 6 to install and build.
+[Test Build](#test-build)
+
+[Development Overview](#development)
+
+## Bundle Tools
+
+> 1. [Browserify](#i-browserify)
+> 1. [Brunch](#ii-brunch)
+> 1. [Fusebox](#iii-fusebox)
+> 1. [Parcel](#iv-parcel)
+> 1. [Rollup](#v-rollup)
+> 1. [Steal](#vi-stealjs)
+> 1. [Webpack](#vii-webpack)
+
+[Installation](#installation)
+
+[Docker](#viii-dockerfile)
+
+**Dodex**: Added for testing and demo. <https://github.com/DaveO-Home/dodex>
+
+## Other Framworks
+
+  1. **Canjs** - <https://github.com/DaveO-Home/embedded-acceptance-tests>
+  1. **Angular** - <https://github.com/DaveO-Home/embedded-acceptance-tests-ng>
+  1. **React** - <https://github.com/DaveO-Home/embedded-acceptance-tests-react>
 
 **Dockerfile**: See instructions at bottom of README.
 
+## Main Tools
+
+  1. Gulp
+  1. Karma
+  1. Jasmine
+  1. Any Browser with a karma launcher
+  1. Code bundling tools
+  1. See `public/package.json` for details
+  1. Node, npm - node v10 or greater works best
+
 ## Installation
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 **Desktop:**
 
@@ -18,7 +54,7 @@ __Note__; the demo was not developed to compare software, rather simply to demon
 
   1. OS Linux or Windows(Tested on Windows10)
   1. Node and npm
-  1. Gulp4 is default - If your global Gulp is version 3, you can execute npx gulp from the build directories.
+  1. Gulp4 is default - If your global Gulp is version 3, you can execute `npx gulp` from the build directories.
   1. Google Chrome
   1. Firefox
 
@@ -38,13 +74,17 @@ __Note__; the demo was not developed to compare software, rather simply to demon
   npm install
 ```
 
-  To install all required dependencies. Also install the global package for Brunch, `npm install brunch -g`.
+  To install all required dependencies. If trying Brunch, install the global package for Brunch, `npm install brunch -g`.
+
+  __Note;__ To fix many of the javascript vulnerabilities, execute `npm audit fix`.
 
 **Client:**
 
 Test builds will generate bundles in 'dist_test' and production in the 'dist' directory at the root level, 'public'.
 
 ## Production Build
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 To generate a build "cd to `public/<bundler>/build` and type `gulp`, e.g.
 
@@ -67,6 +107,8 @@ You can repeat the procedure with "webpack", "browserify", "stealjs", "brunch", 
 Normally you can also run the test bundles(dist_test) from the node express server. However, when switching between development karma testing and running the test(dist_test) application, some resources are not found because of the "base/dist_test" URL. To fix this run `gulp rebuild` from the `<bundler>/build` directory.
 
 ## Test Build
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 The test build simply runs the tests in headless mode. The default browsers are ChromeHeadless and FirefoxHeadless.  To change the default you can set an environment variable; e.g.
 
@@ -141,6 +183,8 @@ SUMMARY:
 
 ## Development
 
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+
 __Note__; When modifying project assets(.handlebars, .html, etc.) you can execute `gulp copy` from the `public/<bundler>/build` directory to preview changes. This is not required for __StealJs__.
 
 __A word on developing tests__; You can write and execute tests quicker by using the rebuild process of a given bundler and running the `acceptance` gulp task after the auto-rebuild, e.g. with __Rollup__ you can;
@@ -150,9 +194,11 @@ __A word on developing tests__; You can write and execute tests quicker by using
 * Develop or modify a test.
 * In another window execute `gulp acceptance` from the `build` directory to view the modified or new test results.
 
-  __Also Note__; All of the development tasks(`hmr, server, watch`) etc, can be run from one window using the `gulp development` task.
+  __Also Note__; With a few of the bundle tools, execute the `gulp development` task to run from one window.
 
-### I.  **Browserify**
+### I. **Browserify**
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
@@ -175,7 +221,9 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.  Note, you do not need `hmr` active for `tdd`. Also, `tdd` can be run with a headless browser.
 
-### II.  **Brunch**
+### II. **Brunch**
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Watch, Recompile and Reload Window*** -
 
@@ -202,7 +250,9 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
   * `npm install eslint@latest`
   * `cd <install>/public` and edit the `brunch-config.js` file and uncomment the eslint section.
 
-### III.  **Fusebox**
+### III. **Fusebox**
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Hot Module Reload(HMR) Server Window*** -
 
@@ -218,7 +268,9 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
 
-### IV.  **Parcel**
+### IV. **Parcel**
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Watch, Recompile and Reload Window*** -
 
@@ -238,7 +290,9 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
   __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### V.  **Rollup**
+### V. **Rollup**
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
@@ -255,6 +309,8 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
 ### VI. **Stealjs**
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
@@ -279,11 +335,12 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
 ### VII. **Webpack**
 
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+
 1\. ***Development HMR Server Window*** -
 
 * `cd public/webpack/build`
 * `gulp hmr`
-
 
 2\. ***Hot Module Reload(Watch) Window*** -
 
@@ -331,15 +388,17 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
 Change versions as needed.
 
-### IX.  **Dockerfile**
+### VIII. **Dockerfile**
+
+[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
 
 You can build a complete test/develpment environment on a Docker vm with the supplied Dockerfile.
 
 **Linux as Parent Host**(assumes docker is installed and daemon is running)-
 
-In directory containing the Dockerfile execute the following commands;
+In the top parent directory, usually `..../embedded-acceptance-tests-ng/` execute the following commands;
 
-1\. ```docker build -t embedded .```
+1\. ```docker build -t embedded fedora``` or ```docker build -t embedded centos```
 
 2\. ```docker run -ti --privileged  -p 3080:3080 -e DISPLAY=$DISPLAY  -v /tmp/.X11-unix:/tmp/.X11-unix --name test_env embedded bash```
 
@@ -351,7 +410,7 @@ You should be logged into the test container(test_env). There will be 4 embedded
 
 For Pro and Enterpise OS's, follow the Docker instructions on installation.  For the Home OS version you can use the legacy **Docker Desktop** client. It is best to have a Pro or Enterpise Windows OS to use a WSL(Windows bash) install. Use following commands with Windows;
 
-1\. ```docker build -t embedded .```
+1\. ```docker build -t embedded fedora``` or ```docker build -t embedded centos```
 
 2\. ```docker run -ti --privileged  -p 3080:3080 --name test_env embedded bash```
 
