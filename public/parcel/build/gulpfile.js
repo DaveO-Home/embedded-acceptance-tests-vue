@@ -143,6 +143,7 @@ const copyprod = function () {
 const copyprod_images = function () {
     isProduction = true;
     dist = prodDist;
+    copyImages2();
     return copyImages();
 };
 /**
@@ -155,6 +156,7 @@ const copy_test = function () {
 const copy_images = function () {
     isProduction = false;
     dist = testDist;
+    copyImages2();
     return copyImages();
 };
 /**
@@ -270,14 +272,18 @@ function parcelBuild(watch, cb) {
 }
 
 function copySrc() {
-    return src(["../appl/view*/**/*", "../appl/temp*/**/*", "../appl/assets/**/*"/*, isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'*/])
+    return src(["../appl/view*/**/*", "../appl/temp*/**/*",  "../appl/assets/**/*"/*, isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'*/])
         .pipe(flatten({ includeParents: -2 })
-            .pipe(dest("../../" + dist + "/")));
+        .pipe(dest("../../" + dist + "/")));
 }
 
 function copyImages() {
-    return src(["../images/*", "../../README.m*", "../appl/assets/**/*"])
+    return src(["../images/*", "../../README.m*", "../appl/assets/**/*", "../appl/dodex/**/*"])
         .pipe(copy("../../" + dist + "/appl"));
+}
+function copyImages2() {
+    return src(["../images/*"])
+        .pipe(copy("../../" + dist));
 }
 
 function runKarma(done) {
@@ -290,7 +296,7 @@ function runKarma(done) {
             done();
         }
         if (exitCode > 0) {
-            console.log("You may need to remove the ../parcel/build/.cache directory");
+            log("You may need to remove the ../parcel/build/.cache directory");
             process.exit(exitCode);
         }
     }).start();

@@ -83,7 +83,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: "vendor",
-      minChunks (module) {
+      minChunks(module) {
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&
@@ -117,21 +117,32 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: [".*"]
       },
-      {from: "../images/favicon.ico", to: "./images"},
-      {from: "./appl/testapp.html", to: config.build.assetsSubDirectory},
-      {from: "./appl/index.html", to: config.build.assetsSubDirectory},
-      {from: "./index.html", to: "./"},
-      {from: "../README.md", to: "../"},
-      {from: {
-                glob: "./appl/views/**/*",
-                dot: false
-             },
-       to: ""},
-       {from: {
-                glob: "./appl/templates/**/*",
-                dot: false
-              },
-        to: ""}
+      // { from: "../images/favicon.ico", to: "./images" },
+      { from: "./appl/testapp.html", to: config.build.assetsSubDirectory },
+      { from: "./appl/index.html", to: config.build.assetsSubDirectory },
+      { from: "./index.html", to: "./" },
+      { from: "../README.md", to: "../" },
+      {
+        from: {
+          glob: "../appl/templates/**/*",
+          dot: false
+        },
+        to: "appl"
+      },
+      {
+        from: {
+          glob: "../appl/dodex/**/*",
+          dot: false
+        },
+        to: "appl"
+      },
+      {
+        from: {
+          glob: "../images/**/*",
+          dot: false
+        },
+        to: "images"
+      }
     ])
   ]
 });

@@ -8,8 +8,8 @@
     style="height: 750px"
   />
 </template>
-<script>
 
+<script>
 import Setup from "b/setup";
 import App from "b/app";
 // Setting up for optional Karma/Jasmine

@@ -17,7 +17,7 @@ module.exports = {
     "rules": {
         "strict": 1,
         "semi": 1,
-        "quotes": 2,
+        "quotes": [2, "double", { "allowTemplateLiterals": true }],
         "no-console": [2, { allow: ["warn", "error"] }],
         "no-case-declarations": 1,
         "import/first": 0

@@ -36,16 +36,16 @@ const pat = function (done) {
         let cmd = exec(osCommands + "npm run bt");
         cmd.stdout.on("data", (data) => {
             if (data && data.length > 0) {
-                console.log(data.trim());
+                log(data.trim());
             }
         });
         cmd.stderr.on("data", (data) => {
             if (data && data.length > 0)
-                console.log(data.trim());
+                log(data.trim());
         });
         return cmd.on("exit", (code) => {
             done();
-            console.log(`Child exited with code ${code}`);
+            log(`Child exited with code ${code}`);
         });
     }
     else
@@ -65,7 +65,7 @@ const pat = function (done) {
  * javascript linter
  */
 const esLint = function (cb) {
-    var stream = src(["../appl/**/*.js", "../appl/**/*.vue"])
+    var stream = src(["../appl/**/*.js", "../appl/**/*.vue", "../jasmine/*.js"])
         .pipe(eslint({
             configFile: "../../.eslintrc.js", // "eslintConf.json",
             quiet: 1,
@@ -151,16 +151,16 @@ const brunch_watch = function (cb) {
     let cmd = exec(osCommands + "npm run bw");
     cmd.stdout.on("data", (data) => {
         if (data && data.length > 0) {
-            console.log(data);
+            log(data);
         }
     });
     cmd.stderr.on("data", (data) => {
         if (data && data.length > 0)
-            console.log(data);
+            log(data);
     });
     return cmd.on("exit", (code) => {
         cb();
-        console.log(`Watch exited with code ${code}`);
+        log(`Watch exited with code ${code}`);
     });
 };
 /*
@@ -202,16 +202,16 @@ const brunch_tdd = function (done) {
     let cmd = exec(osCommands + "npm run bt");
     cmd.stdout.on("data", (data) => {
         if (data && data.length > 0) {
-            console.log(data);
+            log(data);
         }
     });
     cmd.stderr.on("data", (data) => {
         if (data && data.length > 0)
-            console.log(data);
+            log(data);
     });
     return cmd.on("exit", (code) => {
         done();
-        console.log(`Test Driven Development exited with code ${code}`);
+        log(`Test Driven Development exited with code ${code}`);
     });
 };
 

@@ -1,22 +1,22 @@
-const prefixRE = /^VUE_APP_/
+const prefixRE = /^VUE_APP_/;
 
 module.exports = function resolveClientEnv (options, raw) {
-  const env = {}
+  const env = {};
   Object.keys(process.env).forEach(key => {
-    if (prefixRE.test(key) || key === 'NODE_ENV') {
-      env[key] = process.env[key]
+    if (prefixRE.test(key) || key === "NODE_ENV") {
+      env[key] = process.env[key];
     }
-  })
-  env.BASE_URL = options.baseUrl
+  });
+  env.BASE_URL = options.baseUrl;
 
   if (raw) {
-    return env
+    return env;
   }
 
   for (const key in env) {
-    env[key] = JSON.stringify(env[key])
+    env[key] = JSON.stringify(env[key]);
   }
   return {
-    'process.env': env
-  }
-}
+    "process.env": env
+  };
+};

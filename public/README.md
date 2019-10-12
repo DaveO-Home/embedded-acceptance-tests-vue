@@ -60,7 +60,6 @@ To run the production application:
   1. `cd <install>/acceptance_tests`
   1. `npm start`  -  This should start a Node Server with port 3080.
   1. Start a browser and enter `localhost:3080/dist/<bundler>/appl/testapp.html`
-  1. For Brunch the Production Url is `localhost:3080/dist/brunch/testapp.html` or `localhost:3080/dist/brunch`
   1. For Parcel the Production Url is `localhost:3080/dist/parcel/testapp.html`
 
 You can repeat the procedure with "webpack", "browserify", "stealjs", "brunch", "parcel" or "rollup". Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
@@ -120,11 +119,24 @@ A test result might look like;
     Popup Login Form
       ✔ Login form - verify modal with login loaded
       ✔ Login form - verify cancel and removed from DOM
+    Dodex Operation Validation
+      ✔ Dodex - loaded and toggle on icon mousedown
+      ✔ Dodex - Check that card A is current and flipped on mousedown
+      ✔ Dodex - Check that card B is current and flipped on mousedown
+      ✔ Dodex - Flip cards A & B back to original positions
+      ✔ Dodex - Flip multiple cards on tab mousedown
+      ✔ Dodex - Add additional app/personal cards
+      ✔ Dodex - Load Login Popup from card1(A)
+    Dodex Input Operation Validation
+      ✔ Dodex Input - popup on mouse double click
+      ✔ Dodex Input - Verify that form elements exist
+      ✔ Dodex Input - verify that uploaded file is processed
+      ✔ Dodex Input - close popup on button click
 
 Finished in 13.883 secs / 9.677 secs @ 13:26:11 GMT-0800 (PST)
 
 SUMMARY:
-✔ 48 tests completed
+✔ 72 tests completed
 ```
 
 ## Development
@@ -133,10 +145,10 @@ __Note__; When modifying project assets(.handlebars, .html, etc.) you can execut
 
 __A word on developing tests__; You can write and execute tests quicker by using the rebuild process of a given bundler and running the `acceptance` gulp task after the auto-rebuild, e.g. with __Rollup__ you can;
 
-  * `cd public/rollup/build`
-  * `gulp watch`
-  * Develop or modify a test.
-  * In another window execute `gulp acceptance` from the `build` directory to view the modified or new test results.
+* `cd public/rollup/build`
+* `gulp watch`
+* Develop or modify a test.
+* In another window execute `gulp acceptance` from the `build` directory to view the modified or new test results.
 
   __Also Note__; All of the development tasks(`hmr, server, watch`) etc, can be run from one window using the `gulp development` task.
 
@@ -144,22 +156,22 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
 1\. ***Development Server Window*** -
 
-   * `cd public/browserify/build`
-   * `gulp server`
+* `cd public/browserify/build`
+* `gulp server`
 
    Browsersync will start a browser tab(default Chrome) with `localhost:3080/dist_test/browserify/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload.
 
 2\. ***Hot Module Reload(HMR) Window*** -
 
-   * `cd public/browserify/build`
-   * `gulp hmr`
+* `cd public/browserify/build`
+* `gulp hmr`
 
    The `watchify` plugin will remain active to rebuild the bundle on code change.
 
 3\. ***Test Driven Development(tdd) Window*** -
 
-   * `cd public/browserify/build`
-   * `gulp tdd`
+* `cd public/browserify/build`
+* `gulp tdd`
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.  Note, you do not need `hmr` active for `tdd`. Also, `tdd` can be run with a headless browser.
 
@@ -167,17 +179,17 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
 1\. ***Watch, Recompile and Reload Window*** -
 
-  * `cd public/brunch/build`
-  * `gulp watch` or `./cook watch` (output formatted better)
+* `cd public/brunch/build`
+* `gulp watch` or `./cook watch` (output formatted better)
 
-At this point you can start a browser and enter `localhost:3080/`. Any changes to the source code(*.js files and other assets such as *.html) should be reflected in the browser auto reload.
+At this point you can start a browser and enter `localhost:3080/appl/testapp_dev.html`. Any changes to the source code(*.js files and other assets such as *.html) should be reflected in the browser auto reload.
 
 __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.paths.public' as the server context. Also, the reload may fail at times, I've noticed that making a second code mod re-rights the ship.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
-  * `cd public/brunch/build`
-  * `gulp tdd` or `./cook tdd`
+* `cd public/brunch/build`
+* `gulp tdd` or `./cook tdd`
 
   While the Brunch watcher is running, tests are re-run when code are changed. 
   
@@ -185,24 +197,24 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
 3\. ***Special Considerations***
   
-  * Brunch plugin eslint-brunch uses eslint 3. The demo/vue uses version 4.  The `gulp`(production build) command uses a gulp linter, so javascript linting is executed. However, if you wish to use the Brunch eslint-brunch plugin, do the following;
-    * `cd <install>/public/node_modules/eslint-brunch`
-    * `npm install eslint@latest`
-    * `cd <install>/public` and edit the `brunch-config.js` file and uncomment the eslint section.
+* Brunch plugin eslint-brunch uses eslint 3. The demo/vue uses version 4.  The `gulp`(production build) command uses a gulp linter, so javascript linting is executed. However, if you wish to use the Brunch eslint-brunch plugin, do the following;
+  * `cd <install>/public/node_modules/eslint-brunch`
+  * `npm install eslint@latest`
+  * `cd <install>/public` and edit the `brunch-config.js` file and uncomment the eslint section.
 
 ### III.  **Fusebox**
 
 1\. ***Hot Module Reload(HMR) Server Window*** -
 
-   * `cd public/fusebox/build`
-   * `gulp hmr` or `fuse hmr`
+* `cd public/fusebox/build`
+* `gulp hmr` or `fuse hmr`
 
    At this point you can start a browser and enter `localhost:3080/fusebox/appl/testapp_dev.html` or `localhost:3080/dist_test/fusebox/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
-   * `cd public/fusebox/build`
-   * `gulp tdd`
+* `cd public/fusebox/build`
+* `gulp tdd`
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
 
@@ -210,15 +222,15 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
 1\. ***Watch, Recompile and Reload Window*** -
 
-  * `cd public/parcel/build`
-  * `gulp watch`
+* `cd public/parcel/build`
+* `gulp watch`
 
 At this point you can start a browser and enter `localhost:3080/dist_test/parcel/testapp_dev.html` (configured to auto open browser tab). Any changes to the source code(*.js and *.css files) should be reflected in the browser auto reload.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
-  * `cd public/parcel/build`
-  * `gulp tdd`
+* `cd public/parcel/build`
+* `gulp tdd`
 
   While the Parcel watcher is running, tests are re-run when code are changed.
   
@@ -230,15 +242,15 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
 1\. ***Development Server Window*** -
 
-   * `cd public/rollup/build`
-   * `gulp watch`
+* `cd public/rollup/build`
+* `gulp watch`
 
    The Rollup Development Server, Watch(auto-rebuild) and Page Reload functions are started together.  Simply use one of the following URLs in any browser; `localhost:3080/rollup/appl/testapp_dev.html` or `localhost:3080/dist_test/rollup/appl/testapp_dev.html`.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
-   * `cd public/rollup/build`
-   * `gulp tdd`
+* `cd public/rollup/build`
+* `gulp tdd`
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
@@ -246,14 +258,13 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
 1\. ***Development Server Window*** -
 
-   * `cd public/stealjs/build`
-   * `gulp server`
-
+* `cd public/stealjs/build`
+* `gulp server`
 
 2\. ***Live-Reload(HMR) Window*** -
 
-   * `cd public/stealjs/build`
-   * `gulp hmr`
+* `cd public/stealjs/build`
+* `gulp hmr`
 
    At this point you can start a browser and enter `localhost:3080/stealjs/appl/testapp_dev.html`(please note that dist_test is not in the URL).  Any changes to the source code(*.js files) should be reflected in the browser auto reload.  The `gulp hmr` by default builds a vendor bundle for faster reload.  When you are not modifying the node_modules directory, subsequent executions of `gulp hmr` do not need the vendor bundle build. You can disable by setting an environment variable, `export USE_VENDOR_BUILD=false`.
 
@@ -261,8 +272,8 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
 3\. ***Test Driven Development(tdd) Window*** -
 
-   * `cd public/steal/build`
-   * `gulp tdd`
+* `cd public/steal/build`
+* `gulp tdd`
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
@@ -270,53 +281,53 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
 1\. ***Development HMR Server Window*** -
 
-   * `cd public/webpack/build`
-   * `gulp hmr`
+* `cd public/webpack/build`
+* `gulp hmr`
 
 
 2\. ***Hot Module Reload(Watch) Window*** -
 
-   * `cd public/webpack/build`
-   * `gulp watch`
+* `cd public/webpack/build`
+* `gulp watch`
 
    At this point you can start a browser and enter `localhost:3080/dist_test/webpack/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload. Running the application from the source directory should also work, e.g., `localhost:3080/webpack/appl/testapp_dev.html`.
 
 3\. ***Test Driven Development(tdd) Window*** -
 
-   * `cd public/webpack/build`
-   * `gulp tdd`
+* `cd public/webpack/build`
+* `gulp tdd`
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
 4\. ***Webpack 4 is default(Vue Cli-3)*** -
 
-    The demo supports both Webpack 3 and Webpack 4(default). The dependency differences follows;
+  The demo supports both Webpack 3 and Webpack 4(default). The dependency differences follows;
 
 *Webpack 4 dependencies*:
 
-   * "@intervolga/optimize-cssnano-plugin": "^1.0.6"
-   * "address": "^1.0.3"
-   * "babel-preset-vue": "^2.0.2"
-   * "cache-loader": "^1.2.2"
-   * "case-sensitive-paths-webpack-plugin": "^2.1.2"
-   * "friendly-errors-webpack-plugin": "^1.7.0"
-   * "joi": "^13.7.0"
-   * "lodash.defaultsdeep": "^4.6.0"
-   * "mini-css-extract-plugin": "^0.4.3"
-   * "string.prototype.padend": "^3.0.0"
-   * "string.prototype.padstart": "^3.0.0"
-   * "webpack-chain": "^4.12.0"
+* "@intervolga/optimize-cssnano-plugin": "^1.0.6"
+* "address": "^1.0.3"
+* "babel-preset-vue": "^2.0.2"
+* "cache-loader": "^1.2.2"
+* "case-sensitive-paths-webpack-plugin": "^2.1.2"
+* "friendly-errors-webpack-plugin": "^1.7.0"
+* "joi": "^13.7.0"
+* "lodash.defaultsdeep": "^4.6.0"
+* "mini-css-extract-plugin": "^0.4.3"
+* "string.prototype.padend": "^3.0.0"
+* "string.prototype.padstart": "^3.0.0"
+* "webpack-chain": "^4.12.0"
 
 *Webpack 4 upgraded dependencies*:
 
-   * "vue-loader": "^14.2.3"
-   * "vue-loader": "^15.4.2"
-   * "webpack": "^3.11.0"
-   * "webpack": "^4.20.2"
-   * "webpack-dev-server": "^2.11.3"
-   * "webpack-dev-server": "^3.1.9"
-   * "webpack-stream": "^4.0.3"
-   * "webpack-stream": "^5.1.1"
+* "vue-loader": "^14.2.3"
+* "vue-loader": "^15.4.2"
+* "webpack": "^3.11.0"
+* "webpack": "^4.20.2"
+* "webpack-dev-server": "^2.11.3"
+* "webpack-dev-server": "^3.1.9"
+* "webpack-stream": "^4.0.3"
+* "webpack-stream": "^5.1.1"
 
 Change versions as needed.
 

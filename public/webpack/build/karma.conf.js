@@ -15,7 +15,9 @@ module.exports = function (config) {
             "/templates": "/base/" + bundler + "/appl/templates",
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
-            "webpack/appl/": "/base/" + bundler + "/webpack/appl/"
+            "webpack/appl/": "/base/" + bundler + "/webpack/appl/",
+            "/dodex/": "/base/" + bundler + "/appl/dodex/",
+            "/images/": "/base/" + bundler + "/images/",
         },
         // list of files / patterns to load in the browser
         files: [
@@ -33,7 +35,8 @@ module.exports = function (config) {
             //Test suites
             {pattern: bundler + "/tests/**/*test.js", included: false},
             //end Test suites
-            {pattern: bundler + "/images/favicon.ico", included: false},
+            {pattern: bundler + "/images/*", included: false},
+            {pattern: "node_modules/dodex/dist/dodex.min.css", watched: false, included: false},
             //Jasmine/setup for tests and may start Karma
             bundler + "/build/karma.bootstrap.js"
         ],

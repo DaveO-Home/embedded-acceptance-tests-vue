@@ -17,7 +17,6 @@ Setup.init();
 // Code between the ..start and ..end tags will be removed by the BlockStrip plugin during the production build.
 // testit is true if running under Karma - see testapp_dev.html
 if (typeof testit !== "undefined" && testit) {
-
     new Promise((resolve) => {
         setTimeout(function () {
             resolve(0);

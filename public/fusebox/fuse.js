@@ -84,16 +84,17 @@ const fuse = FuseBox.init({
         isProduction && BabelPlugin({
             presets: ["env"]
         }),
-        ["node_modules/font-awesome/**.css",
-            CSSResourcePlugin({
-                dist: distDir + "/resources",
-                resolve: resources
-            }), CSSPlugin()
-        ],
+        // ["node_modules/font-awesome/**.css",
+        //     CSSResourcePlugin({
+        //         dist: distDir + "/resources",
+        //         resolve: resources
+        //     }), CSSPlugin()
+        // ],
         CSSPlugin(),
         CopyFsPlugin({
             copy: [{from: "appl/views/**/*", to: distDir + "/appl/views"},
                 {from: "appl/templates/**/*", to: distDir + "/appl/templates"},
+                {from: "appl/dodex/**/*", to: distDir + "/appl/dodex"},
                 {from: "appl/index.html", to: distDir + "/"},
                 {from: "index.html", to: distDir + "/"},
                 {from: "images/*", to: distDir + "/images"},

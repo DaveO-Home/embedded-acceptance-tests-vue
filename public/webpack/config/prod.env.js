@@ -1,5 +1,5 @@
-'use strict'
+
 module.exports = {
-  NODE_ENV: '"production"',
-  PUBLIC_PATH: '""'
-}
+  NODE_ENV: "\"production\"",
+  PUBLIC_PATH: "\"\""
+};

@@ -1,11 +1,11 @@
-const { createSchema, validate } = require('../../cli-shared-utils')
-const isProduction = process.env.NODE_ENV === 'production'
-const dist = isProduction ? '../../dist/webpack' : '../../dist_test/webpack'
-const index = isProduction ? 'testapp.html' : 'testapp_dev.html'
-const baseUrl = '../'
+const { createSchema, validate } = require("../../cli-shared-utils");
+const isProduction = process.env.NODE_ENV === "production";
+const dist = isProduction ? "../../dist/webpack" : "../../dist_test/webpack";
+const index = isProduction ? "testapp.html" : "testapp_dev.html";
+const baseUrl = "../";
 
 const schema = createSchema(joi => joi.object({
-  baseUrl: joi.string().allow(''),
+  baseUrl: joi.string().allow(""),
   outputDir: joi.string(),
   assetsDir: joi.string(),
   indexPath: joi.string(),
@@ -16,7 +16,7 @@ const schema = createSchema(joi => joi.object({
   parallel: joi.boolean(),
   devServer: joi.object(),
   pages: joi.object(),
-  crossorigin: joi.string().valid(['', 'anonymous', 'use-credentials']),
+  crossorigin: joi.string().valid(["", "anonymous", "use-credentials"]),
   integrity: joi.boolean(),
 
   // css
@@ -41,25 +41,25 @@ const schema = createSchema(joi => joi.object({
   ),
 
   // known runtime options for built-in plugins
-  lintOnSave: joi.any().valid([true, false, 'error']),
+  lintOnSave: joi.any().valid([true, false, "error"]),
   pwa: joi.object(),
 
   // 3rd party plugin options
   pluginOptions: joi.object()
-}))
+}));
 
 exports.validate = (options, cb) => {
-  validate(options, schema, cb)
-}
+  validate(options, schema, cb);
+};
 
 // #2110
 // https://github.com/nodejs/node/issues/19022
 // in some cases cpus() returns undefined, and may simply throw in the future
 function hasMultipleCores () {
   try {
-    return require('os').cpus().length > 1
+    return require("os").cpus().length > 1;
   } catch (e) {
-    return false
+    return false;
   }
 }
 
@@ -71,10 +71,10 @@ exports.defaults = () => ({
   outputDir: dist,
 
   // where to put static assets (js/css/img/font/...)
-  assetsDir: './',
+  assetsDir: "./",
 
   // filename for index.html (relative to outputDir)
-  indexPath: 'appl/' + index,
+  indexPath: "appl/" + index,
 
   // whether filename will contain hash part
   filenameHashing: true,
@@ -124,4 +124,4 @@ exports.defaults = () => ({
     before: app => {}
   */
   }
-})
+});

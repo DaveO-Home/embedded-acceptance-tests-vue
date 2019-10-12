@@ -1,12 +1,9 @@
-import Vue from "../../../../node_modules/vue/dist/vue";
 import VueRouter from "vue-router";
 import HelloWorld from "../../components/HelloWorld.vue";
 import StartC from "../../components/StartC.vue";
 import PdfC from "../../components/PdfC.vue";
 import ToolsC from "../../components/ToolsC.vue";
 import ContactC from "../../components/ContactC.vue";
-
-Vue.use(VueRouter);
 
 export default new VueRouter({
   mode: "hash",

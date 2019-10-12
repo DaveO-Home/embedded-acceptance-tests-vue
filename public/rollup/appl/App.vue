@@ -70,9 +70,10 @@
         </div>   
       </div>    
       <a
-        class="pl-2 navbar-brand mr-auto"
-        href="#"
-      >Test</a>     
+        class="pl-2 navbar-brand mr-auto" href="#">Test</a>
+        <div class="pl-2 navbar-brand mr-auto">
+            <dodex-c></dodex-c>
+        </div>     
     </nav>
 
     <div class="container-fluid">

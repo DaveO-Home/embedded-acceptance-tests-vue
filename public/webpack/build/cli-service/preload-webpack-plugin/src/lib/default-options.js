@@ -16,10 +16,10 @@
  */
 
 const defaultOptions = {
-  rel: 'preload',
-  include: 'asyncChunks',
+  rel: "preload",
+  include: "asyncChunks",
   excludeHtmlNames: [],
   fileBlacklist: [/\.map/]
-}
+};
 
-module.exports = defaultOptions
+module.exports = defaultOptions;

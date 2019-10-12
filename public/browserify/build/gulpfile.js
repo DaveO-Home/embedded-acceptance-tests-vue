@@ -176,11 +176,6 @@ const copyprod_images = function () {
     return copyImages();
 };
 
-const copyprod_fonts = function () {
-    isProduction = true;
-    dist = prodDist;
-    return copyFonts();
-};
 /**
  * Resources and content copied to dist_test directory - for development
  */
@@ -193,11 +188,6 @@ const copy_images = function () {
     return copyImages();
 };
 
-const copy_fonts = function () {
-    isProduction = false;
-    dist = testDist;
-    return copyFonts();
-};
 /*
  * Setup development with reload of app on code change
  */
@@ -251,8 +241,8 @@ const tddo = function (done) {
     }, done).start();
 };
 
-const runCopyProd = parallel(copyprod, copyprod_images, copyprod_fonts);
-const runCopyTest = parallel(copy_fonts, copy_test, copy_images);
+const runCopyProd = parallel(copyprod, copyprod_images);
+const runCopyTest = parallel(copy_test, copy_images);
 const runTest = series(application_development, build_development, pat);
 const runLint = parallel(esLint, cssLint, bootLint);
 const runHmr = series(b_watchify, parallel(application_development, build_development), b_hmr);
@@ -270,6 +260,7 @@ exports.server = watch;
 exports.hmr = runHmr;
 exports.development = parallel(watch, runHmr, runTdd);
 exports.lint = runLint;
+exports.copy = runCopyTest;
 
 function browserifyBuild(cb) {
     browserifyInited = browserify({
@@ -376,7 +367,7 @@ function enableWatchify() {
 }
 
 function copySrc() {
-    return src(["../appl/views/**/*", "../appl/templates/**/*", "../appl/index.html", isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
+    return src(["../appl/views/**/*", "../appl/templates/**/*", "../appl/dodex/**/*", "../appl/index.html", isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
         .pipe(copy("../../" + dist + "/appl"));
 }
 
@@ -387,11 +378,6 @@ function copyIndex() {
 
 function copyImages() {
     return src(["../images/*", "../../README.md", "../appl/assets/*"])
-        .pipe(copy("../../" + dist + "/appl"));
-}
-
-function copyFonts() {
-    return src(["../../node_modules/font-awesome/fonts/*"])
         .pipe(copy("../../" + dist + "/appl"));
 }
 

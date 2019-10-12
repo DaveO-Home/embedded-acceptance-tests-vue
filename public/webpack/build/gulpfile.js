@@ -284,7 +284,7 @@ const webpack_server = function (cb) {
         quiet: false
     };
 
-    webpackConfig = webpackVersion === 4 ? getService() : require("./webpack.dev.conf.js"); // require('./webpack.dev.conf.js');
+    webpackConfig = webpackVersion === 4 ? getService() : require("./webpack.dev.conf.js");
     webpackConfig.devtool = "eval";
     webpackConfig.output.path = path.resolve(config.dev.assetsRoot);
     webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());

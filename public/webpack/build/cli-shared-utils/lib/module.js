@@ -1,72 +1,72 @@
-const semver = require('semver')
+const semver = require("semver");
 
 function resolveFallback (request, options) {
-  const Module = require('module')
-  const isMain = false
-  const fakeParent = new Module('', null)
+  const Module = require("module");
+  const isMain = false;
+  const fakeParent = new Module("", null);
 
-  const paths = []
+  const paths = [];
 
   for (let i = 0; i < options.paths.length; i++) {
-    const path = options.paths[i]
-    fakeParent.paths = Module._nodeModulePaths(path)
-    const lookupPaths = Module._resolveLookupPaths(request, fakeParent, true)
+    const path = options.paths[i];
+    fakeParent.paths = Module._nodeModulePaths(path);
+    const lookupPaths = Module._resolveLookupPaths(request, fakeParent, true);
 
-    if (!paths.includes(path)) paths.push(path)
+    if (!paths.includes(path)) paths.push(path);
 
     for (let j = 0; j < lookupPaths.length; j++) {
-      if (!paths.includes(lookupPaths[j])) paths.push(lookupPaths[j])
+      if (!paths.includes(lookupPaths[j])) paths.push(lookupPaths[j]);
     }
   }
 
-  const filename = Module._findPath(request, paths, isMain)
+  const filename = Module._findPath(request, paths, isMain);
   if (!filename) {
-    const err = new Error(`Cannot find module '${request}'`)
-    err.code = 'MODULE_NOT_FOUND'
-    throw err
+    const err = new Error(`Cannot find module '${request}'`);
+    err.code = "MODULE_NOT_FOUND";
+    throw err;
   }
-  return filename
+  return filename;
 }
 
-const resolve = semver.satisfies(process.version, '>=10.0.0')
+const resolve = semver.satisfies(process.version, ">=10.0.0")
   ? require.resolve
-  : resolveFallback
+  : resolveFallback;
 
 exports.resolveModule = function (request, context) {
-  let resolvedPath
+  let resolvedPath;
   try {
     resolvedPath = resolve(request, {
       paths: [context]
-    })
+    });
   } catch (e) {}
-  return resolvedPath
-}
+  return resolvedPath;
+};
 
 exports.loadModule = function (request, context, force = false) {
-  const resolvedPath = exports.resolveModule(request, context)
+  const resolvedPath = exports.resolveModule(request, context);
   if (resolvedPath) {
     if (force) {
-      clearRequireCache(resolvedPath)
+      clearRequireCache(resolvedPath);
     }
-    return require(resolvedPath)
+    return require(resolvedPath);
   }
-}
+};
 
 exports.clearModule = function (request, context) {
-  const resolvedPath = exports.resolveModule(request, context)
+  const resolvedPath = exports.resolveModule(request, context);
   if (resolvedPath) {
-    clearRequireCache(resolvedPath)
+    clearRequireCache(resolvedPath);
   }
-}
+};
 
 function clearRequireCache (id, map = new Map()) {
-  const module = require.cache[id]
+  const module = require.cache[id];
   if (module) {
-    map.set(id, true)
+    map.set(id, true);
     // Clear children modules
     module.children.forEach(child => {
-      if (!map.get(child.id)) clearRequireCache(child.id, map)
-    })
-    delete require.cache[id]
+      if (!map.get(child.id)) clearRequireCache(child.id, map);
+    });
+    delete require.cache[id];
   }
 }

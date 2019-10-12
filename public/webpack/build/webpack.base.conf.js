@@ -58,6 +58,8 @@ module.exports = {
             logintests: resolve("tests/logintest"),
             routertests: resolve("tests/routertest"),
             toolstests: resolve("tests/toolstest"),
+            dodextests: resolve("tests/dodextest"),
+            inputtests: resolve("tests/inputtest"),
             handlebars : "handlebars/dist/handlebars.js"
         }
     },

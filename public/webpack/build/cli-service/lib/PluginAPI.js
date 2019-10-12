@@ -1,6 +1,6 @@
-const path = require('path')
-const hash = require('hash-sum')
-const { matchesPluginId } = require('../../cli-shared-utils')
+const path = require("path");
+const hash = require("hash-sum");
+const { matchesPluginId } = require("../../cli-shared-utils");
 
 // Note: if a plugin-registered command needs to run in a specific default mode,
 // the plugin needs to expose it via `module.exports.defaultModes` in the form
@@ -13,15 +13,15 @@ class PluginAPI {
    * @param {Service} service - A vue-cli-service instance.
    */
   constructor (id, service) {
-    this.id = id
-    this.service = service
+    this.id = id;
+    this.service = service;
   }
 
   /**
    * Current working directory.
    */
   getCwd () {
-    return this.service.context
+    return this.service.context;
   }
 
   /**
@@ -31,7 +31,7 @@ class PluginAPI {
    * @return {string} The resolved absolute path.
    */
   resolve (_path) {
-    return path.resolve(this.service.context, _path)
+    return path.resolve(this.service.context, _path);
   }
 
   /**
@@ -41,12 +41,12 @@ class PluginAPI {
    * @return {boolean}
    */
   hasPlugin (id) {
-    if (id === 'router') id = 'vue-router'
-    if (['vue-router', 'vuex'].includes(id)) {
-      const pkg = this.service.pkg
-      return ((pkg.dependencies && pkg.dependencies[id]) || (pkg.devDependencies && pkg.devDependencies[id]))
+    if (id === "router") id = "vue-router";
+    if (["vue-router", "vuex"].includes(id)) {
+      const pkg = this.service.pkg;
+      return ((pkg.dependencies && pkg.dependencies[id]) || (pkg.devDependencies && pkg.devDependencies[id]));
     }
-    return this.service.plugins.some(p => matchesPluginId(id, p.id))
+    return this.service.plugins.some(p => matchesPluginId(id, p.id));
   }
 
   /**
@@ -63,11 +63,11 @@ class PluginAPI {
    *   (args: { [string]: string }, rawArgs: string[]) => ?Promise
    */
   registerCommand (name, opts, fn) {
-    if (typeof opts === 'function') {
-      fn = opts
-      opts = null
+    if (typeof opts === "function") {
+      fn = opts;
+      opts = null;
     }
-    this.service.commands[name] = { fn, opts: opts || {}}
+    this.service.commands[name] = { fn, opts: opts || {}};
   }
 
   /**
@@ -78,7 +78,7 @@ class PluginAPI {
    * @param {function} fn
    */
   chainWebpack (fn) {
-    this.service.webpackChainFns.push(fn)
+    this.service.webpackChainFns.push(fn);
   }
 
   /**
@@ -92,7 +92,7 @@ class PluginAPI {
    * @param {object | function} fn
    */
   configureWebpack (fn) {
-    this.service.webpackRawConfigFns.push(fn)
+    this.service.webpackRawConfigFns.push(fn);
   }
 
   /**
@@ -102,7 +102,7 @@ class PluginAPI {
    * @param {function} fn
    */
   configureDevServer (fn) {
-    this.service.devServerConfigFns.push(fn)
+    this.service.devServerConfigFns.push(fn);
   }
 
   /**
@@ -112,7 +112,7 @@ class PluginAPI {
    * @return {object} Raw webpack config.
    */
   resolveWebpackConfig (chainableConfig) {
-    return this.service.resolveWebpackConfig(chainableConfig)
+    return this.service.resolveWebpackConfig(chainableConfig);
   }
 
   /**
@@ -125,50 +125,50 @@ class PluginAPI {
    * @return {ChainableWebpackConfig}
    */
   resolveChainableWebpackConfig () {
-    return this.service.resolveChainableWebpackConfig()
+    return this.service.resolveChainableWebpackConfig();
   }
 
   /**
    * Generate a cache identifier from a number of variables
    */
   genCacheConfig (id, partialIdentifier, configFiles) {
-    const fs = require('fs')
-    const cacheDirectory = this.resolve(`node_modules/.cache/${id}`)
+    const fs = require("fs");
+    const cacheDirectory = this.resolve(`node_modules/.cache/${id}`);
 
     const variables = {
       partialIdentifier,
-      'cli-service': require('../package.json').version,
-      'cache-loader': require('cache-loader/package.json').version,
+      "cli-service": require("../package.json").version,
+      "cache-loader": require("cache-loader/package.json").version,
       env: process.env.NODE_ENV,
       test: !!process.env.VUE_CLI_TEST,
       config: [
         this.service.projectOptions.chainWebpack,
         this.service.projectOptions.configureWebpack
       ]
-    }
+    };
 
     if (configFiles) {
       const readConfig = file => {
-        const absolutePath = this.resolve(file)
+        const absolutePath = this.resolve(file);
         if (fs.existsSync(absolutePath)) {
-          return fs.readFileSync(absolutePath, 'utf-8')
+          return fs.readFileSync(absolutePath, "utf-8");
         }
-      }
+      };
       if (!Array.isArray(configFiles)) {
-        configFiles = [configFiles]
+        configFiles = [configFiles];
       }
       for (const file of configFiles) {
-        const content = readConfig(file)
+        const content = readConfig(file);
         if (content) {
-          variables.configFiles = content
-          break
+          variables.configFiles = content;
+          break;
         }
       }
     }
 
-    const cacheIdentifier = hash(variables)
-    return { cacheDirectory, cacheIdentifier }
+    const cacheIdentifier = hash(variables);
+    return { cacheDirectory, cacheIdentifier };
   }
 }
 
-module.exports = PluginAPI
+module.exports = PluginAPI;

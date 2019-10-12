@@ -24,7 +24,7 @@
     Tools - Count
 </h4>
 <!--span>Select Job Type: <jobtype-selector to="jobtype-selector" /></span-->  
-        <section>
+        <section class="float-left">
             
             <div id="dropdown1" class="dropdown">
                 <button class="dropdown-toggle smallerfont" type="button" id="dropdown0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

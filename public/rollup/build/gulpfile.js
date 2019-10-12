@@ -2,33 +2,33 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
-const { src, dest, series, parallel, task } = require('gulp');
-const alias = require('rollup-plugin-alias');
-const buble = require('rollup-plugin-buble');
-const commonjs = require('rollup-plugin-commonjs');
+const { src, dest, series, parallel, task } = require("gulp");
+const alias = require("rollup-plugin-alias");
+const buble = require("rollup-plugin-buble");
+const commonjs = require("rollup-plugin-commonjs");
 const copy = require("gulp-copy");
-const csslint = require('gulp-csslint');
-const eslint = require('gulp-eslint');
-const exec = require('child_process').exec;
-const gulpRollup = require('gulp-rollup');
-const livereload = require('rollup-plugin-livereload');
-const log = require('fancy-log');
-const nodeResolve = require('rollup-plugin-node-resolve');
-const noop = require('gulp-noop');
-const path = require('path')
-const postcss = require('rollup-plugin-postcss');
-const progress = require('rollup-plugin-progress');
-const rename = require('gulp-rename');
-const replaceEnv = require('rollup-plugin-replace')
-const rmf = require('rimraf')
-const rollup = require('rollup');
-const serve = require('rollup-plugin-serve');
-const sourcemaps = require('gulp-sourcemaps');
+const csslint = require("gulp-csslint");
+const eslint = require("gulp-eslint");
+const exec = require("child_process").exec;
+const gulpRollup = require("gulp-rollup");
+const livereload = require("rollup-plugin-livereload");
+const log = require("fancy-log");
+const nodeResolve = require("rollup-plugin-node-resolve");
+const noop = require("gulp-noop");
+const path = require("path");
+const postcss = require("rollup-plugin-postcss");
+const progress = require("rollup-plugin-progress");
+const rename = require("gulp-rename");
+const replaceEnv = require("rollup-plugin-replace");
+const rmf = require("rimraf");
+const rollup = require("rollup");
+const serve = require("rollup-plugin-serve");
+const sourcemaps = require("gulp-sourcemaps");
 const stripCode = require("gulp-strip-code");
-const Server = require('karma').Server;
-const uglify = require('gulp-uglify');
-const vue = require('rollup-plugin-vue');
-const image = require('rollup-plugin-img');
+const Server = require("karma").Server;
+const uglify = require("gulp-uglify");
+const vue = require("rollup-plugin-vue");
+const image = require("rollup-plugin-img");
 const chalk = require("chalk");
 
 const startComment = "develblock:start",
@@ -37,12 +37,12 @@ const startComment = "develblock:start",
         startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
         endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
 
-let lintCount = 0
-let isProduction = process.env.NODE_ENV == 'production'
-let browsers = process.env.USE_BROWSERS
-let testDist = "dist_test/rollup"
-let prodDist = "dist/rollup"
-let dist = isProduction ? prodDist : testDist
+let lintCount = 0;
+let isProduction = process.env.NODE_ENV == "production";
+let browsers = process.env.USE_BROWSERS;
+let testDist = "dist_test/rollup";
+let prodDist = "dist/rollup";
+let dist = isProduction ? prodDist : testDist;
 
 if (browsers) {
     global.whichBrowsers = browsers.split(",");
@@ -85,27 +85,27 @@ const esLint = function (cb) {
         }))
         .pipe(eslint.failAfterError());
 
-    stream.on('error', function () {
+    stream.on("error", function () {
         process.exit(1);
     });
 
-    return stream.on('end', function () {
+    return stream.on("end", function () {
         log(chalk.blue.bold("# js & vue files linted: " + lintCount));
-        cb()
+        cb();
     });
 };
 /*
  * css linter
  */
 const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'])
+    var stream = src(["../appl/css/site.css"])
         .pipe(csslint())
         .pipe(csslint.formatter());
 
-    stream.on('error', function () {
+    stream.on("error", function () {
         process.exit(1);
     });
-    return stream.on('end', function () {
+    return stream.on("end", function () {
         cb();
     });
 };
@@ -114,7 +114,7 @@ const cssLint = function (cb) {
  */
 const bootLint = function (cb) {
 
-    exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
+    exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
         log(stdout);
         log(stderr);
         cb(err);
@@ -127,8 +127,8 @@ const clean = function (done) {
     isProduction = true;
     dist = prodDist;
     return rmf(`../../${prodDist}/**/*`, err => {
-        done(err)
-    })
+        done(err);
+    });
 };
 /**
  * Remove previous test build
@@ -137,13 +137,15 @@ const cleant = function (done) {
     isProduction = false;
     dist = testDist;
     return rmf(`../../${dist}/**/*`, err => {
-        done(err)
-    })
+        done(err);
+    });
 };
 /**
  * Resources and content copied to dist directory - for production
  */
 const copyprod = function () {
+    isProduction = true;
+    dist = prodDist;
     copyIndex();
     return copySrc();
 };
@@ -163,12 +165,15 @@ const copyprod_css = function () {
 const copyprod_fonts = function () {
     isProduction = true;
     dist = prodDist;
+    copyFonts2();
     return copyFonts();
 };
 /**
  * Resources and content copied to dist_test directory - for development
  */
 const copy_test = function () {
+    isProduction = false;
+    dist = testDist;
     return copySrc();
 };
 
@@ -188,6 +193,7 @@ const copy_css = function () {
 const copy_fonts = function () {
     isProduction = false;
     dist = testDist;
+    copyFonts2();
     return copyFonts();
 };
 /**
@@ -207,7 +213,7 @@ const rollup_tdd = function (done) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
     }, done).start();
 };
 /**
@@ -218,21 +224,21 @@ const tddo = function (done) {
         global.whichBrowsers = ["Opera"];
     }
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
     }, done).start();
 };
 
 const rollup_watch = function (cb) {
     const watchOptions = {
         allowRealFiles: true,
-        input: '../appl/main.js',
+        input: "../appl/main.js",
         plugins: [
             progress({
                 clearLine: isProduction ? false : true
             }),
             replaceEnv({
-                'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
-                'process.env.VUE_ENV': JSON.stringify('browser')
+                "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
+                "process.env.VUE_ENV": JSON.stringify("browser")
             }),
             alias(aliases()),
             vue(),
@@ -242,13 +248,13 @@ const rollup_watch = function (cb) {
                 browser: true,
                 jsnext: true,
                 main: true,
-                extensions: ['.js', '.json']
+                extensions: [".js", ".json"]
             }),
             commonjs(),
             image({
                 extensions: /\.(png|jpg|jpeg|gif|svg)$/, // support png|jpg|jpeg|gif|svg, and it's alse the default value
                 limit: 8192,  // default 8192(8k)
-                exclude: 'node_modules/**'
+                exclude: "node_modules/**"
               }),
             serve({
                 open: false,
@@ -265,14 +271,14 @@ const rollup_watch = function (cb) {
         ],
         output: {
             name: "acceptance",
-            file: '../../' + dist + '/bundle.js',
+            file: "../../" + dist + "/bundle.js",
             format: "iife",
             sourcemap: true
         }
     };
-    watcher = rollup.watch(watchOptions);
+    const watcher = rollup.watch(watchOptions);
     let starting = false;
-    watcher.on('event', event => {
+    watcher.on("event", event => {
         switch (event.code) {
             case "START":
                 log("Starting...");
@@ -305,37 +311,38 @@ const rollup_watch = function (cb) {
     });
 };
 
-const testCopyRun = series(copy_fonts, parallel(copy_test, copy_images, copy_node_css, copy_css))
-const testRun = series(cleant, testCopyRun, build_development)
-const lintRun = parallel(esLint, cssLint, bootLint)
-const prodCopyRun = series(copyprod_fonts, parallel(copyprod, copyprod_images, copyprod_node_css, copyprod_css))
-const prodRun = series(cleant, testCopyRun, build_development, pat, lintRun, clean, prodCopyRun, build)
-prodRun.displayName = 'prod'
+const testCopyRun = series(copy_test, parallel(copy_images, /*copy_node_css,*/ copy_css));
+const testRun = series(cleant, testCopyRun, build_development);
+const lintRun = parallel(esLint, cssLint, bootLint);
+const prodCopyRun = series(copyprod, parallel(copyprod_images, /*copyprod_node_css,*/ copyprod_css));
+const prodRun = series(cleant, testCopyRun, build_development, pat, lintRun, clean, prodCopyRun, build);
+prodRun.displayName = "prod";
 
-task(prodRun)
-exports.default = prodRun
-exports.test = series(testRun, pat)
-exports.tdd = series(testRun, rollup_tdd)
-exports.watch = rollup_watch
-exports.rebuild = testRun
-exports.acceptance = r_test
-exports.development = parallel(rollup_watch, rollup_tdd)
-exports.lint = parallel(esLint, cssLint, bootLint)
+task(prodRun);
+exports.default = prodRun;
+exports.test = series(testRun, pat);
+exports.tdd = series(testRun, rollup_tdd);
+exports.watch = rollup_watch;
+exports.rebuild = testRun;
+exports.acceptance = r_test;
+exports.development = parallel(rollup_watch, rollup_tdd);
+exports.lint = parallel(esLint, cssLint, bootLint);
+exports.copy = testCopyRun;
 
 function rollupBuild(cb) {
-    return src(['../appl/**/*.js'])
+    return src(["../appl/**/*.js"])
         //.pipe(removeCode({production: isProduction}))
         .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
         .pipe(gulpRollup({
             allowRealFiles: true,
-            input: '../appl/main.js',
+            input: "../appl/main.js",
             output: {
                 format: "iife",
                 name: "acceptance"
             },
             onwarn: function (warning) {
-                if (warning.code === 'THIS_IS_UNDEFINED' ||
-                    warning.code === 'CIRCULAR_DEPENDENCY') {
+                if (warning.code === "THIS_IS_UNDEFINED" ||
+                    warning.code === "CIRCULAR_DEPENDENCY") {
                     return;
                 }
                 console.warn(warning.message);
@@ -347,8 +354,8 @@ function rollupBuild(cb) {
                     clearLine: isProduction ? false : true
                 }),
                 replaceEnv({
-                    'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
-                    'process.env.VUE_ENV': JSON.stringify('browser')
+                    "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
+                    "process.env.VUE_ENV": JSON.stringify("browser")
                 }),
                 alias(aliases()),
                 vue(),
@@ -359,23 +366,23 @@ function rollupBuild(cb) {
                 image({
                     extensions: /\.(png|jpg|jpeg|gif|svg)$/, // support png|jpg|jpeg|gif|svg, and it's alse the default value
                     limit: 8192,  // default 8192(8k)
-                    exclude: 'node_modules/**'
+                    exclude: "node_modules/**"
                   })
             ],
         }))
-        .pipe(rename('bundle.js'))
+        .pipe(rename("bundle.js"))
         .pipe(isProduction ? uglify() : noop())
         .pipe(sourcemaps.init({ loadMaps: !isProduction }))
-        .pipe(isProduction ? noop() : sourcemaps.write('maps'))
-        .pipe(dest('../../' + dist))
-        .on('error', log)
-        .on('end', function () {
+        .pipe(isProduction ? noop() : sourcemaps.write("maps"))
+        .pipe(dest("../../" + dist))
+        .on("error", log)
+        .on("end", function () {
             cb();
         });
 }
 
 function modResolve(dir) {
-    return path.join(__dirname, '..', dir)
+    return path.join(__dirname, "..", dir);
 }
 
 function aliases() {
@@ -403,45 +410,51 @@ function aliases() {
         "logintest": "./logintest.js",
         "routertest": "./routertest.js",
         "toolstest": "./toolstest.js",
+        "dodextest": "./dodextest.js",
+        "inputtest": "./inputtest.js",
         "vue": "../../node_modules/vue/dist/vue.js",
-        '@': modResolve('appl'),
+        "@": modResolve("appl"),
     };
 }
 
 function copySrc() {
-    return src(['../appl/views/**/*', '../appl/templates/**/*', '../appl/index.html', '../appl/assets/**/*', isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return src(["../appl/views/**/*", "../appl/templates/**/*", "../appl/index.html", "../appl/assets/**/*", "../appl/dodex/**/*", isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copyIndex() {
-    return src(['../index.html'])
-        .pipe(copy('../../' + dist + '/rollup'));
+    return src(["../index.html"])
+        .pipe(copy("../../" + dist + "/rollup"));
 }
 
 function copyImages() {
-    return src(['../images/*', '../../README.md'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return src(["../images/*", "../../README.md"])
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copyCss() {
-    return src(['../appl/css/site.css'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return src(["../appl/css/site.css"])
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copyNodeCss() {
-    return src(['../../node_modules/bootstrap/dist/css/bootstrap.min.css', "../../node_modules/font-awesome/css/font-awesome.css",
+    return src(["../../node_modules/bootstrap/dist/css/bootstrap.min.css", "../../node_modules/font-awesome/css/font-awesome.css",
         "../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", "../../node_modules/tablesorter/dist/css/theme.blue.min.css"])
-        .pipe(copy('../../' + dist + '/appl'));
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copyFonts() {
-    return src(['../../node_modules/font-awesome/fonts/*'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return src(["../../node_modules/font-awesome/fonts/**/*"])
+        .pipe(copy("../../" + dist + "/appl"));
+}
+function copyFonts2() {
+    return src(["../../node_modules/font-awesome/fonts/**/*"])
+        .pipe(copy("../../" + dist + "/fonts"));
 }
 
 function runKarma(done) {
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;

@@ -38,4 +38,4 @@ module.exports = options => ({
   sourceMap: options.productionSourceMap,
   cache: true,
   parallel: true
-})
+});

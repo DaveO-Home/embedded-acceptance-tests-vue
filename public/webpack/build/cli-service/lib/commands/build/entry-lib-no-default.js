@@ -1,2 +1,2 @@
-import './setPublicPath'
-export * from '~entry'
+import "./setPublicPath";
+export * from "~entry";

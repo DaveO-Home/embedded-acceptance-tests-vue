@@ -1,19 +1,19 @@
 [
-  'env',
-  'exit',
+  "env",
+  "exit",
   // 'ipc',
-  'logger',
-  'module',
-  'object',
-  'openBrowser',
-  'pluginResolution',
+  "logger",
+  "module",
+  "object",
+  "openBrowser",
+  "pluginResolution",
   // 'launch',
-  'request',
-  'spinner',
-  'validate'
+  "request",
+  "spinner",
+  "validate"
 ].forEach(m => {
-  Object.assign(exports, require(`./lib/${m}`))
-})
+  Object.assign(exports, require(`./lib/${m}`));
+});
 
-exports.chalk = require('chalk')
-exports.execa = require('execa')
+exports.chalk = require("chalk");
+exports.execa = require("execa");

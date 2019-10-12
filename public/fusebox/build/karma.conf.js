@@ -18,7 +18,9 @@ module.exports = function (config) {
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
             "fusebox/appl/": "/base/" + bundler + "/fusebox/appl/",
-            "/node_modules/": "/base/node_modules/"
+            "/node_modules/": "/base/node_modules/",
+            "/dodex/": "/base/" + bundler + "/appl/dodex/",
+            "/images/": "/base/" + bundler + "/images/",
         },
         // list of files / patterns to load in the browser
         files: [
@@ -36,11 +38,12 @@ module.exports = function (config) {
             {pattern: "dist_test/" + bundler + "/vendor.js", included: false, watched: false},
             //Looking for changes to the client bundle
             {pattern: "dist_test/" + bundler + "/acceptance.js", included: false, watched: true, served: true},
-            {pattern: bundler + "/images/favicon.ico", included: false, watched: false},
+            {pattern: bundler + "/images/*", included: false, watched: false},
             {pattern: "node_modules/bootstrap/dist/css/bootstrap.min.css", watched: false, included: true, served: true},
             {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", watched: false, included: true, served: true},
             {pattern: "node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", watched: false, included: true, served: true},
             {pattern: "node_modules/font-awesome/css/font-awesome.css", watched: false, included: false},
+            {pattern: "node_modules/dodex/dist/dodex.min.css", watched: false, included: false},
             {pattern: "node_modules/font-awesome/**/*", watched: false, included: false},
             //Jasmine/Loader tests and starts Karma
             bundler + "/build/karma.bootstrap.js"

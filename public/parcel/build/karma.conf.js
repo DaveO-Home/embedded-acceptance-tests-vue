@@ -17,7 +17,9 @@ module.exports = function (config) {
             "/templates": "/base/" + bundler + "/appl/templates",
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
-            "parcel/appl/": "/base/" + bundler + "/pacel/appl/"
+            "parcel/appl/": "/base/" + bundler + "/pacel/appl/",
+            "/dodex/": "/base/" + bundler + "/appl/dodex/",
+            "/images/": "/base/" + bundler + "/images/",
         },
         // list of files / patterns to load in the browser
         files: [
@@ -33,7 +35,7 @@ module.exports = function (config) {
             // Looking for changes via HMR - tdd should run with Sync Hot Moudule Reload.
             // Looking for changes to the client bundle
             {pattern: "dist_test/" + bundler + "/main.*.*", included: false, watched: true, served: true},
-            {pattern: bundler + "/images/favicon.ico", included: false, watched: false},
+            {pattern: bundler + "/images/*", included: false, watched: false},
             {pattern: "dist_test/" + bundler + "/fontawesome*.*", included: false, watched: false},
             //Jasmine/Loader tests and starts Karma
             bundler + "/build/karma.bootstrap.js"

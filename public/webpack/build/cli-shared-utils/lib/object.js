@@ -1,49 +1,49 @@
 exports.set = function (target, path, value) {
-  const fields = path.split('.')
-  let obj = target
-  const l = fields.length
+  const fields = path.split(".");
+  let obj = target;
+  const l = fields.length;
   for (let i = 0; i < l - 1; i++) {
-    const key = fields[i]
+    const key = fields[i];
     if (!obj[key]) {
-      obj[key] = {}
+      obj[key] = {};
     }
-    obj = obj[key]
+    obj = obj[key];
   }
-  obj[fields[l - 1]] = value
-}
+  obj[fields[l - 1]] = value;
+};
 
 exports.get = function (target, path) {
-  const fields = path.split('.')
-  let obj = target
-  const l = fields.length
+  const fields = path.split(".");
+  let obj = target;
+  const l = fields.length;
   for (let i = 0; i < l - 1; i++) {
-    const key = fields[i]
+    const key = fields[i];
     if (!obj[key]) {
-      return undefined
+      return undefined;
     }
-    obj = obj[key]
+    obj = obj[key];
   }
-  return obj[fields[l - 1]]
-}
+  return obj[fields[l - 1]];
+};
 
 exports.unset = function (target, path) {
-  const fields = path.split('.')
-  let obj = target
-  const l = fields.length
-  const objs = []
+  const fields = path.split(".");
+  let obj = target;
+  const l = fields.length;
+  const objs = [];
   for (let i = 0; i < l - 1; i++) {
-    const key = fields[i]
+    const key = fields[i];
     if (!obj[key]) {
-      return
+      return;
     }
-    objs.splice(0, 0, { obj, key, value: obj[key] })
-    obj = obj[key]
+    objs.splice(0, 0, { obj, key, value: obj[key] });
+    obj = obj[key];
   }
-  delete obj[fields[l - 1]]
+  delete obj[fields[l - 1]];
   // Clear empty objects
   for (const { obj, key, value } of objs) {
     if (!Object.keys(value).length) {
-      delete obj[key]
+      delete obj[key];
     }
   }
-}
+};

@@ -2,13 +2,18 @@ import Route from "router";
 import Start from "start";
 import Helpers from "helpers";
 import { timer } from "rxjs";
+import dodex from "dodex";
+import input from "dodex-input";
+import mess from "dodex-mess";
 
 define(["routertests",
     "domtests",
     "toolstests",
     "logintests",
-    "contacttests"],
-    function (routerTest, domTest, toolsTest, loginTest, contactTest) {
+    "contacttests",
+    "dodextests",
+    "inputtests"],
+    function (routerTest, domTest, toolsTest, loginTest, contactTest, dodexTest, inputTest) {
         return function (App, vm) {
             const vueElement = vm.$el;
 
@@ -98,6 +103,10 @@ define(["routertests",
                 contactTest(Route, Helpers, vm);
                 // Verify modal form
                 loginTest(Start, timer);
+                // Test dodex
+                dodexTest(dodex, input, mess, getAdditionalContent(), Start, timer);
+                // Test dodex input
+                inputTest(dodex, timer);
 
                 if (testOnly) {
                     it("Testing only", () => {
@@ -107,3 +116,41 @@ define(["routertests",
             });
         };
     });
+
+    function getAdditionalContent() {
+        return {
+            cards: {
+                card28: {
+                    tab: "F01999", // Only first 3 characters will show on the tab.
+                    front: {
+                        content: `<h1 style="font-size: 10px;">Friends</h1>
+                        <address style="width:385px">
+                            <strong>Charlie Brown</strong> 	111 Ace Ave. Pet Town
+                            <abbr title="phone"> : </abbr>555 555-1212<br>
+                            <abbr title="email" class="mr-1"></abbr><a href="mailto:cbrown@pets.com">cbrown@pets.com</a>
+                        </address>
+                        `
+                    },
+                    back: {
+                        content: `<h1 style="font-size: 10px;">More Friends</h1>
+                        <address style="width:385px">
+                            <strong>Lucy</strong> 113 Ace Ave. Pet Town
+                            <abbr title="phone"> : </abbr>555 555-1255<br>
+                            <abbr title="email" class="mr-1"></abbr><a href="mailto:lucy@pets.com">lucy@pets.com</a>
+                        </address>
+                        `
+                    }
+                },
+                card29: {
+                    tab: "F02",
+                    front: {
+                        content: "<h1 style=\"font-size: 14px;\">My New Card Front</h1>"
+                    },
+                    back: {
+                        content: "<h1 style=\"font-size: 14px;\">My New Card Back</h1>"
+                    }
+                }
+            }
+        };
+    }
+    

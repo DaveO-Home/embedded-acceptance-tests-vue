@@ -17,6 +17,8 @@ module.exports = function (config) {
             "/node_modules/font-awesome": "/base/node_modules/font-awesome",
             "/app_bootstrap.html": "/base/dist_test/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/dist_test/README.md",
+            "/dodex/": "/base/" + bundler + "/appl/dodex/",
+            "/images/": "/base/" + bundler + "/images/",
         },
         files: [
             //Webcomponents for Firefox - used for link tag with import attribute.
@@ -33,7 +35,7 @@ module.exports = function (config) {
             {pattern: "dist_test/" + bundler + "/**/*.*", included: false, watched: false},
             {pattern: "dist_test/README.md", included: false, watched: false},
             {pattern: "node_modules/font-awesome/**/*", included: false, watched: false},
-            {pattern: bundler + "/images/favicon.ico", included: false, watched: false},
+            {pattern: bundler + "/images/*", included: false, watched: false},
             //Karma/Jasmine/Loader
             bundler + "/build/karma.bootstrap.js"
         ],
