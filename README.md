@@ -396,7 +396,7 @@ You can build a complete test/develpment environment on a Docker vm with the sup
 
 **Linux as Parent Host**(assumes docker is installed and daemon is running)-
 
-In the top parent directory, usually `..../embedded-acceptance-tests-ng/` execute the following commands;
+In the top parent directory, usually `..../embedded-acceptance-tests-vue/` execute the following commands;
 
 1\. ```docker build -t embedded fedora``` or ```docker build -t embedded centos```
 
