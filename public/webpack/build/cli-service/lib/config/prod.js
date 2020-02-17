@@ -28,9 +28,13 @@ module.exports = (api, options) => {
       } else {
         const UglifyPlugin = require("uglifyjs-webpack-plugin");
         const uglifyOptions = require("./uglifyOptions");
-        webpackConfig.optimization.minimizer([
-          new UglifyPlugin(uglifyOptions(options))
-        ]);
+
+        webpackConfig.optimization
+          .minimizer("app")
+          .use(UglifyPlugin, [uglifyOptions(options)])
+        // webpackConfig.optimization.minimizer([
+        //   new UglifyPlugin(uglifyOptions(options))
+        // ]);
       }
     }
   });
