@@ -19,6 +19,9 @@
     .smallerfont {
         font-size: 14px;,
     }
+    .pointer {
+        cursor: pointer;
+    }
 </style>
 <h4>
     Tools - Count
@@ -30,7 +33,7 @@
                 <button class="dropdown-toggle smallerfont" type="button" id="dropdown0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Select Job Type
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdown0">
+                <div class="dropdown-menu pointer" aria-labelledby="dropdown0">
                   <a class="dropdown-item smallerfont">Combined</a>
                   <a class="dropdown-item smallerfont">Category1</a>
                   <a class="dropdown-item smallerfont">Category2</a>

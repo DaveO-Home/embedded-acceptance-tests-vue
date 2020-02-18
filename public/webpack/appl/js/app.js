@@ -127,6 +127,14 @@ export default {
                         const tbody = tbodyTemplate(data);
                         $(".tablesorter tbody").html(tbody).trigger("update");
                         $("#dropdown1 a i").each(function () { this.remove(); });
+                        $("#dropdown1 a svg").each(function () { 
+                            this.remove(); 
+                        });
+                        $("#dropdown1 a").contents().filter(function() {
+                            return this.nodeType == 8;
+                        }).each(function(i, e){
+                            $(e).remove();
+                        });
                         $(sender).fa({ icon: "check" });
                     }, "json").fail((data, err) => {
                         console.error(`Error fetching fixture data: ${err}`);
