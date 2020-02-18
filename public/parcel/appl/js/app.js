@@ -30,7 +30,6 @@ export default {
             }, options);
             return this.each(function () {
                 const $element = $(this.target ? this.target : this);
-console.log("Element***", $element);
                 const icon = `<i class='fa fa-${options.icon}'> </i>`;
                 $(icon).appendTo($element);
             });
@@ -127,11 +126,8 @@ console.log("Element***", $element);
                         }
                         const tbody = tbodyTemplate(data);
                         $(".tablesorter tbody").html(tbody).trigger("update");
-console.log("#dropdown***", $("#dropdown1 a i").each(()=>{console.log(this);}));
                         $("#dropdown1 a i").each(function () { 
                             this.remove(); 
-console.log("Remove***", this);
-console.log("Sender***", $(sender));
                         });
                         $(sender).fa({ icon: "check" });
                     }, "json").fail((data, err) => {
