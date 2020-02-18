@@ -159,3 +159,6 @@ html {
     padding: 9px 0;
 }
 
+.clearfloats {
+    clear: both;
+}

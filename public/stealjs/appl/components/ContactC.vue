@@ -10,7 +10,7 @@
         </div>
 
         <address
-          class="pull-left"
+          class="float-left"
           style="width:300px"
         >
           <strong>The Best Company</strong><br>
@@ -18,7 +18,7 @@
           Middle, Earth 11111
         </address>
 
-        <address class="pull-right">
+        <address class="float-right">
           <abbr
             title="Phone"
             class="mr-2"
@@ -37,12 +37,10 @@
           >Email:</abbr><a href="mailto:info@best.com">info@best.com</a>
         </address>
 
-        <div class="clearfix" />
-
         <form
           action="#"
           method="post"
-          class="form-horizontal"
+          class="clearfloats alert-dangerform-horizontal"
         >
 
           <fieldset>
