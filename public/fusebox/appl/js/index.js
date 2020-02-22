@@ -1,4 +1,3 @@
-
 import vm from "../entry";
 import "config";
 import Setup from "setup";
@@ -6,7 +5,6 @@ import popper from "popper.js";
 import App from "app";
 import Default from "default";
 import "pager";
-/* eslint "import/first": [ "warn", "DISABLE-absolute-first" ] */
 /* develblock:start */
 window._bundler = "fusebox";
 /* develblock:end */

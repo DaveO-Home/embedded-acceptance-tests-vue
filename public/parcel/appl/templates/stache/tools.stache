@@ -23,24 +23,7 @@
         cursor: pointer;
     }
 </style>
-<h4>
-    Tools - Count
-</h4>
-<!--span>Select Job Type: <jobtype-selector to="jobtype-selector" /></span-->  
-        <section class="float-left">
-            
-            <div id="dropdown1" class="dropdown">
-                <button class="dropdown-toggle smallerfont" type="button" id="dropdown0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Select Job Type
-                </button>
-                <div class="dropdown-menu pointer" aria-labelledby="dropdown0">
-                  <a class="dropdown-item smallerfont">Combined</a>
-                  <a class="dropdown-item smallerfont">Category1</a>
-                  <a class="dropdown-item smallerfont">Category2</a>
-                </div>
-              </div>
-            
-        </section>
+
 <br/>
 
 <!--<i id='table_info' class='fa fa-info-circle float-left' aria-hidden='true' data-toggle='modal' data-target='#table_modal'></i>-->

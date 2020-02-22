@@ -3,7 +3,7 @@
     id="data"
     class="hello"
   >
-    <img src="../assets/logo.png">
+    <img :src="logo" />
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <ul>
@@ -72,12 +72,14 @@
 <script>
 import Setup from "setup";
 import App from "app";
+import logo from "../../images/logo.png";
 
 export default {
   name: "HelloWorld",
   data () {
     return {
-      msg: "Hi! - Acceptance Testing with a Vue.js App"
+      msg: "Hi! - Acceptance Testing with a Vue.js App",
+      logo: logo
     };
   },
   mounted: function () {

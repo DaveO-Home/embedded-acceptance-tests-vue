@@ -140,6 +140,7 @@
 </template>
 <script>
 import Start from "./js/controller/start";
+
 export default {
   name: "App",
   mounted: function() {

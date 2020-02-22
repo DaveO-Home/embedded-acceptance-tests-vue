@@ -225,6 +225,7 @@ exports.watch = series(runTestCopy, watch_parcel, sync, watcher);
 exports.acceptance = r_test;
 exports.rebuild = series(runTestCopy, runTest);
 exports.lint = parallel(esLint, cssLint, bootLint);
+exports.copy = runTestCopy;
 // exports.development = parallel(series(runTestCopy, watch_parcel, sync, watcher), series(runTestCopy, build_development, tdd_parcel))
 
 function parcelBuild(watch, cb) {

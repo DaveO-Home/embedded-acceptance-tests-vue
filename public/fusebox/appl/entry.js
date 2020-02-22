@@ -1,4 +1,5 @@
 import Vue from "vue";
+import Vuex from "vuex";
 import router from "./router";
 import VueRouter from "vue-router";
 import App from "./App.vue";
@@ -6,14 +7,29 @@ import dodex from "dodex";
 import input from "dodex-input";
 import mess from "dodex-mess";
 import DodexC from "./components/DodexC.vue";
+// vuex
+import { mutations, STORAGE_KEY } from "./vuex/mutations";
+import actions from "./vuex/actions";
+import plugins from "./vuex/plugins";
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
+Vue.use(Vuex);
+
+const store = new Vuex.Store({
+  state: {
+    selections: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]")
+  },
+  actions,
+  mutations,
+  plugins
+});
 
 Vue.component("dodex-c", DodexC);
 /* eslint-disable no-new */
 export default new Vue({
   el: "#app",
+  store,
   router,
   components: { App },
   template: "<App/>"

@@ -4,7 +4,7 @@ import Setup from "./utils/setup";
 import App from "./app";
 import Default from "./utils/default";
 import "pager";
-/* eslint "import/first": [ "warn", "DISABLE-absolute-first" ] */
+
 App.init(Default);
 Setup.init();
 /* develblock:start */

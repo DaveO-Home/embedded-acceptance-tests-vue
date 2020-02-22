@@ -6,6 +6,8 @@ export default function (Route, Helpers, vm, timer) {
         let tools;
         let beforeValue;
         let afterValue;
+        let vuexBeforeValue;
+        let vuexAfterValue;
         let spyToolsEvent;
         let selectorObject;
         let selectorItem;
@@ -23,7 +25,7 @@ export default function (Route, Helpers, vm, timer) {
             }).then(() => {
                 tools = $("#tools");
                 beforeValue = tools.find("tbody").find("tr:nth-child(1)").find("td:nth-child(2)").text();
-
+                vuexBeforeValue = $("h4").first()[0].innerText;
                 selectorObject = $("#dropdown0");
                 selectorObject = document.activeElement;
                 selectorObject.click();
@@ -36,6 +38,7 @@ export default function (Route, Helpers, vm, timer) {
                 const numbers = timer(50, 50);
                 const observable = numbers.subscribe(timer => {
                     afterValue = tools.find("tbody").find("tr:nth-child(1)").find("td:nth-child(2)").text();
+                    vuexAfterValue = $("h4").first()[0].innerText;
                     if (afterValue !== beforeValue || timer === 20) {
                         observable.unsubscribe();
                         done();
@@ -61,6 +64,10 @@ export default function (Route, Helpers, vm, timer) {
 
         it("new page loaded on change.", function () {
             expect(beforeValue).not.toBe(afterValue);
+        });
+
+        it("vuex storage changed title.", function () {
+            expect(vuexBeforeValue).not.toBe(vuexAfterValue);
         });
     });
 }

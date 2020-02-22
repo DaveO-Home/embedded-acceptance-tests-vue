@@ -23,7 +23,7 @@
         cursor: pointer;
     }
 </style>
-<h4>
+{{! <h4>
     Tools - Count
 </h4>
 <!--span>Select Job Type: <jobtype-selector to="jobtype-selector" /></span-->  
@@ -40,7 +40,7 @@
                 </div>
               </div>
             
-        </section>
+        </section> }}
 <br/>
 
 <!--<i id='table_info' class='fa fa-info-circle float-left' aria-hidden='true' data-toggle='modal' data-target='#table_modal'></i>-->

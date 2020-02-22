@@ -36,6 +36,7 @@ module.exports = function (config) {
             {pattern: "node_modules/bootstrap/**/*.js", watched: false, included: false},
             {pattern: "node_modules/popper.js/dist/umd/*", watched: false, included: false},
             {pattern: "node_modules/vue/**/*.js", watched: false, included: false},
+            {pattern: "node_modules/vuex/**/*.js", watched: false, included: false},
             {pattern: "node_modules/de-indent/index.js", watched: false, included: false},
             {pattern: "node_modules/he/he.js", watched: false, included: false},
             {pattern: bundler + "/appl/**/*", included: false},
