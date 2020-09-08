@@ -39,6 +39,7 @@ export default function (App, vm) {
             /*
              * Loading Welcome page.
              */
+            Route.push({ name: "HelloWorld" });
             Route.push({ name: "start" });
 
             new Promise((resolve, reject) => {

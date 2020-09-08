@@ -38,7 +38,7 @@ export default function (App, vm) {
             /*
              * Loading Welcome page.
              */
-            Route.push({name: "start"});
+            Route.push({name: "start#"});
             
             new Promise((resolve, reject) => {
                 Helpers.isResolved(resolve, reject, vm, "data", 0, 1);

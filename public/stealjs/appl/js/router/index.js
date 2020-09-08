@@ -14,6 +14,12 @@ export default new VueRouter({
       name: "start",
       component: StartC
     },
+    // For testing
+    {
+      path: "/#",
+      name: "start#",
+      component: StartC
+    },
     {
       path: "/pdf/test",
       name: "test",

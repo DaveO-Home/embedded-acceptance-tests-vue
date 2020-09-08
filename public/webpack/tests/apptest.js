@@ -40,8 +40,9 @@ define(["routertests",
                     /*
                      * Loading Welcome page.
                      */
+                    Route.push({ name: "HelloWorld" });
                     Route.push({ name: "start" });
-
+                    
                     new Promise((resolve, reject) => {
                         Helpers.isResolved(resolve, reject, vm, "data", 0, 1);
                     }).catch(rejected => {
@@ -49,6 +50,7 @@ define(["routertests",
                     }).then(() => {
                         // expect(App.loadView).toHaveBeenCalled()
                         // expect(Helpers.isLoaded.calls.count()).toEqual(1)
+
                         expect(App.controllers["Start"]).not.toBeUndefined();
                         expect(vueElement.querySelector("#data").children.length > 1).toBe(true);
 
