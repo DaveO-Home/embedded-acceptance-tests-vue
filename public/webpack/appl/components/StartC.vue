@@ -1,53 +1,24 @@
 <template>
-  <span
-    id="data"
-    v-html="index"
-  />
+  <Suspense>
+    <template #default>
+      <StartA />
+    </template>
+    <template #fallback>
+      <div>Loading...</div>
+    </template>
+  </Suspense>
 </template>
 <script>
-
-import Start from "start";
-import Setup from "setup";
-import Helpers from "helpers";
-
-let inPromise = false;
-let indexHtml = {
-      index: null
-    };
+import setup from "setup";
+import StartA from "./StartA.vue";
 
 export default {
   name: "StartC",
-  data () {
-    this.getData();
-    return indexHtml;
-  },
+  components: { StartA },
   mounted: function () {
-    this.$nextTick(function () {
-      Setup.init();
+    this.$nextTick(() => {
+      setup.init();
     });
-  },
-  methods: {
-    getData () {
-      if (inPromise) {
-        return indexHtml.index;
-      }
-      inPromise = true;
-      Start.initMenu();
-      Start.index();
-
-      new Promise(function (resolve, reject) {
-          let count = 0;
-          Helpers.isLoaded(resolve, reject, indexHtml.index, Start, count, 10);
-        })
-        .catch(function (rejected) {
-          console.warn("Failed", rejected);
-        })
-        .then(function (resolved) {
-            indexHtml.index = resolved;
-            inPromise = false;
-            return indexHtml.index;
-        });
-    }
   }
 };
 </script>

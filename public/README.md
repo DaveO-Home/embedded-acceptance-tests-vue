@@ -1,26 +1,26 @@
-# Embedded Vue Acceptance Testing with Karma and Jasmine
+# Vue Embedded Acceptance Testing with Karma and Jasmine
 
-The basic idea is to build a production application ensuring consistent and stable code using JavaScript, CSS and bootstrap linting and automated unit and e2e testing. This will be in part, assisted by the development tools, detailed in the [Development Overview](#development) and bundle sections.
+The basic idea is to build a production application ensuring consistent and stable code using JavaScript, CSS and bootstrap linting and automated unit and e2e testing. This will be in part, assisted by the development tools, detailed in the [Development Overview](#vue-development) and bundle sections. Parcel, Rollup and Webpack now use Vue 3. The Vue 2 bundlers are located in `public/vue2`.
 
-[Production Build](#production-build)
+[Production Build](#vue-production-build)
 
-[Test Build](#test-build)
+[Test Build](#vue-test-build)
 
-[Development Overview](#development)
+[Development Overview](#vue-development)
 
 ## Bundle Tools
 
-> 1. [Browserify](#i-browserify)
-> 1. [Brunch](#ii-brunch)
-> 1. [Fusebox](#iii-fusebox)
-> 1. [Parcel](#iv-parcel)
-> 1. [Rollup](#v-rollup)
-> 1. [Steal](#vi-stealjs)
-> 1. [Webpack](#vii-webpack)
+> 1. [Browserify](#vue-i-browserify)
+> 1. [Brunch](#vue-ii-brunch)
+> 1. [Fusebox](#vue-iii-fusebox)
+> 1. [Parcel](#vue-iv-parcel)
+> 1. [Rollup](#vue-v-rollup)
+> 1. [Steal](#vue-vi-stealjs)
+> 1. [Webpack](#vue-vii-webpack)
 
-[Installation](#installation)
+[Installation](#vue-installation)
 
-[Docker](#viii-dockerfile)
+[Docker](#vue-viii-dockerfile)
 
 **Dodex**: Added for testing and demo. <https://github.com/DaveO-Home/dodex>
 
@@ -38,17 +38,17 @@ The basic idea is to build a production application ensuring consistent and stab
   1. Karma
   1. Jasmine
   1. Any Browser with a karma launcher
-  1. Code bundling tools
+  1. Javascript bundling tools
   1. See `public/package.json` for details
   1. Node, npm - node v10 or greater works best
 
-## Installation
+## Vue Installation
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 **Desktop:**
 
-  clone the repository or download the .zip
+`Clone the repository or download the .zip`
 
 **Install Assumptions:**
 
@@ -60,36 +60,40 @@ The basic idea is to build a production application ensuring consistent and stab
 
 **Server:**
 
-  `cd` to top level directory `<install>/acceptance-tests`
+  `cd` to top level directory `<install>/acceptance-tests-vue`
 
 ```bash
   npm install
 ```
 
-  This will install a small Node/Express setup to view the results of a production build.
+  This will install a small Node/Koa setup to view the results of a production/test builds.
 
-  `cd <install>/acceptance-tests/public`
+  `cd <install>/acceptance-tests-vue/public`
 
 ```bash
   npm install
 ```
 
-  To install all required dependencies. If trying Brunch, install the global package for Brunch, `npm install brunch -g`.
+  To install required dependencies. Currently this will install Vue3 for Parcel, Rollup and Webpack.
+
+  `cd <install>/acceptance-tests-vue/public/vue2`
+
+  To install required dependencies for Browserify, Brunch, FuseBox and Stealjs for Vue2. If trying Brunch, install the global package for Brunch, `npm install brunch -g`.
 
   __Note;__ To fix many of the javascript vulnerabilities, execute `npm audit fix`.
 
 **Client:**
 
-Test builds will generate bundles in 'dist_test' and production in the 'dist' directory at the root level, 'public'.
+Test builds will generate bundles in `dist_test` and production in the `dist` directory at the root level, `public` for Vue3 bundlers. The distribution directories for Vue2 are under the `public/vue2` directory.
 
-## Production Build
+## Vue Production Build
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 To generate a build "cd to `public/<bundler>/build` and type `gulp`, e.g.
 
 ```bash
-  cd public/fusebox/build
+  cd public/parcel/build
   gulp
 ```
 
@@ -97,18 +101,18 @@ If the tests succeed then the build should complete.
 
 To run the production application:
 
-  1. `cd <install>/acceptance_tests`
+  1. `cd <install>/acceptance_tests-vue`
   1. `npm start`  -  This should start a Node Server with port 3080.
   1. Start a browser and enter `localhost:3080/dist/<bundler>/appl/testapp.html`
-  1. For Parcel the Production Url is `localhost:3080/dist/parcel/testapp.html`
+  1. For the vue2 versions, the Production Url is `localhost:3080/vue2/dist/<bundler>/testapp.html`
 
 You can repeat the procedure with "webpack", "browserify", "stealjs", "brunch", "parcel" or "rollup". Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
 
-Normally you can also run the test bundles(dist_test) from the node express server. However, when switching between development karma testing and running the test(dist_test) application, some resources are not found because of the "base/dist_test" URL. To fix this run `gulp rebuild` from the `<bundler>/build` directory.
+Normally you can also run the test bundles(dist_test) from the node koa server. However, when switching between development karma testing and running the test(dist_test) application, some resources are not found because of the "base/dist_test" URL. To fix this run `gulp rebuild` from the `<bundler>/build` directory.
 
-## Test Build
+## Vue Test Build
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 The test build simply runs the tests in headless mode. The default browsers are ChromeHeadless and FirefoxHeadless.  To change the default you can set an environment variable; e.g.
 
@@ -118,7 +122,7 @@ The test build simply runs the tests in headless mode. The default browsers are 
 
 to remove FirefoxHeadless from the browser list and add Opera.  You can also set this environment variable for a production build.
 
-To run the tests "cd to `public/<bundler>/build` and type `gulp test`, e.g.
+To run the tests "cd to `public/<bundler>/build` or `public/vue2/<bundler>/build` and type `gulp test`, e.g.
 
 ```bash
   cd public/webpack/build
@@ -181,11 +185,11 @@ SUMMARY:
 ✔ 72 tests completed
 ```
 
-## Development
+## Vue Development
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
-__Note__; When modifying project assets(.handlebars, .html, etc.) you can execute `gulp copy` from the `public/<bundler>/build` directory to preview changes. This is not required for __StealJs__.
+__Note__; When modifying project assets(.handlebars, .html, etc.) you can execute `gulp copy` from the `public/<bundler>/build` or `public/vue2/<bundler>/build` directory to preview changes. This is not required for __StealJs__.
 
 __A word on developing tests__; You can write and execute tests quicker by using the rebuild process of a given bundler and running the `acceptance` gulp task after the auto-rebuild, e.g. with __Rollup__ you can;
 
@@ -196,47 +200,47 @@ __A word on developing tests__; You can write and execute tests quicker by using
 
   __Also Note__; With a few of the bundle tools, execute the `gulp development` task to run from one window.
 
-### I. **Browserify**
+### Vue I. **Browserify**
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
-* `cd public/browserify/build`
+* `cd public/vue2/browserify/build`
 * `gulp server`
 
-   Browsersync will start a browser tab(default Chrome) with `localhost:3080/dist_test/browserify/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload.
+   Browsersync will start a browser tab(default Chrome) with `localhost:3080/vue2/dist_test/browserify/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload.
 
 2\. ***Hot Module Reload(HMR) Window*** -
 
-* `cd public/browserify/build`
+* `cd public/vue2/browserify/build`
 * `gulp hmr`
 
    The `watchify` plugin will remain active to rebuild the bundle on code change.
 
 3\. ***Test Driven Development(tdd) Window*** -
 
-* `cd public/browserify/build`
+* `cd public/vue2/browserify/build`
 * `gulp tdd`
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.  Note, you do not need `hmr` active for `tdd`. Also, `tdd` can be run with a headless browser.
 
-### II. **Brunch**
+### Vue II. **Brunch**
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Watch, Recompile and Reload Window*** -
 
-* `cd public/brunch/build`
+* `cd public/vue2/brunch/build`
 * `gulp watch` or `./cook watch` (output formatted better)
 
-At this point you can start a browser and enter `localhost:3080/appl/testapp_dev.html`. Any changes to the source code(*.js files and other assets such as *.html) should be reflected in the browser auto reload.
+At this point you can start a browser and enter `localhost:3080/appl/testapp_dev.html`. Any changes to the source code(*.js files and other assets such as*.html) should be reflected in the browser auto reload.
 
 __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.paths.public' as the server context. Also, the reload may fail at times, I've noticed that making a second code mod re-rights the ship.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
-* `cd public/brunch/build`
+* `cd public/vue2/brunch/build`
 * `gulp tdd` or `./cook tdd`
 
   While the Brunch watcher is running, tests are re-run when code are changed. 
@@ -246,38 +250,38 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 3\. ***Special Considerations***
   
 * Brunch plugin eslint-brunch uses eslint 3. The demo/vue uses version 4.  The `gulp`(production build) command uses a gulp linter, so javascript linting is executed. However, if you wish to use the Brunch eslint-brunch plugin, do the following;
-  * `cd <install>/public/node_modules/eslint-brunch`
+  * `cd <install>/public/vue2/node_modules/eslint-brunch`
   * `npm install eslint@latest`
-  * `cd <install>/public` and edit the `brunch-config.js` file and uncomment the eslint section.
+  * `cd <install>/public/vue2` and edit the `brunch-config.js` file and uncomment the eslint section.
 
-### III. **Fusebox**
+### Vue III. **Fusebox**
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Hot Module Reload(HMR) Server Window*** -
 
-* `cd public/fusebox/build`
+* `cd public/vue2/fusebox/build`
 * `gulp hmr` or `fuse hmr`
 
-   At this point you can start a browser and enter `localhost:3080/fusebox/appl/testapp_dev.html` or `localhost:3080/dist_test/fusebox/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload.
+   At this point you can start a browser and enter `localhost:3080/vue2/fusebox/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
-* `cd public/fusebox/build`
+* `cd public/vue2/fusebox/build`
 * `gulp tdd`
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
 
-### IV. **Parcel**
+### Vue IV. **Parcel**
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Watch, Recompile and Reload Window*** -
 
 * `cd public/parcel/build`
 * `gulp watch`
 
-At this point you can start a browser and enter `localhost:3080/dist_test/parcel/testapp_dev.html` (configured to auto open browser tab). Any changes to the source code(*.js and *.css files) should be reflected in the browser auto reload.
+At this point you can start a browser and enter `localhost:3080/dist_test/parcel/appl/testapp_dev.html` (can be configured to auto open browser tab). Any changes to the source code(*.js and*.css files) should be reflected in the browser auto reload.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
@@ -290,16 +294,16 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
   __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### V. **Rollup**
+### Vue V. **Rollup**
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
 * `cd public/rollup/build`
 * `gulp watch`
 
-   The Rollup Development Server, Watch(auto-rebuild) and Page Reload functions are started together.  Simply use one of the following URLs in any browser; `localhost:3080/rollup/appl/testapp_dev.html` or `localhost:3080/dist_test/rollup/appl/testapp_dev.html`.
+   The Rollup Development Server, Watch(auto-rebuild) and Page Reload functions are started together.  Simply use the following URL in any browser; `localhost:3080/dist_test/rollup/appl/testapp_dev.html`.
 
 2\. ***Test Driven Development(tdd) Window*** -
 
@@ -308,13 +312,13 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### VI. **Stealjs**
+### Vue VI. **Stealjs**
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
-* `cd public/stealjs/build`
+* `cd public/vue2/stealjs/build`
 * `gulp server`
 
 2\. ***Live-Reload(HMR) Window*** -
@@ -322,32 +326,34 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 * `cd public/stealjs/build`
 * `gulp hmr`
 
-   At this point you can start a browser and enter `localhost:3080/stealjs/appl/testapp_dev.html`(please note that dist_test is not in the URL).  Any changes to the source code(*.js files) should be reflected in the browser auto reload.  The `gulp hmr` by default builds a vendor bundle for faster reload.  When you are not modifying the node_modules directory, subsequent executions of `gulp hmr` do not need the vendor bundle build. You can disable by setting an environment variable, `export USE_VENDOR_BUILD=false`.
+   At this point you can start a browser and enter `localhost:3080/vue2/stealjs/appl/testapp_dev.html`(please note that dist_test is not in the URL).  Any changes to the source code(*.js files) should be reflected in the browser auto reload.  The `gulp hmr` by default builds a vendor bundle for faster reload.  When you are not modifying the node_modules directory, subsequent executions of `gulp hmr` do not need the vendor bundle build. You can disable by setting an environment variable, `export USE_VENDOR_BUILD=false`.
 
    Stealjs does not require a dist_test build. It runs development directly from the source(nice!). However, when starting `hmr` a vendor bundle is produced at public/dev-bundle.js for `hmr` performance. The bundle is accessed from the `testapp_dev.html` page, via a `deps-bundle` attribute.
 
 3\. ***Test Driven Development(tdd) Window*** -
 
-* `cd public/steal/build`
+* `cd public/vue2/steal/build`
 * `gulp tdd`
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### VII. **Webpack**
+### Vue VII. **Webpack**
 
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development HMR Server Window*** -
 
 * `cd public/webpack/build`
 * `gulp hmr`
+  
+  This will start a server and watcher. View the application in a browser using URL `localhost:3080/dist_test/webpack/appl/testapp_dev.html`. Any code changes should be reflected in the auto reload.
 
 2\. ***Hot Module Reload(Watch) Window*** -
 
 * `cd public/webpack/build`
 * `gulp watch`
 
-   At this point you can start a browser and enter `localhost:3080/dist_test/webpack/appl/testapp_dev.html`.  Any changes to the source code(*.js files) should be reflected in the browser auto reload. Running the application from the source directory should also work, e.g., `localhost:3080/webpack/appl/testapp_dev.html`.
+   This rebuilds the application. If a server in running, e.g. `npm start` in `<install>/acceptance_tests-vue`, a manual refresh will reflect the change when executing `localhost:3080/dist_test/webpack/appl/testapp_dev.html`.
 
 3\. ***Test Driven Development(tdd) Window*** -
 
@@ -356,41 +362,9 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-4\. ***Webpack 4 is default(Vue Cli-3)*** -
+### Vue VIII. **Dockerfile**
 
-  The demo supports both Webpack 3 and Webpack 4(default). The dependency differences follows;
-
-*Webpack 4 dependencies*:
-
-* "@intervolga/optimize-cssnano-plugin": "^1.0.6"
-* "address": "^1.0.3"
-* "babel-preset-vue": "^2.0.2"
-* "cache-loader": "^1.2.2"
-* "case-sensitive-paths-webpack-plugin": "^2.1.2"
-* "friendly-errors-webpack-plugin": "^1.7.0"
-* "joi": "^13.7.0"
-* "lodash.defaultsdeep": "^4.6.0"
-* "mini-css-extract-plugin": "^0.4.3"
-* "string.prototype.padend": "^3.0.0"
-* "string.prototype.padstart": "^3.0.0"
-* "webpack-chain": "^4.12.0"
-
-*Webpack 4 upgraded dependencies*:
-
-* "vue-loader": "^14.2.3"
-* "vue-loader": "^15.4.2"
-* "webpack": "^3.11.0"
-* "webpack": "^4.20.2"
-* "webpack-dev-server": "^2.11.3"
-* "webpack-dev-server": "^3.1.9"
-* "webpack-stream": "^4.0.3"
-* "webpack-stream": "^5.1.1"
-
-Change versions as needed.
-
-### VIII. **Dockerfile**
-
-[Top](#embedded-vue-acceptance-testing-with-karma-and-jasmine)
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 You can build a complete test/develpment environment on a Docker vm with the supplied Dockerfile.
 
@@ -416,6 +390,6 @@ For Pro and Enterpise OS's, follow the Docker instructions on installation.  For
 
 3\. ```docker exec -it --privileged --user tester -w /home/tester test_env bash```
 
-The web port 3080 is exposed to the parent host, so once an application is sucessfully bundled and the node server(```npm start``` in directory embedded-acceptance-tests) is started, a host browser can view the application using say ```localhost:3080/dist/fusebox/appl/testapp.html```.
+The web port 3080 is exposed to the parent host, so once an application is sucessfully bundled and the node server(```npm start``` in directory embedded-acceptance-tests) is started, a host browser can view the application using say ```localhost:3080/dist/webpack/appl/testapp.html```.
 
 __Note__; Without a complete Pro/Enterprise docker installation, the ```test_env``` container can only run with Headless browsers. Therfore you should execute ```export USE_BROWSERS=ChromeHeadless,FirefoxHeadless``` before testing, development and building.

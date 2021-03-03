@@ -204,7 +204,7 @@ var testContent = `{
 		"card16": {
 			"tab": "P",
 			"front": {
-				"content": "<h1>Test Pdf</h1><a href='#!pdf/test'><i class='fa fa-fw fa-file-pdf-o'></i>PDF View</a>"
+				"content": "<h1>Test Pdf</h1><a href='#!pdftest'><i class='fa fa-fw fa-file-pdf'></i>PDF View</a>"
 			},
 			"back": {
 				"content": "<h1>Lorem Ipsum</h1><a href='https://www.yahoo.com' target='_'>Yahoo16</a>"
@@ -213,7 +213,7 @@ var testContent = `{
 		"card20": {
 			"tab": "T",
 			"front": {
-				"content": "<h1>Test Table</h1><a href='#!table/tools'><i class='fa fa-fw fa-table'></i>Table View</a>"
+				"content": "<h1>Test Table</h1><a href='#!tabletools'><i class='fa fa-fw fa-table'></i>Table View</a>"
 			},
 			"back": {
 				"content": "<h1>Lorem Ipsum</h1><a href='https://www.yahoo.com' target='_'>Yahoo20</a>"

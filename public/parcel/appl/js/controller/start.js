@@ -26,9 +26,9 @@ export default App.controllers.Start ||
         },
         location: "#/",
         index (options) {
-            const indexUrl = "views/prod/index.html";
+            const indexUrl = "../views/prod/index.html";
 
-            const markdownUrl = "../../README.md";
+            const markdownUrl = "../../../README.md";
             this.view({
                 url: indexUrl,
                 urlMd: markdownUrl,
@@ -44,7 +44,7 @@ export default App.controllers.Start ||
             return this.html;
         },
         "div .login click": function (sender, e) {
-            const loginUrl = "views/prod/login.html";
+            const loginUrl = "../views/prod/login.html";
             me.modal({
                 url: loginUrl,
                 title: "Account Log In",

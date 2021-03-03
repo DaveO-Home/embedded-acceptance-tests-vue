@@ -14,7 +14,7 @@ import input from "dodex-input";
 import mess from "dodex-mess";
 
 export default function (App, vm) {
-    const vueElement = vm.$el;
+    const vueElement = document.querySelector(vm._component.el);
 
     describe("Application Unit test suite - AppTest", () => {
         beforeAll(() => {
@@ -48,10 +48,13 @@ export default function (App, vm) {
                 //                expect(App.loadView).toHaveBeenCalled()
                 //                expect(Helpers.isLoaded.calls.count()).toEqual(1)
                 expect(App.controllers["Start"]).not.toBeUndefined();
-                expect(vueElement.querySelector("#data").children.length > 3).toBe(true);
-
-                domTest("index", vueElement);
-                done();
+                
+                // Vue3 is async so we need next tick
+                setTimeout(function() {
+                    expect(vueElement.querySelector("#main_container").children.length > 1).toBe(true);
+                    domTest("index", vueElement);
+                    done();
+                }, 500);
             }).catch(rejected => {
                 fail(`The Welcome Page did not load within limited time: ${rejected}`);
             });
@@ -68,33 +71,38 @@ export default function (App, vm) {
             }).then(() => {
                 // $('body').append(vueElement)
                 expect(App.controllers["Table"]).not.toBeUndefined();
-                expect(vueElement.querySelector("#data").children.length > 1).toBe(true);
 
-                domTest("tools", vueElement);
-                done();
+                setTimeout(function() {
+                    expect(vueElement.querySelector("#data").children.length > 1).toBe(true);
+                    domTest("tools", vueElement);
+                    done();
+                }, 0);
             }).catch(rejected => {
                 fail(`The Tools Page did not load within limited time: ${rejected}`);
             });
         });
 
-        routerTest(vm.$router.options.routes, "table", "tools", null);
+        routerTest(vm._component.router.getRoutes(), "table", "tools", null);
 
         it("Is Pdf Loaded", done => {
             Route.push({ name: "test" });
 
             const numbers = timer(50, 50);
             const observable = numbers.subscribe(timer => {
-                let pdf = vm.$el.querySelector("#main_container").querySelector("[name='pdfDO']");
+                let pdf = vueElement.querySelector("#main_container").querySelector("[name='pdfDO']");
                 if (pdf || timer === 50) {
                     expect(vueElement.querySelector("#main_container").querySelector("iframe") !== null).toBe(true);
                     observable.unsubscribe();
-                    domTest("pdf", vueElement);
-                    done();
+                    setTimeout(function() {
+                        domTest("pdf", vueElement);
+                        done();
+                    }, 0);
                 }
             });
         });
 
-        routerTest(vm.$router.options.routes, "pdf", "test", null);
+        // routerTest(vm.$router.options.routes, "pdf", "test", null);
+        routerTest(vm._component.router.getRoutes(), "pdf", "test", null);
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.

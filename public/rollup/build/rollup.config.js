@@ -1,3 +1,5 @@
+/* This is not used */
+
 const alias = require("rollup-plugin-alias");
 const buble = require("rollup-plugin-buble");
 const builtins = require("rollup-plugin-node-builtins");

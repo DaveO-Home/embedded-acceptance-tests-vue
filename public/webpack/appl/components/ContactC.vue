@@ -138,7 +138,7 @@ import SetUp from "setup";
 export default {
   name: "ContactC",
   mounted: function () {
-    this.$nextTick(function () {
+    this.$nextTick(() => {
         const el = $("#data");
         this.loadStart(el);
         SetUp.init();

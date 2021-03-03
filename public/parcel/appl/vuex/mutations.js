@@ -8,6 +8,8 @@ if (window.testit) {
 export const mutations = {
   addSelection (state, selection) {
         state.selections.push(selection);
+        state.count = selection.count;
+        state.text = selection.text;
   },
 
   removeSelection (state, selection) {
@@ -16,12 +18,16 @@ export const mutations = {
 
   clearSelections ( state ) {
     state.selections = [];
+    state.count = 0;
+    state.text = "Combined";
   },
 
   editSelection (state, index ) {
     const selection = state.selections[index];
     const count = selection.count + 1;
     const text = selection.text;
+    state.count = count;
+    state.text = text;
 
     state.selections.splice(index, 1, {
       ...selection,

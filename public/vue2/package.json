@@ -1,0 +1,260 @@
+{
+  "name": "embedded-acceptance-tests-vue",
+  "version": "1.0.0",
+  "description": "Vue acceptance testing",
+  "keywords": [
+    "karma",
+    "jasmine",
+    "vuejs",
+    "bootstrap",
+    "browserify",
+    "brunch",
+    "fusebox",
+    "stealjs",
+    "steal-tools"
+  ],
+  "author": "DaveO",
+  "private": true,
+  "scripts": {
+    "server": "node ../appExpress.js",
+    "lint": "eslint --ext .js,.vue --ignore-pattern marked.js --ignore-pattern webcomponents-hi-sd-ce.js",
+    "bpc": "rm -rf dist/brunch",
+    "btc": "rm -rf dist_test/brunch",
+    "bt": "npm run btc && brunch b --env test",
+    "bp": "export LOGGY_STACKS=1; npm run bpc && brunch build --production",
+    "bw": "npm run btc && brunch watch --server"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome": "^1.2.0-6",
+    "@fortawesome/fontawesome-free-solid": "^5.1.0-3",
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "bootstrap": "^4.5.2",
+    "browserslist": "^4.14.1",
+    "caniuse-lite": "^1.0.30001124",
+    "dodex": "^1.3.4",
+    "dodex-input": "^1.3.0",
+    "dodex-mess": "^1.2.1",
+    "handlebars": "^4.7.6",
+    "jquery": "^3.5.1",
+    "lodash-es": "^4.17.15",
+    "marked": "^2.0.1",
+    "moment": "^2.27.0",
+    "pager": "^0.1.3",
+    "popper": "^1.0.1",
+    "popper.js": "^1.16.1",
+    "tablesorter": "^2.31.3",
+    "vue": "^2.6.12",
+    "vue-router": "^3.4.3",
+    "vue-to-js": "^0.9.4",
+    "vuex": "^3.5.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.17",
+    "@babel/preset-env": "^7.12.17",
+    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@metahub/karma-jasmine-jquery": "^4.0.1",
+    "@vue/component-compiler-utils": "^3.2.0",
+    "auto-reload-brunch": "^2.7.1",
+    "babel-brunch": "^6.1.1",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-vue": "^2.0.2",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.12",
+    "browserify": "^17.0.0",
+    "browserify-css": "^0.15.0",
+    "browserify-shim": "^3.8.14",
+    "child_process": "^1.0.2",
+    "clean-css-brunch": "^3.0.0",
+    "copy": "^0.3.1",
+    "copycat-brunch": "^1.1.1",
+    "cross-env": "^7.0.2",
+    "envify": "^4.1.0",
+    "eslint": "^7.20.0",
+    "eslint-brunch": "^3.12.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-plugin-html": "^6.1.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-vue": "^7.6.0",
+    "fancy-log": "^1.3.3",
+    "fuse-box": "^3.7.1",
+    "gulp": "^4.0.2",
+    "gulp-bootlint": "^1.1.0",
+    "gulp-copy": "^4.0.1",
+    "gulp-csslint": "^1.0.1",
+    "gulp-env": "^0.4.0",
+    "gulp-eslint": "^6.0.0",
+    "gulp-flatten": "^0.4.0",
+    "gulp-noop": "^1.0.1",
+    "gulp-remove-code": "^3.0.4",
+    "gulp-rename": "^2.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-strip-code": "^0.1.4",
+    "gulp-uglify": "^3.0.2",
+    "jasmine-core": "^3.6.0",
+    "karma": "^6.1.1",
+    "karma-brunch": "^1.0.6",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-firefox-launcher": "^2.1.0",
+    "karma-jasmine": "^4.0.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-opera-launcher": "^1.0.0",
+    "lodash.defaultsdeep": "^4.6.1",
+    "path": "^0.12.7",
+    "postcss-selector-parser": "^6.0.2",
+    "rimraf": "^3.0.2",
+    "rxjs": "^6.6.3",
+    "semver": "^7.3.2",
+    "steal": "^2.2.4",
+    "steal-css": "^1.3.2",
+    "steal-tools": "^2.2.6",
+    "steal-vue": "^0.1.1",
+    "string.prototype.padend": "^3.1.0",
+    "string.prototype.padstart": "^3.1.0",
+    "stripcode-brunch": "file:brunch/appl/js/stripcode-brunch",
+    "typescript": "^4.2.2",
+    "uglify-es": "^3.3.10",
+    "uglify-js-brunch": "^2.10.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "vue-brunch": "^2.0.1",
+    "vue-template-compiler": "^2.6.12",
+    "vueify": "^9.4.1",
+    "watchify": "^4.0.0"
+  },
+  "steal": {
+    "paths": {
+      "app": "stealjs/appl/js/app.js",
+      "basecontrol": "stealjs/appl/js/utils/base.control.js",
+      "config": "stealjs/appl/js/config.js",
+      "cinput": "stealjs/appl/js/utils/CanvasInput.js",
+      "default": "stealjs/appl/js/utils/default.js",
+      "helpers": "stealjs/appl/js/utils/helpers.js",
+      "lodash": "node_modules/lodash/lodash.min.js",
+      "menu": "stealjs/appl/js/utils/menu.js",
+      "pdf": "stealjs/appl/js/controller/pdf.js",
+      "router": "stealjs/appl/js/router.js",
+      "setup": "stealjs/appl/js/utils/setup.js",
+      "start": "stealjs/appl/js/controller/start.js",
+      "table": "stealjs/appl/js/controller/table.js",
+      "tablepager": "node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js",
+      "tablesorter": "node_modules/tablesorter/dist/js/jquery.tablesorter.combined.min.js",
+      "tablewidgets": "node_modules/tablesorter/dist/js/jquery.tablesorter.widgets.min.js",
+      "apptest": "stealjs/appl/jasmine/apptest.js",
+      "contacttest": "stealjs/appl/jasmine/contacttest.js",
+      "domtest": "stealjs/appl/jasmine/domtest.js",
+      "logintest": "stealjs/appl/jasmine/logintest.js",
+      "routertest": "stealjs/appl/jasmine/routertest.js",
+      "toolstest": "stealjs/appl/jasmine/toolstest.js",
+      "dodextest": "stealjs/appl/jasmine/dodextest.js",
+      "inputtest": "stealjs/appl/jasmine/inputtest.js",
+      "popper": "node_modules/popper.js/dist/umd/popper.min.js",
+      "handlebars": "node_modules/handlebars/dist/handlebars.min.js",
+      "fs": "node_modules/graceful-fs/fs.js",
+      "vuex": "node_modules/vuex/dist/vuex.js",
+      "vue": "node_modules/vue/dist/vue.js",
+      "css": "stealjs/appl/css/css.js"
+    },
+    "npmAlgorithm": "flat",
+    "ext": {
+      "css": "steal-css",
+      "vue": "steal-vue"
+    },
+    "cssOptions": {
+      "timeout": "15"
+    },
+    "plugins": [
+      "steal-css",
+      "steal-vue"
+    ],
+    "meta": {
+      "jquery": {
+        "exports": "jQuery",
+        "format": "global"
+      },
+      "bootstrap": {
+        "deps": [
+          "jquery",
+          "popper"
+        ]
+      },
+      "tablesorter": {
+        "deps": [
+          "jquery",
+          "bootstrap"
+        ]
+      },
+      "tablepager": {
+        "deps": [
+          "jquery",
+          "bootstrap"
+        ]
+      },
+      "tablewidgets": {
+        "deps": [
+          "jquery",
+          "bootstrap"
+        ]
+      },
+      "popper": {
+        "format": "global",
+        "exports": "Popper"
+      }
+    }
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "browser": {
+    "b/app": "./browserify/appl/js/app.js",
+    "b/basecontrol": "./browserify/appl/js/utils/base.control.js",
+    "b/config": "./browserify/appl/js/config.js",
+    "b/default": "./browserify/appl/js/utils/default.js",
+    "b/helpers": "./browserify/appl/js/utils/helpers.js",
+    "b/menu": "./browserify/appl/js/utils/menu.js",
+    "b/pager": "tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js",
+    "b/pdf": "./browserify/appl/js/controller/pdf.js",
+    "b/router": "./browserify/appl/js/router.js",
+    "b/setup": "./browserify/appl/js/utils/setup.js",
+    "b/start": "./browserify/appl/js/controller/start.js",
+    "b/table": "./browserify/appl/js/controller/table.js",
+    "b/apptest": "./browserify/appl/jasmine/apptest.js",
+    "b/contacttest": "./browserify/appl/jasmine/contacttest.js",
+    "b/domtest": "./browserify/appl/jasmine/domtest.js",
+    "b/logintest": "./browserify/appl/jasmine/logintest.js",
+    "b/routertest": "./browserify/appl/jasmine/routertest.js",
+    "b/toolstest": "./browserify/appl/jasmine/toolstest.js",
+    "b/popper": "./node_modules/popper.js/dist/umd/popper.js",
+    "b/setglobals": "./browserify/appl/js/utils/set.globals.js",
+    "b/setimports": "../browserify/appl/js/utils/set.imports.js",
+    "b/vue": "vue/dist/vue.common.js"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim",
+      "vueify",
+      "babelify"
+    ]
+  },
+  "browserify-shim": {
+    "b/popper": "Popper",
+    "bootstrap": {
+      "depends": [
+        "jquery:jQuery",
+        "b/popper:Popper"
+      ]
+    }
+  }
+}

@@ -39,7 +39,7 @@ export default {
         $("[data-toggle=collapse]").click(function (e) {
             // Don't change the hash
             e.preventDefault();
-            $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
+            $(this).find("i").toggleClass("fa-chevron-right, fa-chevron-down");
         });
     },
     toUrl (url) {
@@ -101,7 +101,7 @@ export default {
     renderTools (options) {
         const currentController = this.controllers[capitalize(options.controller)];
         let template;
-        const jsonUrl = "templates/tools_ful.json";
+        const jsonUrl = "../templates/tools_ful.json";
 
         $.get(options.templateUrl + options.template, source => {
             template = Stache.compile(source);
@@ -114,7 +114,7 @@ export default {
                     const osKeys = ["Combined", "Category1", "Category2"];
                     const values = ["ful", "cat1", "cat2"];
                     const tbodyTemplate = template;
-                    const toolsUrl = "templates/tools_";
+                    const toolsUrl = "../templates/tools_";
 
                     let selectedJobType = getValue(sender.target.innerText, osKeys, values);
                     if (typeof selectedJobType === "undefined") {
@@ -126,7 +126,7 @@ export default {
                         }
                         const tbody = tbodyTemplate(data);
                         $(".tablesorter tbody").html(tbody).trigger("update");
-                        $("#dropdown1 a i").each(function () { 
+                        $("#dropdown1 a svg").each(function () {
                             this.remove(); 
                         });
                         $(sender).fa({ icon: "check" });

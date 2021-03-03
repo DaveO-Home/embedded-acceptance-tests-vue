@@ -3,12 +3,11 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat' -> test-build -> acceptance-tests -> ('csslint', 'bootlint') -> 'build(eslint)'
  */
-const { src, dest, series, parallel, task } = require("gulp");
+const { src, /* dest, */ series, parallel, task } = require("gulp");
 const env = require("gulp-env");
 const log = require("fancy-log");
 const rmf = require("rimraf");
 const exec = require("child_process").exec;
-const execSync = require("child_process").execSync;
 const path = require("path");
 const chalk = require("chalk");
 const config = require("../config");
@@ -16,52 +15,34 @@ const Server = require("karma").Server;
 const eslint = require("gulp-eslint");
 const csslint = require("gulp-csslint");
 const webpack = require("webpack");
-const webpackStream = require("webpack-stream");
 const WebpackDevServer = require("webpack-dev-server");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const pkg = require("../../package.json");
-const webpackVersion = Number(/\d/.exec(pkg.devDependencies.webpack)[0]);
 const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT && Number(process.env.PORT);
-const isWindows = /^win/.test(process.platform);
+// const execSync = require("child_process").execSync;
+// const pkg = require("../../package.json");
+// const webpackVersion = Number(/\d/.exec(pkg.devDependencies.webpack)[0]);
+// const isWindows = /^win/.test(process.platform);
 
 let webpackConfig = null;
-let service = process.VUE_CLI_SERVICE;
 let browsers = process.env.USE_BROWSERS;
 let lintCount = 0;
-
-const getService = () => {
-    if (webpackVersion === 4 && (!service || process.env.VUE_CLI_API_MODE)) {
-        const Service = require("./cli-service/lib/Service");
-        service = new Service(process.env.VUE_CLI_CONTEXT || process.cwd());
-        service.init(process.env.VUE_CLI_MODE || process.env.NODE_ENV);
-        webpackConfig = service.resolveWebpackConfig();
-    }
-    return webpackConfig;
-};
 
 if (browsers) {
     global.whichBrowser = browsers.split(",");
 }
 
-/**
- * Default: Production Acceptance Tests 
- */
-// gulp.task('pat', ["acceptance-tests"], function (done) {
-const pat = function (done) {
-    done();
-};
 /*
  * javascript linter
  */
 const esLint = function (cb) {
     var stream = src(["../appl/**/*.js", "../appl/**/*.vue", "../tests/*.js"])
         .pipe(eslint({
-            configFile: "../../.eslintrc.js", // 'eslintConf.json',
-            quiet: 1
+            configFile: "../../.eslintrc.js",
+            quiet: 0
         }))
         .pipe(eslint.format())
-        .pipe(eslint.result(result => {
+        .pipe(eslint.result(() => {
             //Keeping track of # of javascript files linted.
             lintCount++;
         }))
@@ -94,14 +75,50 @@ const cssLint = function (cb) {
  * Build the application to the production distribution 
  */
 const build = function (cb) {
-    const envn = isWindows ? "set NODE_ENV=production & " : "export NODE_ENV=production; ";
-    execSync(webpackVersion === 4 ? envn + "node vue-cli-service.js build" : "node build", { stdio: "inherit" });
-    return cb();
+    process.env.NODE_ENV = "development";
+    process.env.USE_WATCH = "false";
+    process.env.USE_KARMA = "false";
+    process.env.USE_HMR = "false";
+    process.env.PUBLIC_PATH = "";
+    process.env.USE_TEST = "true";
+    process.env.USE_BUILD = "false";
+
+    rmf("../../dist/webpack", [], (err) => {
+        if (err) {
+            log(err);
+        }
+    });
+
+    const webpackConfig = webpack(require("./webpack.prod.conf"), (err, stats) => {
+        if (err) {
+            console.error(err.stack || err);
+            if (err.details) {
+                console.error(err.details);
+            }
+            cb();
+            return;
+        }
+
+        const info = stats.toJson();
+
+        if (stats.hasErrors()) {
+            console.error(info.errors);
+        } else {
+            if (stats.hasWarnings()) {
+                console.warn(info.warnings);
+            }
+
+            process.stdout.write(stats.toString(
+                webpackConfig.options.stats
+            ) + "\n");
+        }
+        cb();
+    });
 };
 /*
  * Bootstrap html linter 
  */
-const bootLint = function (cb) {
+const bootLint = (cb) => {
     log("Starting Gulpboot.js");
     return exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
         log(stdout);
@@ -113,14 +130,12 @@ const bootLint = function (cb) {
  * Run karma/jasmine tests once and exit
  * Set environment variable USE_BUILD=false to bypass the build
  */
-// gulp.task('acceptance-tests', ['test-build'], function (done) {
 const acceptance_tests = function (done) {
     karmaServer(done);
 };
 /**
  * Run karma/jasmine tests once and exit
  */
-// gulp.task('jasmine-tests', ['test-env'], function (done) {
 const jasmine_tests = function (done) {
     karmaServer(done);
 };
@@ -142,35 +157,57 @@ const test_env = function () {
  * Build Test without Karma settings for npm Express server (npm start)
  */
 const webpack_rebuild = function (cb) {
-    var envs = env.set({
-        NODE_ENV: "development",
-        USE_WATCH: "false",
-        USE_KARMA: "false",
-        USE_HMR: "false",
-        PUBLIC_PATH: "",
-        USE_TEST: "true",
-        USE_BUILD: "false"
-    });
+    process.env.NODE_ENV = "development";
+    process.env.USE_WATCH = "false";
+    process.env.USE_KARMA = "false";
+    process.env.USE_HMR = "false";
+    process.env.PUBLIC_PATH = "";
+    process.env.USE_TEST = "true";
+    process.env.USE_BUILD = "false";
 
     rmf("../../dist_test/webpack", [], (err) => {
         if (err) {
             log(err);
         }
     });
-    return src("../appl/main.js")
-        .pipe(envs)
-        .pipe(webpackStream(webpackVersion === 4 ? getService() : require("./webpack.dev.conf.js")))
-        .pipe(envs.reset)
-        .pipe(dest("../../dist_test/webpack"))
-        .on("end", function () {
+
+    const webpackConfig = webpack(require("./webpack.dev.conf"), (err, stats) => {
+        if (err) {
+            console.error(err.stack || err);
+            if (err.details) {
+                console.error(err.details);
+            }
             cb();
-        });
+            return;
+        }
+
+        const info = stats.toJson();
+
+        if (stats.hasErrors()) {
+            console.error(info.errors);
+        }
+        if (stats.hasWarnings()) {
+            console.warn(info.warnings);
+        }
+
+        process.stdout.write(stats.toString(
+            webpackConfig.options.stats
+        ) + "\n");
+        cb();
+    });
 };
 /*
  * Build the test bundle
  */
 const test_build = function (cb) {
     var useBuild = process.env.USE_BUILD === "false" ? "false" : "true";
+    process.env.NODE_ENV = "development";
+    process.env.USE_WATCH = "false";
+    process.env.USE_KARMA = "true";
+    process.env.USE_HMR = "false";
+    process.env.PUBLIC_PATH = "/base/dist_test/webpack/"   //This sets config to run under Karma;
+    process.env.USE_TEST = "true";
+    process.env.USE_BUILD = useBuild;
     var envs = env.set({
         NODE_ENV: "development",
         USE_WATCH: "false",
@@ -190,19 +227,35 @@ const test_build = function (cb) {
             log(err);
         }
     });
-    return src("../appl/main.js")
-        .pipe(envs)
-        .pipe(webpackStream(webpackVersion === 4 ? getService() : require("./webpack.dev.conf.js")))
-        .pipe(envs.reset)
-        .pipe(dest("../../dist_test/webpack"))
-        .on("end", function () {
+
+    const webpackConfig = webpack(require("./webpack.dev.conf"), (err, stats) => {
+        if (err) {
+            console.error(err.stack || err);
+            if (err.details) {
+                console.error(err.details);
+            }
             cb();
-        });
+            return;
+        }
+
+        const info = stats.toJson();
+
+        if (stats.hasErrors()) {
+            console.error(info.errors);
+        }
+        if (stats.hasWarnings()) {
+            console.warn(info.warnings);
+        }
+
+        process.stdout.write(stats.toString(
+            webpackConfig.options.stats
+        ) + "\n");
+        cb();
+    });
 };
 /**
  * Continuous testing - test driven development.  
  */
-// gulp.task('webpack-tdd', ["test-build"], function (done) {
 const webpack_tdd = function (done) {
     if (!browsers) {
         global.whichBrowser = ["Chrome", "Firefox"];
@@ -217,43 +270,47 @@ const webpack_tdd = function (done) {
  * run watch in separate window. Used with karma tdd.
  */
 const webpack_watch = function (cb) {
-    let envs = env.set({
-        NODE_ENV: "development",
-        USE_WATCH: "true",
-        USE_KARMA: "false",
-        USE_HMR: "false",
-        PUBLIC_PATH: "/base/dist_test/webpack/"
-    });
+    process.env.NODE_ENV = "development";
+    process.env.USE_WATCH = "true";
+    process.env.USE_KARMA = "false";
+    process.env.USE_HMR = "false";
+    process.env.PUBLIC_PATH = "/base/dist_test/webpack/"   //This sets config to run under Karma;
 
     rmf("../../dist_test/webpack", [], (err) => {
         if (err) {
             log(err);
         }
     });
-    return src("../appl/**/*")
-        .pipe(envs)
-        .pipe(webpackStream(webpackVersion === 4 ? getService() : require("./webpack.dev.conf.js")))
-        .pipe(dest("../../dist_test/webpack"))
-        .on("end", function () {
+
+    webpack(require("./webpack.dev.conf"), (err, stats) => {
+        if (err) {
+            console.error(err.stack || err);
+            if (err.details) {
+                console.error(err.details);
+            }
             cb();
-        });
+            return;
+        }
 
-};
+        const info = stats.toJson();
 
-const set_watch_env = function (cb) {
-    var envs = env.set({
-        NODE_ENV: "development",
-        USE_WATCH: "true",
-        USE_KARMA: "false",
-        USE_HMR: "false",
-        PUBLIC_PATH: "/base/dist_test/webpack/"
+        if (stats.hasErrors()) {
+            console.error(info.errors);
+        }
+        if (stats.hasWarnings()) {
+            console.warn(info.warnings);
+        }
+
+        log(stats.toString({
+            colors: true,
+            warnings: false,
+            assets: false,
+            cached: false,
+            modules: false
+        }));
+        // cb();
+        log(chalk.blue.bold("Watching for changes"));
     });
-
-    return src("./appl/index.js")
-        .pipe(envs)
-        .on("end", function () {
-            cb();
-        });
 };
 /*
  * Webpack development server - use with normal development
@@ -276,7 +333,12 @@ const webpack_server = function (cb) {
         hot: true,
         host: "localhost",
         publicPath: config.dev.assetsPublicPath,
-        stats: { colors: true },
+        stats: {
+            colors: true,
+            children: false,
+            warnings: false,
+            modules: false
+        },
         watchOptions: {
             ignored: /node_modules/,
             poll: config.dev.poll
@@ -284,14 +346,13 @@ const webpack_server = function (cb) {
         quiet: false
     };
 
-    webpackConfig = webpackVersion === 4 ? getService() : require("./webpack.dev.conf.js");
+    webpackConfig = require("./webpack.dev.conf.js");
     webpackConfig.devtool = "eval";
     webpackConfig.output.path = path.resolve(config.dev.assetsRoot);
     webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-    webpackConfig.plugins.push(new webpack.NamedModulesPlugin()); // HMR shows correct file names in console on update.
     webpackConfig.plugins.push(new HtmlWebpackPlugin({
         filename: "testapp_dev.html",
-        template: webpackVersion === 4 ? "../appl/testapp_dev.html" : "appl/testapp_dev.html",
+        template: "./appl/testapp_dev.html",
         inject: true
     }));
 
@@ -315,7 +376,7 @@ prodRun.displayName = "prod";
 
 task(prodRun);
 exports.default = prodRun;
-exports.prd = build;
+exports.prd = series(lintRun, build);
 exports.test = series(test_build, acceptance_tests);
 exports.tdd = series(test_build, webpack_tdd);
 exports.rebuild = webpack_rebuild;
@@ -376,9 +437,9 @@ function karmaServerSnap(done) {
             takeSnapShot(["", "start"]);
             takeSnapShot(["contact", "contact"]);
             takeSnapShot(["welcome", "vue"]);
-            takeSnapShot(["table/tools", "tools"]);
+            takeSnapShot(["tabletools", "tools"]);
             // Not working with PDF-?
-            // takeSnapShot(['pdf/test', 'test'])       
+            // takeSnapShot(['pdftest', 'test'])       
             process.exit(exitCode);
         }
     }).start();

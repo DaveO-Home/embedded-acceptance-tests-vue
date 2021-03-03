@@ -4,21 +4,49 @@
       Tools - Count {{ text }} selected {{ count }} times (from Vuex store)
     </h4>
     <section class="float-left">
-            
-      <div id="dropdown1" class="dropdown">
-        <button id="dropdown0" class="dropdown-toggle smallerfont" type="button"
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Select Job Type 
+      <div
+        id="dropdown1"
+        class="dropdown"
+      >
+        <button
+          id="dropdown0"
+          class="dropdown-toggle smallerfont"
+          type="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Select Job Type
         </button>
-        <div class="dropdown-menu pointer" aria-labelledby="dropdown0">
-          <a class="dropdown-item smallerfont" @click="addSelection">Combined</a>
-          <a class="dropdown-item smallerfont" @click="addSelection">Category1</a>
-          <a class="dropdown-item smallerfont" @click="addSelection">Category2</a>
+        <div
+          class="dropdown-menu pointer"
+          aria-labelledby="dropdown0"
+        >
+          <a
+            class="dropdown-item smallerfont"
+            @click="addSelection"
+          >Combined</a>
+          <a
+            class="dropdown-item smallerfont"
+            @click="addSelection"
+          >Category1</a>
+          <a
+            class="dropdown-item smallerfont"
+            @click="addSelection"
+          >Category2</a>
         </div>
       </div>
-            
     </section>
-    <span v-html="tools" />
+    <Suspense>
+      <template #default>
+        <AsyncToolsLoad />
+      </template>
+      <template #fallback>
+        <pre>
+          <div><strong>             Loading...</strong></div>
+        </pre>
+      </template>
+    </Suspense>
   </span>
 </template>
 
@@ -27,99 +55,120 @@ import Table from "table";
 import Setup from "setup";
 import App from "app";
 import Helpers from "helpers";
+import { defineAsyncComponent } from "vue";
+import { useStore } from "vuex";
 
-let that;
-let inPromise = false;
-let table = {
-      tools: null,
-      text: null,
-      count: 0
-    };
+const AsyncToolsLoad = defineAsyncComponent(() => {
+  const tools = new Promise((resolve) => {
+    getData(resolve);
+  });
+  return tools;
+});
 
 export default {
   name: "ToolsC",
-  data () {
-      that = this;
-      this.loadTools();
-      this.getData();
-    return table;
+  components: { AsyncToolsLoad },
+  data() {
+    this.loadTools();
+    return {};
   },
   computed: {
-    selections () {
-      return this.$store.state.selections;
+    count() {
+      return this.$store.state.count;
+    },
+    text() {
+      return this.$store.state.text;
     }
   },
-  mounted: function () {
-    table.text = "Combined";
-    table.count = 1;
-    this.$store.dispatch("clearAll");
-    this.$store.dispatch("addSelection", table.text);
-    this.$nextTick(function () {
-        Setup.init();
-    });
+  mounted() {
+    const store = useStore();
+    store.dispatch("clearAll");
+    store.dispatch("addSelection", "Combined");
+    Setup.init(); 
   },
   methods: {
-    addSelection (e) {
+    addSelection(e) {
       const text = e.target.innerText;
       if (text.trim()) {
-        table.text = text;
-        let index = findSelectionIndex (this.$store.state.selections, text);
-        if(index < 0) {
+        const index = findSelectionIndex(this.$store.state.selections, text);
+        if (index < 0) {
           this.$store.dispatch("addSelection", text);
-          table.count = this.$store.state.selections[this.$store.state.selections.length - 1].count;
-        }
-        else {
+        } else {
           this.$store.dispatch("editSelection", index);
-          table.count = this.$store.state.selections[index].count;
         }
       }
     },
-    loadTools () {
-        const controllerName = "Table";
-        const actionName = "tools";
-        const failMsg = `Load problem with: '${controllerName}/${actionName}'.`;
-        App.loadController(controllerName, Table, controller => {
-            if (controller &&
-                controller[actionName]) {
-                    controller[actionName]({});
-            } else {
-                console.error(failMsg);
-            }
-        }, err => {
-            console.error(`${failMsg} - ${err}`);
-        });
+    loadTools() {
+      const controllerName = "Table";
+      const actionName = "tools";
+      const failMsg = `Load problem with: '${controllerName}/${actionName}'.`;
+      App.loadController(
+        controllerName,
+        Table,
+        (controller) => {
+          if (controller && controller[actionName]) {
+            controller[actionName]({});
+          } else {
+            console.error(failMsg);
+          }
+        },
+        (err) => {
+          console.error(`${failMsg} - ${err}`);
+        }
+      );
     },
-    getData () {
-      if (inPromise) {
-        return table.tools;
-      }
-      inPromise = true;
-      new Promise(function (resolve, reject) {
-          let count = 0;
-          Helpers.isLoaded(resolve, reject, table.tools, Table, count, 10);
-        })
-        .catch(function (rejected) {
-          console.warn("Failed", rejected);
-        })
-        .then(function (resolved) {
-            table.tools = resolved;
-            inPromise = false;
-            that.$nextTick(function () {
-                Table.decorateTable("tools");
-                Helpers.scrollTop();
-                $("#dropdown1").on("click", Table.dropdownEvent);
-                if (App.controllers["Start"]) {
-                    App.controllers["Start"].initMenu();
-                }
-            });
-            return table.tools;
-        });
-    }
   }
 };
 
-function findSelectionIndex (selections, text) {
-  let selection = selections.find(s => s.text === text);
+function getData(asyncResolve) {
+  new Promise((resolve, reject) => {
+    let count = 0;
+    Helpers.isLoaded(resolve, reject, "", Table, count, 10);
+  })
+    .catch(function (rejected) {
+      console.warn("Failed", rejected);
+    })
+    .then(function (resolved) {
+      return asyncResolve({
+        template: resolved,
+        mounted() {
+            Table.decorateTable("tools");
+            Helpers.scrollTop();
+            $("#dropdown1").on("click", Table.dropdownEvent);
+            if (App.controllers["Start"]) {
+              App.controllers["Start"].initMenu();
+            }
+        }
+      });
+    });
+}
+
+function findSelectionIndex(selections, text) {
+  let selection = selections.find((s) => s.text === text);
   return selections.indexOf(selection);
 }
 </script>
+
+<style scoped>
+#app span,
+table,
+div tbody {
+  font-size: 13px;
+  line-height: 1.2;
+  padding: 5px;
+}
+#app table tr td {
+  margin: 5px;
+  padding: 5px;
+}
+h4,
+h3 {
+  text-align: center;
+}
+.smallerfont {
+  font-size: 14px;
+}
+.pointer {
+  cursor: pointer;
+}
+</style>

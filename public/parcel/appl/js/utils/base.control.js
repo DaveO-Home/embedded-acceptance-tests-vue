@@ -37,7 +37,7 @@ export default {
         let template;
 
         App.loadView({
-            url: "templates/stache/modal.stache"
+            url: "../templates/stache/modal.stache"
         }, modalFrag => {
             template = Stache.compile(modalFrag);
 

@@ -5,7 +5,7 @@ module.exports = {
         "jasmine": true, "jquery": true, "amd": true, "node": true
     },
     "extends": ["eslint:recommended",
-        "plugin:vue/recommended"],
+        "plugin:vue/vue3-recommended"],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"

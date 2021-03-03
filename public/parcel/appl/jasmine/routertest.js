@@ -3,7 +3,7 @@ export default function (Router, controller, action, id) {
     let route;
 
     for (let i = 0; i < Router.length; i++) {
-        if (Router[i].name === action) {
+        if (Router[i].name && Router[i].name === action) {
             route = Router[i];
             i = Router.length + 1;
         }
@@ -24,9 +24,10 @@ export default function (Router, controller, action, id) {
             //     })
             // }
 
-            it(`component defined: ${route.component.name}`, () => {
-                expect(route.component.name).not.toBeUndefined();
+            it(`component defined: ${route.components.default.name}`, () => {
+                expect(route.components.default.name).not.toBeUndefined();
             });
+                
         });
     }
 }

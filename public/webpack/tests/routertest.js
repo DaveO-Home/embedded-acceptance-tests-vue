@@ -3,7 +3,8 @@ define(() => (Router, controller, action, id) => {
     let route;
 
     for (let routes of Router) {
-        if (routes.name === action) {
+// console.log(routes)
+        if (routes.name && routes.name === action) {
             route = routes;
             break;
         }
@@ -23,9 +24,8 @@ define(() => (Router, controller, action, id) => {
             //         expect(route.id).toBe(id)
             //     })
             // }
-
-            it(`component defined: ${route.component.name}`, () => {
-                expect(route.component.name).not.toBeUndefined();
+            it(`component defined: ${route.components.default.name}`, () => {
+                expect(route.components.default.name).not.toBeUndefined();
             });
         });
     }

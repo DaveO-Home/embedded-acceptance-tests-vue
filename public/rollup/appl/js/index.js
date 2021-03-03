@@ -1,17 +1,22 @@
-
 import vm from "./entry";
 import "config";
-import App from "app";
+import app from "app";
 import Default from "default";
-import Setup from "setup";
+import setup from "setup";
 /* develblock:start */
 import apptest from "apptest";
 /* develblock:end */
 import "tablesorter";
 import "pager";
 
-App.init(Default);
-Setup.init();
+app.init(Default);
+setup.init();
+
+vm._component.router.isReady()
+    .then(() => {
+        vm.mount("#app");
+    }).catch(e => console.error(e));
+
 /* develblock:start */
 // Code between the ..start and ..end tags will be removed by the BlockStrip plugin during the production build.
 // testit is true if running under Karma - see testapp_dev.html
@@ -22,7 +27,7 @@ if (typeof testit !== "undefined" && testit) {
         }, 500);
     }).then(() => {
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
-        apptest(App, vm);
+        apptest(app, vm);
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         __karma__.start();
     }).catch(rejected => {

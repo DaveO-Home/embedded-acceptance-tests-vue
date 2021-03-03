@@ -119,7 +119,7 @@ export default {
     // Custom promise for async call for a resource.
     // If the DOM (#main_container) is populated then the promise is complete.
     isResolved: function isResolved (resolve, reject, vm, selectorId, counter, length) {
-        const container = vm.$el.querySelector(`#${selectorId}`);
+        const container = document.querySelector(vm._component.el).querySelector(`#${selectorId}`);
 
         if (!container) {
             resolve("loaded");

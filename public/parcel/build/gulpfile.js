@@ -2,21 +2,20 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
-
+const Parcel = require("@parcel/core").default;
 const { src, dest, series, parallel, task} = require("gulp");
 const Server = require("karma").Server;
 const eslint = require("gulp-eslint");
 const csslint = require("gulp-csslint");
 const exec = require("child_process").exec;
 const copy = require("gulp-copy");
-const stripCode = require("gulp-strip-code");
 const del = require("del");
-const noop = require("gulp-noop");
 const log = require("fancy-log");
-const Bundler = require("parcel-bundler");
 const flatten = require("gulp-flatten");
 const chalk = require("chalk");
 const browserSync = require("browser-sync");
+// const noop = require("gulp-noop");
+// const stripCode = require("gulp-strip-code");
 
 const startComment = "develblock:start",
     endComment = "develblock:end",
@@ -39,7 +38,7 @@ if (browsers) {
  * Build Development bundle from package.json 
  */
 const build_development = function (cb) {
-    return parcelBuild(false, cb); // setting watch = false
+    return parcelBuild(false, false, cb); // setting watch = false
 };
 /**
  * Production Parcel 
@@ -47,7 +46,7 @@ const build_development = function (cb) {
 const build = function (cb) {
     process.env.NODE_ENV = "production";
     isProduction = true;
-    parcelBuild(false, cb).then(function () {
+    parcelBuild(false, false, cb).then(function () {
         cb();
     });
 };
@@ -71,7 +70,7 @@ const esLint = function (cb) {
             quiet: 0
         }))
         .pipe(eslint.format())
-        .pipe(eslint.result(result => {
+        .pipe(eslint.result(() => {
             //Keeping track of # of javascript files linted.
             lintCount++;
         }))
@@ -171,7 +170,6 @@ const r_test = function (done) {
 /**
  * Continuous testing - test driven development.  
  */
-// gulp.task('tdd-parcel', ['build-development'], done => {
 const tdd_parcel = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Chrome", "Firefox"];
@@ -197,8 +195,8 @@ const tddo = function (done) {
 const sync = function () {
     const server = browserSync.create("devl");
     dist = testDist;
-    server.init({ server: "../../", index: "index_p.html", port: 3080/*, browser: ['google-chrome']*/ });
-    server.watch("../../" + dist + "/appl.*.*").on("change", server.reload);  //change any file in appl/ to reload app - triggered on watchify results
+    server.init({ server: "../../", index: "index_p.html", port: 3080/*, browser: ['google-chrome']*/, open: false });
+    server.watch("../../" + dist + "/appl/*.*").on("change", server.reload);  //change any file in appl/ to reload app - triggered on watchify results
     return server;
 };
 
@@ -208,7 +206,11 @@ const watcher = function (done) {
 };
 
 const watch_parcel = function (cb) {
-    return parcelBuild(true, cb);
+    return parcelBuild(true, false, cb);
+};
+
+const serve_parcel = function (cb) {
+    return parcelBuild(false, true, cb);
 };
 
 const runTestCopy = parallel(copy_test, copy_images);
@@ -219,57 +221,73 @@ runProd.displayName = "prod";
 
 task(runProd);
 exports.default = runProd;
+exports.prd = series(clean, runProdCopy, build);
 exports.test = series(runTest, pat);
 exports.tdd = series(runTest, tdd_parcel);
 exports.watch = series(runTestCopy, watch_parcel, sync, watcher);
+// exports.serve = series(runTestCopy, serve_parcel, sync, watcher);
 exports.acceptance = r_test;
 exports.rebuild = series(runTestCopy, runTest);
 exports.lint = parallel(esLint, cssLint, bootLint);
 exports.copy = runTestCopy;
 // exports.development = parallel(series(runTestCopy, watch_parcel, sync, watcher), series(runTestCopy, build_development, tdd_parcel))
 
-function parcelBuild(watch, cb) {
+function parcelBuild(watch, serve=false, cb) {
     if (bundleTest && bundleTest === "false") {
         return cb();
     }
     const file = isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html";
-    // Bundler options
+    const port = 3082;
+    // Parcel options
     const options = {
-        production: isProduction,
-        outDir: "../../" + dist,
-        outFile: isProduction ? "testapp.html" : "testapp_dev.html",
-        publicUrl: "./",
-        watch: watch,
-        cache: !isProduction,
+        mode: isProduction? "production": "development",
+        entryRoot: "../appl",
+        entries: file,
+        publicUrl: watch ? "/dist_test/parcel" : "./",
+        shouldDisableCache: !isProduction,
+        shouldAutoInstall: true,
+        shouldProfile: false,
         cacheDir: ".cache",
-        minify: isProduction,
-        target: "browser",
-        https: false,
-        logLevel: 3, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
-        // hmrPort: 3080,
-        sourceMaps: !isProduction,
-        // hmrHostname: 'localhost',
-        detailedReport: isProduction
+        shouldContentHash: isProduction,
+        logLevel: 2, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
+        detailedReport: isProduction,
+        defaultConfig: require.resolve("@parcel/config-default"),
+        distDir: "../../" + dist,
+        shouldPatchConsole: false,
+        defaultTargetOptions: {
+            shouldOptimize: isProduction,
+            shouldScopeHoist: false,
+            sourceMaps: isProduction,
+            publicUrl: "./",
+            distDir: "../../" + dist + "/appl",
+            engines: {
+                browsers: ["> 0.2%, not dead, not op_mini all"]
+            }
+          },
     };
 
-    // Initialises a bundler using the entrypoint location and options provided
-    const bundler = new Bundler(file, options);
-    let isBundled = false;
-
-    bundler.on("bundled", (bundle) => {
-        isBundled = true;
-    });
-    bundler.on("buildEnd", () => {
-        if (isBundled) {
-            log(chalk.green("Build Successful"));
+    return ( async () => {
+        const parcel = new Parcel(options);
+        if(watch) {
+            options.hmrOptions = {
+                port: port, host: "localhost"
+            };
+            await parcel.watch();
+        } else if(serve) { // disabled
+            options.hmrOptions = {
+                port: port, host: "localhost"
+            };
+            options.serveOptions = { 
+                publicUrl: "/dist_test/parcel/appl",
+                host: "localhost",
+                port: port,
+                https: false
+            };
+            await parcel.watch();
+        } else {
+            await parcel.run();
         }
-        else {
-            log(chalk.red("Build Failed"));
-            process.exit(1);
-        }
-    });
-    // Run the bundler, this returns the main bundle
-    return bundler.bundle();
+    })();
 }
 
 function copySrc() {

@@ -26,7 +26,7 @@ export default App.controllers.Start ||
         },
         location: "#/",
         index (options) {
-            const indexUrl = "views/prod/index.html";
+            const indexUrl = "./views/prod/index.html";
             
             const markdownUrl = "../../README.md";
             this.view({
@@ -44,7 +44,7 @@ export default App.controllers.Start ||
             return this.html;
         },
         "div .login click": function (sender, e) {
-            const loginUrl = "views/prod/login.html";
+            const loginUrl = "./views/prod/login.html";
             me.modal({
                 url: loginUrl,
                 title: "Account Log In",
@@ -66,7 +66,7 @@ export default App.controllers.Start ||
         },
         contact (ev) {
             this.view({
-                url: "views/prod/contact.html",
+                url: "./views/prod/contact.html",
                 selector: window.rmain_container || "#main_container",
                 fade: true,
                 contactListener: me.contactListener
@@ -138,7 +138,7 @@ export default App.controllers.Start ||
             // const marked = require('../utils/marked')
             me = this;
             const mdFunction = data => {
-                me.html = `${App.html} ${Marked(data)}`;
+                me.html = `${App.html} ${Marked(data)}</div>`;
             };
             $.get(options.urlMd, mdFunction, "text")
             .fail(err => {

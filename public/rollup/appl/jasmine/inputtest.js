@@ -149,7 +149,7 @@ var testContent = `{
 		"card1": {
 			"tab": "A",
 			"front": {
-				"content": "<h1>Application Access</h1><div class='mr-2'>Log in:<a href='#' class='login'><i class='fa fa-sign-in'></i></a></div>"
+				"content": "<h1>Application Access</h1><div class='mr-2'>Log in:<a href='#' class='login'><i class='fa fa-sign-in-alt'></i></a></div>"
 			},
 			"back": {
 				"content": "<div>Back - First Page</div>"

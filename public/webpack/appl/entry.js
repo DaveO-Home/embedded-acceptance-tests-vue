@@ -1,8 +1,7 @@
 
-import Vue from "vue";
-import Vuex from "vuex";
-import VueRouter from "vue-router";
-import App from "@/App";
+import { createApp } from "vue";
+import { createStore } from "vuex";
+import App from "./App.vue";
 import router from "router";
 import dodex from "dodex";
 import input from "dodex-input";
@@ -13,23 +12,25 @@ import { mutations, STORAGE_KEY } from "./vuex/mutations";
 import actions from "./vuex/actions";
 import plugins from "./vuex/plugins";
 
-Vue.config.productionTip = false;
-Vue.use(VueRouter);
-Vue.use(Vuex);
+const getters = {
+  getCounts: (state, index) => state.selections[index].count,
+  getSelections: state => state.selections
+};
 
-Vue.component("dodex-c", DodexC);
-
-const store = new Vuex.Store({
+const store = createStore({
   state: {
-    selections: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]")
+    selections: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]"),
+    count: 0,
+    text: null
   },
+  getters,
   actions,
   mutations,
   plugins
 });
 
 /* eslint-disable no-new */
-export default new Vue({
+const vueApp = createApp({
   el: "#app",
   router,
   store,
@@ -37,29 +38,42 @@ export default new Vue({
   template: "<App/>"
 });
 
-if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) {
-  if (document.querySelector(".top--dodex") === null) {
-    // Content for cards A-Z and static card
-    dodex.setContentFile("./dodex/data/content.js");
-    dodex.init({
-      width: 375,
-      height: 200,
-      left: "50%",
-      top: "100px",
-      input: input,    	// required if using frontend content load
-      private: "full", 	// frontend load of private content, "none", "full", "partial"(only cards 28-52) - default none
-      replace: true,   	// append to or replace default content - default false(append only)
-      mess: mess
-    }).then(function () {
-      // Add in app/personal cards
-      for (let i = 0;i < 3;i++) {
-        dodex.addCard(getAdditionalContent());
-      }
-      /* Auto display of widget */
-      // dodex.openDodex();
-    });
-  }
+vueApp.use(router);
+vueApp.use(store);
+vueApp.component("Dodexc", DodexC);
+
+// Change route if navigating to anchor on README page and refreshing the page
+if(location.hash.startsWith("#/vue-")) {
+  vueApp._component.router.push({path: "/"});
 }
+
+setTimeout(function() {
+  if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) {
+    if (document.querySelector(".top--dodex") === null) {
+      // Content for cards A-Z and static card
+      dodex.setContentFile("./dodex/data/content.js");
+      dodex.init({
+        width: 375,
+        height: 200,
+        left: "50%",
+        top: "100px",
+        input: input,    	// required if using frontend content load
+        private: "full", 	// frontend load of private content, "none", "full", "partial"(only cards 28-52) - default none
+        replace: true,   	// append to or replace default content - default false(append only)
+        mess: mess
+      }).then(function () {
+        // Add in app/personal cards
+        for (let i = 0;i < 3;i++) {
+          dodex.addCard(getAdditionalContent());
+        }
+        /* Auto display of widget */
+        // dodex.openDodex();
+      });
+    }
+  }
+}, 500);
+
+export default vueApp;
 
 function getAdditionalContent() {
   return {

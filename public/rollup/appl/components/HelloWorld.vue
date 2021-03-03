@@ -9,9 +9,9 @@
     <ul>
       <li>
         <a
-          href="https://vuejs.org"
+          href="https://v3.vuejs.org"
           target="_blank"
-        >Core Docs</a>
+        >Core Docs v3</a>
       </li>
       <li>
         <a
@@ -43,27 +43,27 @@
     <ul>
       <li>
         <a
-          href="http://router.vuejs.org/"
+          href="https://next.router.vuejs.org"
           target="_blank"
-        >vue-router</a>
+        >vue-router 4</a>
       </li>
       <li>
         <a
-          href="http://vuex.vuejs.org/"
+          href="https://next.vuex.vuejs.org/"
           target="_blank"
-        >vuex</a>
+        >vuex 4</a>
       </li>
       <li>
         <a
-          href="http://vue-loader.vuejs.org/"
+          href=""
           target="_blank"
         >vue-loader</a>
       </li>
       <li>
         <a
-          href="https://github.com/vuejs/awesome-vue"
+          href="https://github.com/blacksonic/awesome-vue-3"
           target="_blank"
-        >awesome-vue</a>
+        >awesome-vue3</a>
       </li>
     </ul>
   </div>
@@ -78,7 +78,7 @@ export default {
   name: "HelloWorld",
   data () {
     return {
-      msg: "Hi! - Acceptance Testing with a Vue.js App"
+      msg: "Hi! - Acceptance Testing with a Vue3 App"
     };
   },
   mounted: function () {

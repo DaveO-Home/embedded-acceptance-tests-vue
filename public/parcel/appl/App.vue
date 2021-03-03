@@ -4,26 +4,39 @@
     <nav
       id="top-nav"
       class="navbar-expand-md navbar-light fixed-top rounded nav-bar-bg"
-      hidden="hidden">
-      <div class="nav-login" @click="loginModal">
+      hidden="hidden"
+    >
+      <div
+        class="nav-login"
+        @click="loginModal"
+      >
         <small>
-          <a href="#" class="login">Log in</a>
+          <a
+            href="#"
+            class="login"
+          >Log in
+          </a>
         </small>
       </div>
       <div
         class="navbar navbar-toggler"
         aria-controls="navbarTools"
         aria-expanded="false"
-        aria-label="Toggle navigation">
+        aria-label="Toggle navigation"
+      >
         <div class="container-fluid">
           <button
             class="navbar-toggler-right"
             type="button"
             data-toggle="collapse"
-            data-target="#navbarTools">
+            data-target="#navbarTools"
+          >
             <span class="navbar-toggler-icon" />
           </button>
-          <div id="navbarTools" class="collapse navbar-collapse">
+          <div
+            id="navbarTools"
+            class="collapse navbar-collapse"
+          >
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
                 <router-link to="/">
@@ -40,7 +53,10 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >Tools</a>
-                <div class="dropdown-menu" aria-labelledby="tools01">
+                <div
+                  class="dropdown-menu"
+                  aria-labelledby="tools01"
+                >
                   <a class="dropdown-item">
                     <router-link to="/pdf/test">PDF View</router-link>
                   </a>
@@ -53,22 +69,33 @@
           </div>
         </div>
       </div>
-      <a class="pl-2 navbar-brand mr-auto" href="#">Test</a>
+      <a 
+        class="pl-2 navbar-brand mr-auto" 
+        href="#"
+      >Test
+      </a>
       <div class="pl-2 navbar-brand mr-auto">
-        <dodex-c></dodex-c>
+        <DodexC />
       </div>
     </nav>
 
     <div class="container-fluid">
-      <div id="side-nav" class="row" hidden="hidden">
-        <nav class="col-md-2 bg-light rounded sidebar" id="top-menu">
-          <hr />
+      <div
+        id="side-nav"
+        class="row"
+        hidden="hidden"
+      >
+        <nav
+          id="top-menu"
+          class="col-md-2 bg-light rounded sidebar"
+        >
+          <hr>
           <a>
             <strong>
-              <i class="fa fa-eye"></i> Views
+              <i class="fa fa-eye" /> Views
             </strong>
           </a>
-          <hr />
+          <hr>
           <div class="nav flex-column nav-side-menu">
             <ul class="nav navbar-collapse">
               <li class="nav-header nav-item">
@@ -77,32 +104,37 @@
                   href="#submenu1sub1"
                   data-toggle="collapse"
                   data-target="#submenu1"
-                  aria-expanded="true">
+                  aria-expanded="true"
+                >
                   Test Menu
-                  <i class="fa fa-chevron-down"></i>
+                  <i class="fa fa-chevron-down" />
                 </a>
-                <div class="collapse small show" id="submenu1" aria-expanded="true">
+                <div 
+                  id="submenu1" 
+                  class="collapse small show"
+                  aria-expanded="true"
+                >
                   <ul class="flex-column nav pl-4">
                     <li class="nav-item">
                       <router-link to="/">
-                        <i class="fa fa-fw fa-home"></i> Home
+                        <i class="fa fa-fw fa-home" /> Home
                       </router-link>
                     </li>
                     <li class="nav-item">
                       <router-link to="/pdf/test">
-                        <i class="fa fa-fw fa-file-pdf-o"></i> PDF View
+                        <i class="fa fa-fw fa-file-pdf" /> PDF View
                       </router-link>
                     </li>
                     <li class="nav-header nav-item">Statistics</li>
                     <li class="nav-item">
                       <router-link to="/table/tools">
-                        <i class="fa fa-fw fa-table"></i> Tabular View
+                        <i class="fa fa-fw fa-table" /> Tabular View
                       </router-link>
                     </li>
                     <li class="nav-header nav-item">Vue</li>
                     <li class="nav-item">
                       <router-link to="/welcome">
-                        <i class="fa fa-fw fa-hand-paper-o"></i> Vue Welcome
+                        <i class="fa fa-fw fa-hand-paper" /> Vue Welcome
                       </router-link>
                     </li>
                   </ul>
@@ -110,7 +142,7 @@
               </li>
             </ul>
           </div>
-          <hr />
+          <hr>
         </nav>
         <main class="col-md-9 ml-md-auto col-md-10 pt-3">
           <div id="main_container">
@@ -123,7 +155,7 @@
     </div>
     <!--/container-->
 
-    <hr />
+    <hr>
     <footer class="footer">
       <div class="container">
         <span
@@ -138,16 +170,12 @@
     </footer>
   </span>
 </template>
+
 <script>
 import Start from "./js/controller/start";
 
 export default {
   name: "App",
-  mounted: function() {
-    this.$nextTick(function() {
-      Start.init();
-    });
-  },
   methods: {
     loginModal: function() {
       Start["div .login click"]();

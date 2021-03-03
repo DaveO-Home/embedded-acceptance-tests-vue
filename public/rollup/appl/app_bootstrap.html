@@ -1,5 +1,5 @@
+<!-- The app main page - imported in the App.vue component -->
 <span>
-    <!-- The app main page - imported in the App.vue component -->
     <nav id="top-nav" class="navbar-expand-md navbar-light fixed-top rounded nav-bar-bg" hidden="hidden">
         <div class="nav-login" v-on:click="loginModal">
             <small>
@@ -41,7 +41,7 @@
         </div>
         <a class="pl-2 navbar-brand mr-auto" href="#">Test</a>
         <div class="pl-2 navbar-brand mr-auto">
-            <dodex-c></dodex-c>
+            <DodexC />
         </div>
     </nav>
 
@@ -69,7 +69,7 @@
                                     </li>
                                     <li class="nav-item">
                                         <router-link to="/pdf/test">
-                                            <i class="fa fa-fw fa-file-pdf-o"></i> PDF View
+                                            <i class="fa fa-fw fa-file-pdf"></i> PDF View
                                         </router-link>
 
                                     </li>
@@ -82,7 +82,7 @@
                                     <li class="nav-header nav-item">Vue</li>
                                     <li class="nav-item">
                                         <router-link to="/welcome">
-                                            <i class="fa fa-fw fa-hand-paper-o"></i> Vue Welcome
+                                            <i class="fa fa-fw fa-hand-paper"></i> Vue Welcome
                                         </router-link>
                                     </li>
                                 </ul>
@@ -95,7 +95,7 @@
             <main class="col-md-9 ml-md-auto col-md-10 pt-3">
                 <div id="main_container">
                     <div class="loading-page"></div>
-                    <router-view/>
+                    <router-view></router-view>
                 </div>
             </main>
         </div>
@@ -106,7 +106,7 @@
     <hr>
     <footer class="footer">
         <div class="container">
-            <span class="ml-5 small text-muted">Karma, Jasmine, Rollup and Vue Acceptance Test and Build Demo</span>
+            <span class="ml-5 small text-muted">Karma, Jasmine, Webpack and Vue Acceptance Test and Build Demo</span>
             <span class="contact pull-right">
                 <router-link to="/contact">
                     <small class="grey">Contact</small>

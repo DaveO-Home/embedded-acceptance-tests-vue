@@ -25,7 +25,7 @@ export default {
     };
   },
   mounted: function () {
-    this.$nextTick(function () {
+    this.$nextTick(() => {
       if (App.controllers["Start"]) {
           App.controllers["Start"].initMenu();
       }

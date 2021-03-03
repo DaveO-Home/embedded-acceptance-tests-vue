@@ -40,7 +40,7 @@ export default {
         };
     },
     initPage () {
-        $("[data-toggle=collapse]").click(function (e) {
+        $("[data-toggle=collapse]").on("click", function (e) {
             // Don't change the hash
             e.preventDefault();
             $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
