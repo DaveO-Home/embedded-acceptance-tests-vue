@@ -17,21 +17,14 @@ function resolve(dir) {
 module.exports = {
   mode: "development",
   stats: {
+    errorDetails: true,
     colors: true,
     warnings: false,
     modules: false
   },
   context: resolve("."), //path.resolve(__dirname),
   // devtool: "source-map",
-  node: {
-    setImmediate: false,
-    process: "mock",
-    dgram: "empty",
-    fs: "empty",
-    net: "empty",
-    tls: "empty",
-    child_process: "empty"
-  },
+  node: false,
   output: {
     path: path.resolve(__dirname, "../..", "dist_test/webpack"),
     filename: "js/[name].js",
@@ -150,46 +143,43 @@ module.exports = {
         include: "asyncChunks"
       }
     ),
-    new CopyWebpackPlugin([
-      { from: "./appl/index.html", to: "./" },
+    new CopyWebpackPlugin({ patterns: [
+      { from: "./appl/index.html", to: "" },
       { from: "./appl/index.html", to: "./appl" },
-      {
-        from: {
-          glob: "./static/**/*",
-          dot: false
-        },
-        to: "."
-      },
+      // {
+      //   from: path.resolve(__dirname, "../static"),
+      //   globOptions: {
+      //     dot: false
+      //   },
+      //   to: ""
+      // },
       { from: "../README.md", to: "../" },
       {
-        from: {
-          glob: "./appl/templates/**/*",
+        from: "./appl/templates/**/*",
+        globOptions: { 
           dot: false
         },
-        to: "."
+        to: ""
       },
       {
-        from: {
-          glob: "./appl/views/**/*",
-          dot: false
-        },
-        to: "."
+        from: "./appl/views/**/*", 
+        to: ""
       },
       {
-        from: {
-          glob: "./appl/dodex/**/*",
+        from: "./appl/dodex/**/*",
+        globOptions: { 
           dot: false
         },
-        to: "."
+        to: ""
       },
       {
-        from: {
-          glob: "./images/**/*",
+        from: "./images/**/*",
+        globOptions: { 
           dot: false
         },
-        to: "."
+        to: ""
       }
-    ]),
+    ]}),
     new ProgressPlugin()
   ],
   watch: isWatch,

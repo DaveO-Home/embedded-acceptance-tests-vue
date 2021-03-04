@@ -7,7 +7,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssnanoPlugin = require("optimize-css-assets-webpack-plugin");
-const { DefinePlugin, HashedModuleIdsPlugin, NamedChunksPlugin, ProgressPlugin } = require("webpack");
+const { DefinePlugin, ProgressPlugin } = require("webpack");
+const { HashedModuleIdsPlugin, NamedChunkIdsPlugin } = require("webpack").ids;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const PreloadPlugin = require("preload-webpack-plugin");
 const resolveClientEnv = require("./resolveClientEnv");
@@ -31,15 +32,7 @@ module.exports =  {
   },
   context: resolve("."),
   devtool: "source-map",
-  node: {
-    setImmediate: false,
-    process: "mock",
-    dgram: "empty",
-    fs: "empty",
-    net: "empty",
-    tls: "empty",
-    child_process: "empty"
-  },
+  node: false,
   output: {
     path: path.resolve(__dirname, "../..", "dist/webpack"),
     filename: "js/[name].[contenthash:8].js",
@@ -161,8 +154,8 @@ module.exports =  {
               safari10: true
             }
           },
-          sourceMap: true,
-          cache: true,
+          // sourceMap: true,
+          // cache: true,
           parallel: true,
           extractComments: false
         }
@@ -221,17 +214,17 @@ module.exports =  {
       }
     ),
     /* config.plugin("named-chunks") */
-    new NamedChunksPlugin(
+    new NamedChunkIdsPlugin(
       chunk => {
         if (chunk.name) {
-          return chunk.name
+          return chunk.name;
         }
 
         const hash = require("hash-sum")
         const joinedHash = hash(
           Array.from(chunk.modulesIterable, m => m.id).join("_")
-        )
-        return `chunk-` + joinedHash
+        );
+        return `chunk-` + joinedHash;
       }
     ),
     /* config.plugin("html") */
@@ -283,44 +276,43 @@ module.exports =  {
       }
     ),
     // copy custom static assets
-    new CopyWebpackPlugin([
+    new CopyWebpackPlugin({ patterns: [
       {
         from: path.resolve(__dirname, "../static"),
-        to: assetsSubDirectory,
-        ignore: [".*"]
+        to: assetsSubDirectory
       },
       { from: "./appl/index.html", to: assetsSubDirectory },
       { from: "./appl/index.html", to: "./appl" },
       { from: "../README.md", to: "../" },
       {
-        from: {
-          glob: "./appl/templates/**/*",
+        from: "./appl/templates/**/*",
+        globOptions: {
           dot: false
         },
         to: assetsSubDirectory
       },
       {
-        from: {
-          glob: "./appl/views/**/*",
+        from: "./appl/views/**/*",
+        globOptions: { 
           dot: false
         },
         to: assetsSubDirectory
       },
       {
-        from: {
-          glob: "./appl/dodex/**/*",
+        from: "./appl/dodex/**/*",
+        globOptions: {
           dot: false
         },
         to: assetsSubDirectory
       },
       {
-        from: {
-          glob: "./images/**/*",
+        from: "./images/**/*",
+        globOptions: { 
           dot: false
         },
         to: assetsSubDirectory
       }
-    ]),
+    ]}),
     new ProgressPlugin()
   ],
   entry: {

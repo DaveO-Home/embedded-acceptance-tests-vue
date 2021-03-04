@@ -1,6 +1,6 @@
 {
   "name": "acceptance-test",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Karma/Jasmine/React Testing",
   "scripts": {
     "start": "node koa.js"

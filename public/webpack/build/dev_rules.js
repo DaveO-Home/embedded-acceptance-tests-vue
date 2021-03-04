@@ -156,7 +156,8 @@ module.exports = [
               },
               /* config.module.rule("css").oneOf("vue-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
+                // loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -185,7 +186,7 @@ module.exports = [
               },
               /* config.module.rule("css").oneOf("vue").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -217,7 +218,7 @@ module.exports = [
               },
               /* config.module.rule("css").oneOf("normal-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -245,7 +246,7 @@ module.exports = [
               },
               /* config.module.rule("css").oneOf("normal").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -283,7 +284,7 @@ module.exports = [
               },
               /* config.module.rule("postcss").oneOf("vue-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -312,7 +313,7 @@ module.exports = [
               },
               /* config.module.rule("postcss").oneOf("vue").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -344,7 +345,7 @@ module.exports = [
               },
               /* config.module.rule("postcss").oneOf("normal-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -372,7 +373,7 @@ module.exports = [
               },
               /* config.module.rule("postcss").oneOf("normal").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -410,7 +411,7 @@ module.exports = [
               },
               /* config.module.rule("scss").oneOf("vue-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -446,7 +447,7 @@ module.exports = [
               },
               /* config.module.rule("scss").oneOf("vue").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -485,7 +486,7 @@ module.exports = [
               },
               /* config.module.rule("scss").oneOf("normal-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -520,7 +521,7 @@ module.exports = [
               },
               /* config.module.rule("scss").oneOf("normal").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -565,7 +566,7 @@ module.exports = [
               },
               /* config.module.rule("sass").oneOf("vue-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -604,7 +605,7 @@ module.exports = [
               },
               /* config.module.rule("sass").oneOf("vue").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -646,7 +647,7 @@ module.exports = [
               },
               /* config.module.rule("sass").oneOf("normal-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -684,7 +685,7 @@ module.exports = [
               },
               /* config.module.rule("sass").oneOf("normal").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -732,7 +733,7 @@ module.exports = [
               },
               /* config.module.rule("less").oneOf("vue-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -768,7 +769,7 @@ module.exports = [
               },
               /* config.module.rule("less").oneOf("vue").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -807,7 +808,7 @@ module.exports = [
               },
               /* config.module.rule("less").oneOf("normal-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -842,7 +843,7 @@ module.exports = [
               },
               /* config.module.rule("less").oneOf("normal").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -887,7 +888,7 @@ module.exports = [
               },
               /* config.module.rule("stylus").oneOf("vue-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -924,7 +925,7 @@ module.exports = [
               },
               /* config.module.rule("stylus").oneOf("vue").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -964,7 +965,7 @@ module.exports = [
               },
               /* config.module.rule("stylus").oneOf("normal-modules").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
@@ -1000,7 +1001,7 @@ module.exports = [
               },
               /* config.module.rule("stylus").oneOf("normal").use("postcss-loader") */
               {
-                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/src/index.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/postcss-loader/dist/index.js"),
                 options: {
                   sourceMap: false
                 }
