@@ -362,7 +362,7 @@ const webpack_server = function (cb) {
     const server = new WebpackDevServer(compiler, options);
 
     server.listen(PORT || config.dev.port, HOST /*|| webpackConfig.devServer.host*/, function (err) {
-        log("[webpack-server]", `http://${/*webpackConfig.devServer.host*/ HOST}:${PORT || config.dev.port}/webpack/appl/testapp_dev.html`);
+        log("[webpack-server]", `http://${/*webpackConfig.devServer.host*/ HOST}:${PORT || config.dev.port}/dist_test/webpack/appl/testapp_dev.html`);
         if (err) {
             log(err);
         }
