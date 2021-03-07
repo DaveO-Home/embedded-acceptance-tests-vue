@@ -5,11 +5,11 @@ import "./config";
 import app from "./app";
 import default0 from "./utils/default";
 import setup from "./utils/setup";
+import "tablesorter";
+import "tablesorter/dist/js/extras/jquery.tablesorter.pager.min";
 /* develblock:start */
 import apptest from "../jasmine/apptest";
 /* develblock:end */
-import "tablesorter";
-import "tablesorter/dist/js/extras/jquery.tablesorter.pager.min";
 
 app.init(default0);
 setup.init();

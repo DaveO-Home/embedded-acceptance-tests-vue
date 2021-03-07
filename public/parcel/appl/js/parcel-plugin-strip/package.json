@@ -1,8 +1,0 @@
-{
-  "name": "parcel-plugin-strip",
-  "version": "0.1.1",
-  "private": true,
-  "peerDependencies": {
-    "parcel-bundler": "^1.8.1"
-  }
-}

@@ -14,14 +14,6 @@ const log = require("fancy-log");
 const flatten = require("gulp-flatten");
 const chalk = require("chalk");
 const browserSync = require("browser-sync");
-// const noop = require("gulp-noop");
-// const stripCode = require("gulp-strip-code");
-
-const startComment = "develblock:start",
-    endComment = "develblock:end",
-    regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
-        startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
-        endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
 
 let lintCount = 0;
 let isProduction = process.env.NODE_ENV == "production";
@@ -263,7 +255,7 @@ function parcelBuild(watch, serve=false, cb) {
             engines: {
                 browsers: ["> 0.2%, not dead, not op_mini all"]
             }
-          },
+          }
     };
 
     return ( async () => {
@@ -285,7 +277,11 @@ function parcelBuild(watch, serve=false, cb) {
             };
             await parcel.watch();
         } else {
-            await parcel.run();
+            try {
+                await parcel.run();
+            } catch(e) {
+                console.error(e, e.diagnostics[0]? e.diagnostics[0].codeFrame: "");
+            }
         }
     })();
 }
