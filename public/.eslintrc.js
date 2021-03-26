@@ -6,10 +6,6 @@ module.exports = {
     },
     "extends": ["eslint:recommended",
         "plugin:vue/vue3-recommended"],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
     "parserOptions": {
         "ecmaVersion": 2018,
         "sourceType": "module"
@@ -23,6 +19,7 @@ module.exports = {
         "import/first": 0
     },
     "globals": {
+        "cy": true,
         "System": true,
         "testit": true,
         "testOnly": true,
@@ -32,5 +29,7 @@ module.exports = {
         "FuseBox": true,
         "__karma__": true,
         "spyOnEvent": true,
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
     }
 };

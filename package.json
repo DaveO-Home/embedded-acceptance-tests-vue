@@ -3,7 +3,8 @@
   "version": "2.0.1",
   "description": "Karma/Jasmine/React Testing",
   "scripts": {
-    "start": "node koa.js"
+    "start": "node koa.js",
+    "stop": "node server.stop.js"
   },
   "keywords": [
     "karma",
@@ -17,5 +18,11 @@
     "koa": "^2.13.1",
     "koa-logger": "^3.2.1",
     "koa-static": "^5.0.0"
+  },
+  "dependencies": {
+    "koa2-cors": "^2.0.6",
+    "node-fetch": "^2.6.1",
+    "socket.io": "^4.0.0",
+    "socket.io-client": "^4.0.0"
   }
 }

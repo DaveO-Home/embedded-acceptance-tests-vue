@@ -1,4 +1,3 @@
-deleted.sh
 .fusebox
 .cache
 .DS_Store
@@ -16,8 +15,6 @@ public/.editorconfig
 public/dev-bundle.js
 public/dev-bundle.css
 public/package_1.json
-public/packageX*.json
-public/packageY*.json
 public/*.dat
 .metals
 dist/
@@ -31,6 +28,7 @@ yarn-error.log*
 /test/unit/coverage/
 /test/e2e/reports/
 selenium-debug.log
+outdated.dat
 
 # Editor directories and files
 .idea

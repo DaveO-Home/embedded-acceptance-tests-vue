@@ -5,7 +5,7 @@ module.exports = [
       {
         test: /\.vue$/,
         use: [
-          /* config.module.rule("vue").use("cache-loader") */
+          // config.module.rule("vue").use("cache-loader") 
           {
             loader: path.resolve(__dirname, "../..", "node_modules/cache-loader/dist/cjs.js"),
             options: {
@@ -13,7 +13,7 @@ module.exports = [
               cacheIdentifier: "6b2e3ffb"
             }
           },
-          /* config.module.rule("vue").use("vue-loader") */
+          // config.module.rule("vue").use("vue-loader") 
           {
             loader: path.resolve(__dirname, "../..", "node_modules/vue-loader-v16/dist/index.js"),
             options: {
@@ -28,6 +28,8 @@ module.exports = [
           }
         ]
       },
+/*
+*/
       /* config.module.rule("images") */
       {
         test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,

@@ -1,6 +1,6 @@
 # Vue Embedded Acceptance Testing with Karma and Jasmine
 
-The basic idea is to build a production application ensuring consistent and stable code using JavaScript, CSS and bootstrap linting and automated unit and e2e testing. This will be in part, assisted by the development tools, detailed in the [Development Overview](#vue-development) and bundle sections. Parcel, Rollup and Webpack now use Vue 3. The Vue 2 bundlers are located in `public/vue2`.
+The basic idea is to build a production application ensuring consistent and stable code using JavaScript, CSS and bootstrap linting and automated unit and e2e testing. This will be in part, assisted by the development tools, detailed in the [Development Overview](#vue-development) and bundle sections. Parcel, Rollup and Webpack now use Vue 3. The Vue 2 bundlers are located in `public/vue2`. Vite was added for vue3 and is located in `public/vite`.
 
 [Production Build](#vue-production-build)
 
@@ -17,10 +17,11 @@ The basic idea is to build a production application ensuring consistent and stab
 > 1. [Rollup](#vue-v-rollup)
 > 1. [Steal](#vue-vi-stealjs)
 > 1. [Webpack](#vue-vii-webpack)
+> 1. [Vite](#vue-viii-vite)
 
 [Installation](#vue-installation)
 
-[Docker](#vue-viii-dockerfile)
+[Docker](#vue-ix-dockerfile)
 
 **Dodex**: Added for testing and demo. <https://github.com/DaveO-Home/dodex>
 
@@ -41,6 +42,7 @@ The basic idea is to build a production application ensuring consistent and stab
   1. Javascript bundling tools
   1. See `public/package.json` for details
   1. Node, npm - node v10 or greater works best
+  1. Vite/Cypress
 
 ## Vue Installation
 
@@ -63,7 +65,7 @@ The basic idea is to build a production application ensuring consistent and stab
   `cd` to top level directory `<install>/acceptance-tests-vue`
 
 ```bash
-  npm install
+  npm install or npm install --force
 ```
 
   This will install a small Node/Koa setup to view the results of a production/test builds.
@@ -71,7 +73,7 @@ The basic idea is to build a production application ensuring consistent and stab
   `cd <install>/acceptance-tests-vue/public`
 
 ```bash
-  npm install
+  npm install or npm install --force
 ```
 
   To install required dependencies. Currently this will install Vue3 for Parcel, Rollup and Webpack.
@@ -362,7 +364,32 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### Vue VIII. **Dockerfile**
+### Vue VIII. **Vite**
+
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
+
+1. Vite is loacated in the `public/vite` directory.
+2. The vite setup does not use `gulp` rather it uses `npm` scripts, see `vite/package.json`.
+3. To install, execute `npm install` or `npm install --force` in both `<install dir>/public` and `<install dir>/public/vite`.
+
+***Production*** -
+
+1. Execute `npm run prod` to run full testing, linting and build. (`Cypress` and `Karma` testing)
+2. Execute `npm run build` to build without the tests. The build is located in `vite/dist`.
+3. Execute `npm start` from the main install directory to run the `Koa` server and use Url `localhost:3080/vite/dist/index.html`.
+4. You can also use `npm run serve` from the `Vite` directory to start a server at port 5000. However you  will need to use the `Network host` displayed in the terminal. Running production from the dev server, `npm run dev` with Url `localhost:4080/dist/index.html` may work.
+5. Execute `npm copy` to recopy static files to the `dist` directory.
+6. Execute `npm run integration` to run `karma` embedded tests. __Note;__ The `karma` tests run against the production build.
+7. Execute `npm run integrationp` to run the `karma` test against an existing production bundle.
+
+***Developemnt*** -
+
+1. Exeucte `npm run dev` to start the development server. Code changes will be reflected in the browser at `localhost:4080`. __Note;__ `npm run dev` executes `vite` and dynamically setups up the application via modules, no bundles are created. Good for large applications.
+2. Execute `npm run tdd` to start up both the `dev` server and `cypress` to run test driven development. This will also reload the browser at `localhost:4080`.
+3. Execute `npm run acceptance` to run all of the defined `cypress` tests in the e2e directory.
+4. Execute `npm run lint` to lint the application(js and vue) files.
+
+### Vue IX. **Dockerfile**
 
 [Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
