@@ -2,8 +2,8 @@ var bundler = "webpack";
 // Karma configuration
 module.exports = function (config) {
     //whichBrowser to use from gulp task.
-    if (!global.whichBrowser) {
-        global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
+    if (!global.whichBrowsers) {
+        global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -57,7 +57,7 @@ module.exports = function (config) {
          * This test demo will work with Chrome/ChromeHeadless by default - Webcomponents included above, so FirefoxHeadless should work also. 
          * Other browsers may work with tdd.
          */
-        browsers: global.whichBrowser,
+        browsers: global.whichBrowsers,
         customLaunchers: {
             ChromeWithoutSecurity: {
                 base: "Chrome",

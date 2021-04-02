@@ -27,7 +27,7 @@ const rmf = require("rimraf");
 const rollup = require("rollup");
 const serve = require("rollup-plugin-serve");
 const stripCode = require("gulp-strip-code");
-const Server = require("karma").Server;
+const karma = require("karma");
 const uglify = require("gulp-uglify");
 const vue = require("rollup-plugin-vue");
 const image = require("@rollup/plugin-image");
@@ -69,7 +69,7 @@ const pat = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    runKarma(done);
+    karmaServer(done, true, false);
 };
 /*
  * javascript linter
@@ -206,7 +206,7 @@ const r_test = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    runKarma(done);
+    karmaServer(done, true, false);
 };
 /**
  * Continuous testing - test driven development.  
@@ -215,9 +215,7 @@ const rollup_tdd = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    karmaServer(done, false, true);
 };
 /**
  * Karma testing under Opera. -- needs configuation  
@@ -226,9 +224,7 @@ const tddo = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Opera"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    karmaServer(done, false, true);
 };
 
 const rollup_watch = function (cb) {
@@ -521,19 +517,31 @@ function copyCss() {
 //         .pipe(copy("../../" + dist + "/fonts"));
 // }
 
-function runKarma(done) {
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        if (typeof done === "function") {
-            done();
-        }
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+function karmaServer(done, singleRun = false, watch = true) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            if(!singleRun) {
+                done();
+            }
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                if(singleRun) {
+                    done();
+                }
+                if(exitCode > 0) {
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
 }
 //per stackoverflow - Converting milliseconds to minutes and seconds with Javascript
 function millisToMinutesAndSeconds(millis) {

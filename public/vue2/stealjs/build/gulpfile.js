@@ -2,14 +2,15 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat' -> ('eslint', 'csslint', 'boot') -> 'build'
  */
-const { src, dest, series, parallel, task } = require("gulp");
+const { src, /* dest, */ series, parallel, /* task */ } = require("gulp");
 const chalk = require("chalk");
 const csslint = require("gulp-csslint");
 const eslint = require("gulp-eslint");
 const exec = require("child_process").exec;
 const log = require("fancy-log");
 const stealTools = require("steal-tools");
-const Server = require("karma").Server;
+const karma = require("karma");
+const path = require("path");
 
 let lintCount = 0;
 let browsers = process.env.USE_BROWSERS;
@@ -25,16 +26,7 @@ const pat = function (done) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
 
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        done();
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+    karmaServer(done, true, false);
 };
 
 /*
@@ -129,14 +121,14 @@ const bootLint = function (cb) {
  */
 const steal_firefox = function (done) {
     global.whichBrowsers = ["FirefoxHeadless"];
-    runKarma(done, true, false);
+    karmaServer(done, true, false);
 };
 /**
  * Run karma/jasmine tests using ChromeHeadless 
  */
 const steal_chrome = function (done) {
     global.whichBrowsers = ["ChromeHeadless"];
-    runKarma(done, true, false);
+    karmaServer(done, true, false);
 };
 /**
  * Run karma/jasmine tests once and exit
@@ -145,7 +137,7 @@ const steal_test = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    return runKarma(done, true, false);
+    return karmaServer(done, true, false);
 };
 /**
  * Continuous testing - test driven development.  
@@ -154,7 +146,7 @@ const steal_tdd = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Firefox", "Chrome"];
     }
-    return runKarma(done, false, true);
+    return karmaServer(done, false, true);
 };
 /*
  * Startup live reload monitor. 
@@ -217,20 +209,31 @@ exports.server = web_server;
 exports.development = parallel(series(vendor, live_reload), web_server, steal_tdd);
 exports.lint = parallel(esLint, cssLint, bootLint);
 
-function runKarma(done, singleRun, watch) {
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: singleRun,
-        watch: typeof watch === "undefined" || !watch ? false : true
-    }, result => {
-        var exitCode = !result ? 0 : result;
-        if (typeof done === "function") {
-            done();
-        }
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+function karmaServer(done, singleRun = false, watch = true) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            if(!singleRun) {
+                done();
+            }
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                if(singleRun) {
+                    done();
+                }
+                if(exitCode > 0) {
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
 }
 
 // From Stack Overflow - Node (Gulp) process.stdout.write to file

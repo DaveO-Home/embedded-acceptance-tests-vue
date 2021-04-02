@@ -11,7 +11,7 @@ const exec = require("child_process").exec;
 const path = require("path");
 const chalk = require("chalk");
 const config = require("../config");
-const Server = require("karma").Server;
+const karma = require("karma");
 const eslint = require("gulp-eslint");
 const csslint = require("gulp-csslint");
 const webpack = require("webpack");
@@ -19,17 +19,13 @@ const WebpackDevServer = require("webpack-dev-server");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT && Number(process.env.PORT);
-// const execSync = require("child_process").execSync;
-// const pkg = require("../../package.json");
-// const webpackVersion = Number(/\d/.exec(pkg.devDependencies.webpack)[0]);
-// const isWindows = /^win/.test(process.platform);
 
 let webpackConfig = null;
 let browsers = process.env.USE_BROWSERS;
 let lintCount = 0;
 
 if (browsers) {
-    global.whichBrowser = browsers.split(",");
+    global.whichBrowsers = browsers.split(",");
 }
 
 /*
@@ -131,13 +127,13 @@ const bootLint = (cb) => {
  * Set environment variable USE_BUILD=false to bypass the build
  */
 const acceptance_tests = function (done) {
-    karmaServer(done);
+    karmaServer(done, true, false);
 };
 /**
  * Run karma/jasmine tests once and exit
  */
 const jasmine_tests = function (done) {
-    karmaServer(done);
+    karmaServer(done, true, false);
 };
 
 const test_env = function () {
@@ -258,12 +254,10 @@ const test_build = function (cb) {
  */
 const webpack_tdd = function (done) {
     if (!browsers) {
-        global.whichBrowser = ["Chrome", "Firefox"];
+        global.whichBrowsers = ["Chrome", "Firefox"];
     }
 
-    new Server({
-        configFile: __dirname + "/karma.conf.js"
-    }, done).start();
+    karmaServer(done, false, true);
 };
 /*
  * Webpack recompile to 'dist_test' on code change
@@ -386,21 +380,35 @@ exports.hmr = webpack_server;
 exports.development = parallel(webpack_watch, webpack_server, webpack_tdd);
 exports.lint = lintRun;
 
-function karmaServer(done) {
+function karmaServer(done, singleRun = false, watch = true) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+    
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true,
-        watch: false
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        done();
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            if(!singleRun) {
+                done();
+            }
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                if(singleRun) {
+                    done();
+                }
+                if(exitCode > 0) {
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
 }
 
 //From Stack Overflow - Node (Gulp) process.stdout.write to file
@@ -423,9 +431,35 @@ if (process.env.USE_LOGFILE == "true") {
  * Taking a snapshot example - puppeteer - Not installed!
  */
 function karmaServerSnap(done) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+    
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: true, watch: false },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            new Server(karmaConfig, function doneCallback(result) {
+                var exitCode = !result ? 0 : result;
+                done();
+                if (exitCode > 0) {
+                    takeSnapShot(["", "start"]);
+                    takeSnapShot(["contact", "contact"]);
+                    takeSnapShot(["welcome", "vue"]);
+                    takeSnapShot(["tabletools", "tools"]);
+                    // Not working with PDF-?
+                    // takeSnapShot(['pdftest', 'test'])       
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
     new Server({
         configFile: __dirname + "/karma.conf.js",
         singleRun: true,

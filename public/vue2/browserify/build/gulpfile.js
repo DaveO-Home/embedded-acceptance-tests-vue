@@ -8,13 +8,14 @@ const rmf = require("rimraf");
 const copy = require("gulp-copy");
 const exec = require("child_process").exec;
 const noop = require("gulp-noop");
+const path = require("path");
 const chalk = require("chalk");
 const buffer = require("vinyl-buffer");
 const envify = require("envify/custom");
 const eslint = require("gulp-eslint");
 const source = require("vinyl-source-stream");
 const uglify = require("gulp-uglify");
-const Server = require("karma").Server;
+const karma = require("karma");
 const csslint = require("gulp-csslint");
 const watchify = require("watchify");
 const stripCode = require("gulp-strip-code");
@@ -77,7 +78,7 @@ const pat = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    runKarma(done);
+    karmaServer(done, true, false);
 };
 /*
  * javascript linter
@@ -205,7 +206,7 @@ const b_test = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    runKarma(done);
+    karmaServer(done, true, false);
 };
 /**
  * Run watch(HMR)
@@ -225,9 +226,7 @@ const tdd_browserify = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    karmaServer(done, false, true);
 };
 /**
  * Karma testing under Opera. -- needs configuation  
@@ -236,9 +235,7 @@ const tddo = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Opera"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    karmaServer(done, false, true);
 };
 
 const runCopyProd = parallel(copyprod, copyprod_images);
@@ -389,19 +386,31 @@ function copyImages() {
         .pipe(copy("../../" + dist + "/appl"));
 }
 
-function runKarma(done) {
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        if (typeof done === "function") {
-            done();
-        }
-        if (exitCode > 1) {
-            process.exit(exitCode);
-        }
-    }).start();
+function karmaServer(done, singleRun = false, watch = true) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            if(!singleRun) {
+                done();
+            }
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                if(singleRun) {
+                    done();
+                }
+                if(exitCode > 0) {
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
 }
 
 // From Stack Overflow - Node (Gulp) process.stdout.write to file

@@ -10,7 +10,7 @@ const csslint = require("gulp-csslint");
 const eslint = require("gulp-eslint");
 const exec = require("child_process").exec;
 const log = require("fancy-log");
-const Server = require("karma").Server;
+const karma = require("karma");
 
 let lintCount = 0;
 let dist = "dist_test/fusebox";
@@ -38,16 +38,7 @@ const pat = function (done) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
 
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        done();
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+    karmaServer(done, true, false);
 };
 /*
  * javascript linter
@@ -248,16 +239,7 @@ const fb_test = function (done) {
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        done();
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+    karmaServer(done, true, false);
 };
 /**
  * Continuous testing - test driven development.  
@@ -267,9 +249,7 @@ const fusebox_tdd = function (done) {
         global.whichBrowser = ["Chrome", "Firefox"];
     }
 
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    karmaServer(done, false, true);
 };
 /**
  * Karma testing under Opera. -- needs configuation  
@@ -278,9 +258,7 @@ const tddo = function (done) {
     if (!browsers) {
         global.whichBrowser = ["Opera"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    karmaServer(done, false, true);
 };
 
 const runProd = series(accept, pat, parallel(esLint, cssLint, bootLint), build);
@@ -350,6 +328,34 @@ function fuseboxConfig(mode, props) {
     };
     return configure;
 }
+
+function karmaServer(done, singleRun = false, watch = true) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            if(!singleRun) {
+                done();
+            }
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                if(singleRun) {
+                    done();
+                }
+                if(exitCode > 0) {
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
+}
+
 // From Stack Overflow - Node (Gulp) process.stdout.write to file
 if (process.env.USE_LOGFILE == "true") {
     var fs = require("fs");
