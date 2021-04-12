@@ -14,7 +14,6 @@ const del = require("del");
 const log = require("fancy-log");
 const flatten = require("gulp-flatten");
 const chalk = require("chalk");
-const browserSync = require("browser-sync");
 
 let lintCount = 0;
 let isProduction = process.env.NODE_ENV == "production";
@@ -172,26 +171,12 @@ const tdd_parcel = function (done) {
 /**
  * Karma testing under Opera. -- needs configuation  
  */
+// eslint-disable-next-line no-unused-vars
 const tddo = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Opera"];
     }
     karmaServer(done, false, true);
-};
-/**
- * Using BrowserSync Middleware for HMR  
- */
-const sync = function () {
-    const server = browserSync.create("devl");
-    dist = testDist;
-    server.init({ server: "../../", index: "index_p.html", port: 3080/*, browser: ['google-chrome']*/, open: false });
-    server.watch("../../" + dist + "/appl/*.*").on("change", server.reload);  //change any file in appl/ to reload app - triggered on watchify results
-    return server;
-};
-
-const watcher = function (done) {
-    log(chalk.green("Watcher & BrowserSync Started - Waiting...."));
-    return done();
 };
 
 const watch_parcel = function (cb) {
@@ -202,9 +187,9 @@ const serve_parcel = function (cb) {
     return parcelBuild(false, true, cb);
 };
 
-const runTestCopy = parallel(copy_test, copy_images);
+const runTestCopy = parallel(copy_test, copy_images, copyReadme);
 const runTest = series(cleant, runTestCopy, build_development);
-const runProdCopy = parallel(copyprod, copyprod_images);
+const runProdCopy = parallel(copyprod, copyprod_images, copyReadme);
 const runProd = series(runTest, pat, parallel(esLint, cssLint, bootLint), clean, runProdCopy, build);
 runProd.displayName = "prod";
 
@@ -213,8 +198,8 @@ exports.default = runProd;
 exports.prd = series(clean, runProdCopy, build);
 exports.test = series(runTest, pat);
 exports.tdd = series(runTest, tdd_parcel);
-exports.watch = series(runTestCopy, watch_parcel, sync, watcher);
-// exports.serve = series(runTestCopy, serve_parcel, sync, watcher);
+exports.watch = series(cleant, runTestCopy, copyReadmeForTest, watch_parcel);
+exports.serve = series(cleant, runTestCopy, copyReadmeForTest, serve_parcel);
 exports.acceptance = r_test;
 exports.rebuild = series(runTestCopy, runTest);
 exports.lint = parallel(esLint, cssLint, bootLint);
@@ -226,23 +211,25 @@ function parcelBuild(watch, serve=false, cb) {
         return cb();
     }
     const file = isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html";
-    const port = 3082;
+    const port = 3080;
     // Parcel options
     const options = {
         mode: isProduction? "production": "development",
         entryRoot: "../appl",
         entries: file,
-        publicUrl: watch ? "/dist_test/parcel" : "./",
         shouldDisableCache: !isProduction,
         shouldAutoInstall: true,
         shouldProfile: false,
         cacheDir: ".cache",
         shouldContentHash: isProduction,
-        logLevel: 2, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
+        logLevel: "info", // 'none' | 'error' | 'warn' | 'info' | 'verbose'
         detailedReport: isProduction,
         defaultConfig: require.resolve("@parcel/config-default"),
-        distDir: "../../" + dist,
         shouldPatchConsole: false,
+        additionalReporters: [
+            { packageName: "@parcel/reporter-cli", resolveFrom: __filename },
+            { packageName: "@parcel/reporter-dev-server", resolveFrom: __filename }
+        ],
         defaultTargetOptions: {
             shouldOptimize: isProduction,
             shouldScopeHoist: false,
@@ -255,47 +242,54 @@ function parcelBuild(watch, serve=false, cb) {
           }
     };
 
-    return ( async () => {
+    return (async () => {
         const parcel = new Parcel(options);
-        if(watch) {
+        if (serve || watch) {
             options.hmrOptions = {
-                port: port, host: "localhost"
+                port: port,
+                host: "localhost"
             };
-            await parcel.watch();
-        } else if(serve) { // disabled
-            options.hmrOptions = {
-                port: port, host: "localhost"
-            };
-            options.serveOptions = { 
-                publicUrl: "/dist_test/parcel/appl",
+            options.serveOptions = {
                 host: "localhost",
                 port: port,
                 https: false
             };
-            await parcel.watch();
+            await parcel.watch(err => {
+                if (err) throw err;
+            });
+            cb();
         } else {
-            try {
-                await parcel.run();
-            } catch(e) {
-                console.error(e, e.diagnostics[0]? e.diagnostics[0].codeFrame: "");
-            }
+            await parcel.run(err => {
+                console.error(err, err.diagnostics[0]? err.diagnostics[0].codeFrame: "");
+            });
+            cb();
         }
     })();
 }
 
 function copySrc() {
-    return src(["../appl/view*/**/*", "../appl/temp*/**/*",  "../appl/assets/**/*"/*, isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'*/])
+    return src(["../appl/view*/**/*", "../appl/temp*/**/*",  "../appl/asset*/**/*"])
         .pipe(flatten({ includeParents: -2 })
-        .pipe(dest("../../" + dist + "/")));
+        .pipe(dest("../../" + dist + "/appl/")));
+}
+
+function copyReadme() {
+    return src(["../../README.md"])
+        .pipe(copy("../../" + dist , {prefix: 2}));
 }
 
 function copyImages() {
-    return src(["../images/*", "../../README.m*", "../appl/assets/**/*", "../appl/dodex/**/*"])
+    return src(["../appl/assets/**/*", "../appl/dodex/**/*"])
         .pipe(copy("../../" + dist + "/appl"));
 }
 function copyImages2() {
-    return src(["../images/*"])
-        .pipe(copy("../../" + dist));
+    return src(["../image*/**/*"])
+        .pipe(dest("../../" + dist + "/appl/"));
+}
+
+function copyReadmeForTest() {
+    return src(["../../README.md"])
+        .pipe(dest("../../" + dist + "/appl"));
 }
 
 function karmaServer(done, singleRun = false, watch = true) {
@@ -312,7 +306,7 @@ function karmaServer(done, singleRun = false, watch = true) {
                 done();
             }
             new Server(karmaConfig, function doneCallback(exitCode) {
-                console.log("Karma has exited with " + exitCode);
+                console.warn("Karma has exited with " + exitCode);
                 if(singleRun) {
                     done();
                 }
@@ -321,7 +315,7 @@ function karmaServer(done, singleRun = false, watch = true) {
                 }
             }).start();
         },
-        (rejectReason) => { console.err(rejectReason); }
+        (rejectReason) => { console.error(rejectReason); }
     );
 }
 

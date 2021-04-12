@@ -7,7 +7,7 @@ export default App.controllers["Table"] || (App.controllers["Table"] = Object.as
     },
     name: "table",
     tools () {
-        const toolsUrl = "../templates/stache/";
+        const toolsUrl = "templates/stache/";
         
         this.view({
             controller: "table",

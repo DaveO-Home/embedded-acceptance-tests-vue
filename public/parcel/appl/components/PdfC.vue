@@ -14,7 +14,7 @@ import Setup from "../js/utils/setup";
 import App from "../js/app";
 
 App.init();
-const url = "../views/prod/Test.pdf";
+const url = "views/prod/Test.pdf";
 
 export default {
   name: "PdfC",

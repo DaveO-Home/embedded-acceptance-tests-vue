@@ -79,7 +79,7 @@ export default {
   data () {
     return {
       msg: "Hi! - Acceptance Testing with a Vue.js App",
-      logo: "../images/logo.png"
+      logo: "images/logo.png"
     };
   },
   mounted: function () {

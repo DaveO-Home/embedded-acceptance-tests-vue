@@ -8,18 +8,12 @@
         <meta name="author" content="">
         <link rel="icon" href="../images/favicon.ico">
         <title>Parcel Test Application</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" 
-            rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-        <script type='text/javascript'>
-            window.testit = (typeof __karma__ !== 'undefined');
-            //true will generate a fatal error, only jasmine specs are run.
-            window.testOnly = false;
-        </script>
+        <script src="./testSetup.js"></script>
     </head>
 
     <body>
         <div id="app"></div>
         
-        <script src="main.js"></script>
+        <script src="./main.js"></script>
     </body>
 </html>

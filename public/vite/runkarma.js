@@ -20,12 +20,12 @@ function karmaServer(singleRun = true, watch = false) {
     ).then(
         (karmaConfig) => {
             new Server(karmaConfig, function doneCallback(exitCode) {
-                console.log("Karma has exited with " + exitCode);
+                console.warn("Karma has exited with " + exitCode);
                 if (exitCode > 0) {
                     process.exit(exitCode);
                 }
             }).start();
         },
-        (rejectReason) => { console.err(rejectReason); }
+        (rejectReason) => { console.error(rejectReason); }
     );
 }

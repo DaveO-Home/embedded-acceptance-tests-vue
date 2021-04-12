@@ -245,7 +245,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 * `cd public/vue2/brunch/build`
 * `gulp tdd` or `./cook tdd`
 
-  While the Brunch watcher is running, tests are re-run when code are changed. 
+  While the Brunch watcher is running, tests are re-run when code are changed.
   
   __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
@@ -281,9 +281,9 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 1\. ***Watch, Recompile and Reload Window*** -
 
 * `cd public/parcel/build`
-* `gulp watch`
+* `gulp watch` or `gulp serve`
 
-At this point you can start a browser and enter `localhost:3080/dist_test/parcel/appl/testapp_dev.html` (can be configured to auto open browser tab). Any changes to the source code(*.js and*.css files) should be reflected in the browser auto reload.
+At this point you can start a browser and enter `localhost:3080/dist_test/parcel/appl/testapp_dev.html` (can be configured to auto open browser tab). Any changes to the source code(*.js and*.css files) should be reflected in the browser auto reload. __Note;__ With `parcel V2`, the parcel internal server is used. To allow the same test URL, a proxy has been added using `.../public/.proxyrc`. The HMR reload seems to have a problem, you may need to reload the browser manually.
 
 2\. ***Test Driven Development(tdd) Window*** -
 

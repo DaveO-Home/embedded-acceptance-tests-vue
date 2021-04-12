@@ -16,12 +16,14 @@ const bootLint = function() {
                     } else {
                         message += file.path + ": " + lint.id + " " + lint.message;
                     }
+                    // eslint-disable-next-line no-console
                     console.log(message);
                 },
                 summaryReportFn: function (file, errorCount, warningCount) {
                     if (errorCount > 0 || warningCount > 0) {
-                        console.log("please fix the " + errorCount + " errors and " + warningCount + " warnings in " + file.path);
+                        console.warn("please fix the " + errorCount + " errors and " + warningCount + " warnings in " + file.path);
                     } else {
+                        // eslint-disable-next-line no-console
                         console.log("No problems found in " + file.path);
                     }
                 }

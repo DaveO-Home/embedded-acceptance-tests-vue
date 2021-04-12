@@ -8,7 +8,7 @@ const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssnanoPlugin = require("optimize-css-assets-webpack-plugin");
 const { DefinePlugin, ProgressPlugin } = require("webpack");
-const { HashedModuleIdsPlugin, NamedChunkIdsPlugin } = require("webpack").ids;
+const { /* HashedModuleIdsPlugin, */ NamedChunkIdsPlugin } = require("webpack").ids;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const PreloadPlugin = require("preload-webpack-plugin");
 const resolveClientEnv = require("./resolveClientEnv");
@@ -103,11 +103,12 @@ module.exports =  {
     rules: rules
   },
   optimization: {
+    moduleIds: "deterministic",
     splitChunks: {
       cacheGroups: {
-        vendors: {
+        defaultVendors: {
           name: "chunk-vendors",
-          test: /[\\\/]node_modules[\\\/]/,
+          test: /[\\/]node_modules[\\/]/,
           priority: -10,
           chunks: "initial"
         },
@@ -208,11 +209,11 @@ module.exports =  {
       }
     ),
     /* config.plugin("hash-module-ids") */
-    new HashedModuleIdsPlugin(
-      {
-        hashDigest: "hex"
-      }
-    ),
+    // new HashedModuleIdsPlugin(
+    //   {
+    //     hashDigest: "hex"
+    //   }
+    // ),
     /* config.plugin("named-chunks") */
     new NamedChunkIdsPlugin(
       chunk => {

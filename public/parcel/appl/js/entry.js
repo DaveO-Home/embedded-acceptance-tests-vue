@@ -33,7 +33,7 @@ const vueApp =  createApp({
   components: { App },
   template: "<App/>"
 });
-// console.log("VueApp:*********", vueApp)
+
 vueApp.use(router);
 vueApp.use(store);
 vueApp.component("DodexC", DodexC);

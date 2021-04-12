@@ -1,5 +1,5 @@
 
-<template scoped>
+<template>
   <div class="dodex--open">
     <img :src="ico">
   </div>
@@ -10,7 +10,7 @@ import dodex from "dodex";
 import input from "dodex-input";
 import mess from "dodex-mess";
 
-const ico = "../images/dodex_g.ico";
+const ico = "images/dodex_g.ico";
 
 export default {
   name: "DodexC",

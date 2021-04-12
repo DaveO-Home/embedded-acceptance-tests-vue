@@ -22,7 +22,7 @@ export default function (dodex, input, mess, content, Start, timer) {
             if (!$(mainContainer)[0]) {
                 $("body").append("<div id=\"main_container\"><div class=\"loading-page\"></div></div>");
             }
-            dodex.setContentFile("../dodex/data/content.js");
+            dodex.setContentFile("dodex/data/content.js");
             dodex.init({
                 input: input,
                 private: "full",

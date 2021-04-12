@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-const bomb = "../images/bomb-gif.gif";
+const bomb = "images/bomb-gif.gif";
 export default {
   name: "DeadEnd",
   data () {

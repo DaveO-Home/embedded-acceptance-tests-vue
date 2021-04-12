@@ -13,12 +13,12 @@ module.exports = function (config) {
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ["jasmine-jquery"],
         proxies: {
-            "/views/": "/base/dist_test/" + bundler + "/views/",
-            "/templates": "/base/dist_test/" + bundler + "/templates",
+            "/views/": "/base/dist_test/" + bundler + "/appl/views/",
+            "/templates": "/base/dist_test/" + bundler + "/appl/templates",
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
-            "/README.md": "/base/dist_test/README.md",
+            "/README.md": "/base/dist_test/" + bundler + "/README.md",
             "/dodex/": "/base/dist_test/" + bundler + "/appl/dodex/",
-            "/images/": "/base/dist_test/" + bundler + "/images/",
+            "/images/": "/base/dist_test/" + bundler + "/appl/images/",
         },
         // list of files / patterns to load in the browser
         files: [
@@ -29,7 +29,7 @@ module.exports = function (config) {
             //Jasmine tests
             bundler + "/tests/unit_tests*.js",
             //'node_modules/promise-polyfill/promise.js',
-            {pattern: "dist_test/README.md", included: false},
+            {pattern: "dist_test/" + bundler + "/README.md", included: false},
             // Looking for changes via HMR - tdd should run with Sync Hot Moudule Reload.
             // Looking for changes to the client bundle
             {pattern: "dist_test/" + bundler + "/**/*", included: false, watched: true, served: true},
@@ -69,7 +69,7 @@ module.exports = function (config) {
         port: 9876,
         colors: true,
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_ERROR,
+        logLevel: config.LOG_INFO,
         autoWatch: true,
         // Continuous Integration mode
         singleRun: false,
