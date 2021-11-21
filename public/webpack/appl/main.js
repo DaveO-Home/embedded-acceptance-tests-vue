@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
-import vm from "./entry";
-/* eslint-enable no-unused-vars */
-import "config";
 import "setglobals";
+// /* eslint-disable no-unused-vars */
+import { dodexApp, login, sidebar, content, footer } from "./entry";
+// /* eslint-enable no-unused-vars */
+import "config";
 import app from "app";
 import default0 from "default";
 import setup from "setup";
@@ -14,9 +14,15 @@ import apptest from "apptests";
 app.init(default0);
 setup.init();
 
-vm._component.router.isReady()
+dodexApp._component.router.isReady()
     .then(() => {
-        vm.mount("#app");
+        if (typeof testit === "undefined" || !testit) {
+            dodexApp.mount("#dodex");
+            login.mount("#login");
+            sidebar.mount("#sidebar");
+            content.mount("#content");
+            footer.mount("#footer");
+        }
     }).catch(e => console.error(e));
 
 /* develblock:start */
@@ -32,7 +38,7 @@ new Promise((resolve) => {
     if (typeof testit !== "undefined" && testit) {
         // var apptest = require("../tests/apptest");
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
-        apptest(app, vm);
+        apptest(app, dodexApp, login, sidebar, content, footer);
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         __karma__.start();
     }

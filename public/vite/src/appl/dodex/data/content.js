@@ -107,23 +107,19 @@
 			},
 			back: { // Bootstrap 
 				content: `<h1 style="font-size: 14px;">
-					<svg height="18" width="17" style="font-family: 'Open Sans', sans-serif;">
-					<text x="3" y="18" fill="#059">O</text><text x="0" y="15" fill="#059">D</text></svg> doDex</h1>
-					<footer class="footer" style="width:350px">
-					<div class="container">
-						<div class="row">
-							<div class="footer-col col-sm-10">
-								<ul class="list-inline" style="width:345px;">
-									<li class="list-inline-item"><a class="btn-social btn-outline" href="https://www.facebook.com/" target="_"><i class="fab fa-facebook"></i></a></li>
-									<li class="list-inline-item"><a class="btn-social btn-outline" href="https://news.google.com/" target="_"><i class="fab fa-google"></i></a></li>
-									<li class="list-inline-item"><a class="btn-social btn-outline" href="https://twitter.com/Twitter" target="_"><i class="fab fa-twitter"></i></a></li>
-									<li class="list-inline-item"><a class="btn-social btn-outline" href="https://www.linkedin.com/" target="_"><i class="fab fa-linkedin"></i></a></li>
-									<li class="list-inline-item"><a class="btn-social btn-outline" href="https://dribbble.com/" target="_"><i class="fab fa-dribbble"></i></a></li>
-									<li class="float-right mr-2">doDex &copy; 2019</li>
-								</ul>
-							</div>
-						</div>
-					</div></footer>`
+				<svg height="18" width="17" style="font-family: 'Open Sans', sans-serif;">
+				<text x="3" y="18" fill="#059">O</text><text x="0" y="15" fill="#059">D</text></svg> doDex</h1>
+				<footer class="dodex-footer  mt-auto py-3" style="width:95%">
+						<div class="footer-col col-sm-12">
+							<ul class="list-inline" class="w-100">
+								<li class="list-inline-item"><a class="btn-social btn-outline" href="https://www.facebook.com/" target="_"><i class="fab fa-fw fa-facebook"></i></a></li>
+								<li class="list-inline-item"><a class="btn-social btn-outline" href="https://news.google.com/" target="_"><i class="fab fa-fw fa-google"></i></a></li>
+								<li class="list-inline-item"><a class="btn-social btn-outline" href="https://twitter.com/Twitter" target="_"><i class="fab fa-fw fa-twitter"></i></a></li>
+								<li class="list-inline-item"><a class="btn-social btn-outline" href="https://www.linkedin.com/" target="_"><i class="fab fa-fw fa-linkedin"></i></a></li>
+								<li class="list-inline-item"><a class="btn-social btn-outline" href="https://dribbble.com/" target="_"><i class="fab fa-fw fa-dribbble"></i></a></li>
+								<li class="float-end">doDex &copy; 2021</li>
+							</ul>
+						</div></footer>`
 			}
 		}
 	}

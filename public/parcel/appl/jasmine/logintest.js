@@ -12,7 +12,7 @@ export default function (Start, timer) {
             // Somehow we lost the listener-?
             Start["div .login click"]();
             const loginObject = $("div .login");
-            loginObject.click();
+            loginObject.trigger("click");;
 
             // Note: if page does not refresh, increase the timer time.
             // Using RxJs instead of Promise.

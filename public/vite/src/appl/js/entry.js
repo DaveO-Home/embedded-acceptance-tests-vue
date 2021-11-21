@@ -1,8 +1,11 @@
 import { createApp } from "vue";
 import { createStore } from "vuex";
 import router from "./router";
-import App from "../App.vue";
 import DodexC from "../components/DodexC.vue";
+import SidebarC from "../components/SidebarC.vue";
+import LoginC from "../components/LoginC.vue";
+import ContentC from "../components/ContentC.vue";
+import FooterC from "../components/FooterC.vue";
 // vuex
 import { mutations, STORAGE_KEY } from "../vuex/mutations";
 import actions from "../vuex/actions";
@@ -25,21 +28,46 @@ const store = createStore({
   plugins
 });
 
-const vueApp = createApp({
-  el: "#app",
+const dodexApp =  createApp({
+  el: "#dodex",
+  store,
   router,
-  // store,
-  components: { App },
-  template: "<App/>"
+  components: { DodexC },
+  template: "<DodexC/>"
 });
 
-vueApp.use(router);
-vueApp.use(store);
-vueApp.component("DodexC", DodexC);
+const login =  createApp({
+  el: "#login",
+  components: { LoginC },
+  template: "<LoginC/>"
+});
+
+const sidebar =  createApp({
+  el: "#sidebar",
+  components: { SidebarC },
+  template: "<SidebarC/>"
+});
+
+const content =  createApp({
+  el: "#content",
+  components: { ContentC },
+  template: "<ContentC/>"
+});
+
+const footer =  createApp({
+  el: "#footer",
+  components: { FooterC },
+  template: "<FooterC/>"
+});
+
+sidebar.use(router);
+content.use(router);
+footer.use(router);
+content.use(store);
 
 // Change route if navigating to anchor on README page and refreshing the page
 if(location.hash.startsWith("#/vue-")) {
-  vueApp._component.router.push({path: "/"});
+  dodexApp._component.router.push({path: "/"});
 }
 
-export default vueApp;
+export { dodexApp, login, sidebar, content, footer };

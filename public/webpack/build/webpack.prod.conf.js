@@ -4,7 +4,6 @@ const { VueLoaderPlugin } = require("vue-loader");
 const TerserPlugin = require("terser-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssnanoPlugin = require("optimize-css-assets-webpack-plugin");
 const { DefinePlugin, ProgressPlugin } = require("webpack");
@@ -184,8 +183,6 @@ module.exports =  {
     ),
     // /* config.plugin("case-sensitive-paths") */
     new CaseSensitivePathsPlugin(),
-    // /* config.plugin("friendly-errors") */
-    new FriendlyErrorsWebpackPlugin(),
     /* config.plugin("extract-css") */
     new MiniCssExtractPlugin(
       {

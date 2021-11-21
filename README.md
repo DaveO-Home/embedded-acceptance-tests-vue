@@ -12,16 +12,17 @@ The basic idea is to build a production application ensuring consistent and stab
 
 > 1. [Browserify](#vue-i-browserify)
 > 1. [Brunch](#vue-ii-brunch)
-> 1. [Fusebox](#vue-iii-fusebox)
-> 1. [Parcel](#vue-iv-parcel)
-> 1. [Rollup](#vue-v-rollup)
-> 1. [Steal](#vue-vi-stealjs)
-> 1. [Webpack](#vue-vii-webpack)
-> 1. [Vite](#vue-viii-vite)
+> 1. [esbuild](#vue-iii-esbuild)
+> 1. [Fusebox](#vue-iv-fusebox)
+> 1. [Parcel](#vue-v-parcel)
+> 1. [Rollup](#vue-vi-rollup)
+> 1. [Steal](#vue-vii-stealjs)
+> 1. [Webpack](#vue-viii-webpack)
+> 1. [Vite](#vue-ix-vite)
 
 [Installation](#vue-installation)
 
-[Docker](#vue-ix-dockerfile)
+[Docker](#vue-x-dockerfile)
 
 **Dodex**: Added for testing and demo. <https://github.com/DaveO-Home/dodex>
 
@@ -256,7 +257,31 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
   * `npm install eslint@latest`
   * `cd <install>/public/vue2` and edit the `brunch-config.js` file and uncomment the eslint section.
 
-### Vue III. **Fusebox**
+### Vue III. **esbuild**
+
+[Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
+
+1\. ***Hot Module Reload(HMR) Server Window*** -
+
+* `cd public/esbuild/build`
+* `gulp hmr`
+* HMR will start a web server with port 3080, a watcher will also start that rebuilds the bundle on code change.
+
+  HMR is using `browser-sync` so a web page will start at: `localhost:3080/dist_test/esbuild/appl/testapp_dev.html`.  Any changes to the source code(\*.js|*.jsx) files should be reflected in the browser auto reload. Also, the browser will reload when changing static content by executing `gulp copy`.
+
+  For development and testing, the normal tasks; `gulp test`, `gulp acceptance`, `gulp rebuild` can be executed when needed.
+
+2\. ***Test Driven Development(tdd) Window*** -
+
+* `cd public/esbuild/build`
+* `gulp tdd`
+
+  You must use `gulp build` and not gulp rebuild with `gulp tdd` running. Tdd will fail with gulp rebuild because it cleans the test directory.
+
+  The HMR Server must be running if you want tests to rerun as source code(*.js) are changed. Note, tests can be added or 
+  removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
+
+### Vue IV. **Fusebox**
 
 [Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
@@ -274,7 +299,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
 
-### Vue IV. **Parcel**
+### Vue V. **Parcel**
 
 [Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
@@ -296,7 +321,7 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
   __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### Vue V. **Rollup**
+### Vue VI. **Rollup**
 
 [Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
@@ -314,7 +339,7 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### Vue VI. **Stealjs**
+### Vue VII. **Stealjs**
 
 [Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
@@ -339,7 +364,7 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### Vue VII. **Webpack**
+### Vue VIII. **Webpack**
 
 [Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
@@ -364,13 +389,13 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### Vue VIII. **Vite**
+### Vue IX. **Vite**
 
 [Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 
 1. Vite is loacated in the `public/vite` directory.
 2. The vite setup does not use `gulp` rather it uses `npm` scripts, see `vite/package.json`.
-3. To install, execute `npm install` or `npm install --force` in both `<install dir>/public` and `<install dir>/public/vite`.
+3. To install, execute `npm install` or `npm install --legacy-peer-deps (--force)` in both `<install dir>/public` and `<install dir>/public/vite`.
 
 ***Production*** -
 
@@ -382,6 +407,8 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 6. Execute `npm run integration` to run `karma` embedded tests. __Note;__ The `karma` tests run against the production build.
 7. Execute `npm run integrationp` to run the `karma` test against an existing production bundle.
 
+__Note:__ Vite has an issue with `bootstrap 5` and jQuery. The `modal (jQuery.fn)` fails in production mode.
+
 ***Developemnt*** -
 
 1. Exeucte `npm run dev` to start the development server. Code changes will be reflected in the browser at `localhost:4080`. __Note;__ `npm run dev` executes `vite` and dynamically setups up the application via modules, no bundles are created. Good for large applications.
@@ -389,7 +416,7 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 3. Execute `npm run acceptance` to run all of the defined `cypress` tests in the e2e directory.
 4. Execute `npm run lint` to lint the application(js and vue) files.
 
-### Vue IX. **Dockerfile**
+### Vue X. **Dockerfile**
 
 [Top](#vue-embedded-acceptance-testing-with-karma-and-jasmine)
 

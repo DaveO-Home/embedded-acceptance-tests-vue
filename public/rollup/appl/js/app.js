@@ -4,6 +4,7 @@ import capitalize from "lodash-es/capitalize";
 import "bootstrap";
 import { fas } from "@fortawesome/fontawesome-free-solid";
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
+import { createPopper } from "@popperjs/core";
 
 library.add(fas);
 dom.watch();
@@ -17,7 +18,7 @@ if (typeof testit !== "undefined" && testit) {
         });
 
         it("is Popper defined", () => {
-            expect(typeof Popper === "function").toBe(true);
+            expect(typeof createPopper === "function").toBe(true);
         });
     });
 }
@@ -40,7 +41,7 @@ export default {
         };
     },
     initPage () {
-        $("[data-toggle=collapse]").on("click", function (e) {
+        $("[data-bs-toggle=collapse]").on("click", function (e) {
             // Don't change the hash
             e.preventDefault();
             $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");

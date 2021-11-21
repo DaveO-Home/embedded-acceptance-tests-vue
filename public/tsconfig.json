@@ -1,8 +1,8 @@
 
 {
-    "name": "daveo",
+    "name": "vite",
     "compilerOptions": {
-        "target": "es5",
+        // "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
         "isolatedModules": false,

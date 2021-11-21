@@ -7,7 +7,7 @@ const bootLint = function () {
                 stoponerror: true,
                 stoponwarning: false,
                 loglevel: "debug",
-                disabledIds: ["E001", "W009", "E007", "W005"],
+                disabledIds: ["E001", "W009", "E007", "W005", "E013"],
                 issues: fileIssues,
                 reportFn: function (file, lint, isError, isWarning, errorLocation) {
                     var message = (isError) ? "ERROR! - " : "WARN! - ";

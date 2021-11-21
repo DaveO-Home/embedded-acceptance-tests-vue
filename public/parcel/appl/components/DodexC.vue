@@ -25,6 +25,7 @@ export default {
       (typeof testit !== "undefined" && !testit)
     ) {
       if (document.querySelector(".top--dodex") === null) {
+        const server = window.location.hostname + (window.location.port.length > 0 ? ":" + window.location.port : "");
         // Content for cards A-Z and static card
         dodex.setContentFile("./dodex/data/content.js");
         dodex
@@ -37,6 +38,7 @@ export default {
             private: "full", // frontend load of private content, "none", "full", "partial"(only cards 28-52) - default none
             replace: true, // append to or replace default content - default false(append only)
             mess: mess,
+            server: server
           })
           .then(function () {
             // Add in app/personal cards

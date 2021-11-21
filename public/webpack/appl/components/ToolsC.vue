@@ -4,36 +4,27 @@
       Tools - Count {{ text }} selected {{ count }} times (from Vuex store)
     </h4>
     <section class="float-left">
-      <div
-        id="dropdown1"
-        class="dropdown"
-      >
+      <div id="dropdown1" class="dropdown">
         <button
           id="dropdown0"
           class="dropdown-toggle smallerfont"
           type="button"
-          data-toggle="dropdown"
+          data-bs-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
         >
           Select Job Type
         </button>
-        <div
-          class="dropdown-menu pointer"
-          aria-labelledby="dropdown0"
-        >
-          <a
-            class="dropdown-item smallerfont"
-            @click="addSelection"
-          >Combined</a>
-          <a
-            class="dropdown-item smallerfont"
-            @click="addSelection"
-          >Category1</a>
-          <a
-            class="dropdown-item smallerfont"
-            @click="addSelection"
-          >Category2</a>
+        <div class="dropdown-menu pointer" aria-labelledby="dropdown0">
+          <a class="dropdown-item smallerfont pointer" @click="addSelection"
+            >Combined</a
+          >
+          <a class="dropdown-item smallerfont pointer" @click="addSelection"
+            >Category1</a
+          >
+          <a class="dropdown-item smallerfont pointer" @click="addSelection"
+            >Category2</a
+          >
         </div>
       </div>
     </section>
@@ -78,13 +69,13 @@ export default {
     },
     text() {
       return this.$store.state.text;
-    }
+    },
   },
   mounted() {
     const store = useStore();
     store.dispatch("clearAll");
     store.dispatch("addSelection", "Combined");
-    Setup.init(); 
+    Setup.init();
   },
   methods: {
     addSelection(e) {
@@ -117,7 +108,7 @@ export default {
         }
       );
     },
-  }
+  },
 };
 
 function getData(asyncResolve) {
@@ -132,13 +123,13 @@ function getData(asyncResolve) {
       return asyncResolve({
         template: resolved,
         mounted() {
-            Table.decorateTable("tools");
-            Helpers.scrollTop();
-            $("#dropdown1").on("click", Table.dropdownEvent);
-            if (App.controllers["Start"]) {
-              App.controllers["Start"].initMenu();
-            }
-        }
+          Table.decorateTable("tools");
+          Helpers.scrollTop();
+          $("#dropdown1").on("click", Table.dropdownEvent);
+          if (App.controllers["Start"]) {
+            App.controllers["Start"].initMenu();
+          }
+        },
       });
     });
 }

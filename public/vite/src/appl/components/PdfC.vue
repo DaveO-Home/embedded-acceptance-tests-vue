@@ -12,7 +12,7 @@
 import Setup from "setup";
 import App from "app";
 // Setting up for optional Karma/Jasmine
-import "setglobals";
+// import "setglobals";
 App.init();
 const url = "views/prod/Test.pdf";
 

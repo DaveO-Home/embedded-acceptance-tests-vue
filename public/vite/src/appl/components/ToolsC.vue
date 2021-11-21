@@ -1,42 +1,30 @@
 <template>
-  <span
-    id="data"
-    data-testid="tools-data"
-  >
+  <span id="data" data-testid="tools-data">
     <h4>
       Tools - Count {{ text }} selected {{ count }} times (from Vuex store)
     </h4>
     <section class="float-left">
-      <div
-        id="dropdown1"
-        class="dropdown"
-      >
+      <div id="dropdown1" class="dropdown">
         <button
           id="dropdown0"
-          class="dropdown-toggle smallerfont"
+          class="dropdown-bs-toggle smallerfont"
           type="button"
-          data-toggle="dropdown"
+          data-bs-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
         >
           Select Job Type
         </button>
-        <div
-          class="dropdown-menu pointer"
-          aria-labelledby="dropdown0"
-        >
-          <a
-            class="dropdown-item smallerfont"
-            @click="addSelection"
-          >Combined</a>
-          <a
-            class="dropdown-item smallerfont"
-            @click="addSelection"
-          >Category1</a>
-          <a
-            class="dropdown-item smallerfont"
-            @click="addSelection"
-          >Category2</a>
+        <div class="dropdown-menu pointer" aria-labelledby="dropdown0">
+          <a class="dropdown-item smallerfont pointer" @click="addSelection"
+            >Combined</a
+          >
+          <a class="dropdown-item smallerfont pointer" @click="addSelection"
+            >Category1</a
+          >
+          <a class="dropdown-item smallerfont pointer" @click="addSelection"
+            >Category2</a
+          >
         </div>
       </div>
     </section>
@@ -72,7 +60,7 @@ const ToolsAsyncLoad = defineAsyncComponent(() => {
 export default {
   name: "ToolsC",
   components: { ToolsAsyncLoad },
-   data() {
+  data() {
     this.loadTools();
     return {};
   },
@@ -82,13 +70,13 @@ export default {
     },
     text() {
       return this.$store.state.text;
-    }
+    },
   },
   mounted() {
     const store = useStore();
     store.dispatch("clearAll");
     store.dispatch("addSelection", "Combined");
-    setup.init(); 
+    setup.init();
   },
   methods: {
     addSelection(e) {
@@ -121,7 +109,7 @@ export default {
         }
       );
     },
-  }
+  },
 };
 
 function getData(asyncResolve) {
@@ -143,38 +131,42 @@ function getData(asyncResolve) {
           if (app.controllers["Start"]) {
             app.controllers["Start"].initMenu();
           }
-        }
+        },
       });
     });
 }
 
-function findSelectionIndex (selections, text) {
-  let selection = selections.find(s => s.text === text);
+function findSelectionIndex(selections, text) {
+  let selection = selections.find((s) => s.text === text);
   return selections.indexOf(selection);
 }
 </script>
 
 <style scoped>
-    span,table,div tbody {
-        font-size: 13px;  
-        line-height: 1.2; 
-        padding: 5px;
-    }
-    table tr td { 
-        margin:5px; padding:5px;
-    }
-    h4,h3 {
-        text-align: center;
-    }
-    #table_info {
-        font-size: 14px;
-        color: #99bfe6;
-        cursor: pointer;
-    }
-    .smallerfont {
-        font-size: 14px;
-    }
-    .pointer {
-        cursor: pointer;
-    }
+span,
+table,
+div tbody {
+  font-size: 13px;
+  line-height: 1.2;
+  padding: 5px;
+}
+table tr td {
+  margin: 5px;
+  padding: 5px;
+}
+h4,
+h3 {
+  text-align: center;
+}
+#table_info {
+  font-size: 14px;
+  color: #99bfe6;
+  cursor: pointer;
+}
+.smallerfont {
+  font-size: 14px;
+}
+.pointer {
+  cursor: pointer;
+}
 </style>

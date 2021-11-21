@@ -13,7 +13,7 @@ describe("Contact Form Validation", () => {
   });
 
   it("Contact form - verify required fields", () => {
-    cy.get("[data-testid=main_container] form").then((container) => {
+    cy.get("form").then((container) => {
       contact = container;
       nameObject = container.find("#inputName");
       emailObject = container.find("#inputEmail");
@@ -46,10 +46,13 @@ describe("Contact Form Validation", () => {
   });
 
   it("Contact form - validate email with valid email address.", () => {
+    cy.get("form").then((container) => {
+    emailObject = container.find("#inputEmail");
     emailObject.val("ace@ventura.com");
 
     expect(emailObject[0].validity.typeMismatch).to.be.false;
     expect(emailObject[0].checkValidity()).to.be.true;
+    });
   });
 
   it("Contact form - validate form submission.", done => {

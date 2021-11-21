@@ -13,7 +13,7 @@ export default function (Start, timer) {
             // Somehow we lost the listener-?
             Start["div .login click"]();
             const loginObject = $("div .login");
-            loginObject.click();
+            loginObject.trigger("click");
 
             // Note: if page does not refresh, increase the timer time.
             // Using RxJs instead of Promise.
@@ -21,11 +21,11 @@ export default function (Start, timer) {
             const observable = numbers.subscribe(timer => {
                 modal = $("#modalTemplate");
                 if ((typeof modal[0] !== "undefined" && modal[0].length !== 0) || timer === 20) {
+                    observable.unsubscribe();
                     nameObject = $("#inputUsername");
                     modal.on("shown.bs.modal", function () {
                         modal.modal("toggle");
                     });
-                    observable.unsubscribe();
                     done();
                 }
             });
@@ -47,10 +47,10 @@ export default function (Start, timer) {
             const observable = numbers.subscribe(timer => {
                 const modal2 = $("#modalTemplate");
                 if (typeof modal2[0] === "undefined" || timer === 25) {
+                    observable.unsubscribe();
                     expect(modal[0]).not.toBeVisible();
                     expect(modal[0]).not.toBeInDOM();
                     $("div .login").remove(); // Just cleaning up page for tdd
-                    observable.unsubscribe();
                     done();
                 }
             });

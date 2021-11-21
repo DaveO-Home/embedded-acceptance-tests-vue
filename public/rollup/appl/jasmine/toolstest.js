@@ -1,4 +1,4 @@
-export default function (Route, Helpers, vm, timer) {
+export default function (Route, Helpers, content, timer) {
     /*
      * Test that new data are loaded when the select value changes.
      */
@@ -21,7 +21,7 @@ export default function (Route, Helpers, vm, timer) {
 
             // Wait for Web Page to be loaded
             new Promise(function (resolve, reject) {
-                Helpers.isResolved(resolve, reject, vm, "data", 0, 1);
+                Helpers.isResolved(resolve, reject, content, "data", 0, 1);
             }).catch(function (rejected) {
                 fail("The Tools Page did not load within limited time: " + rejected);
             }).then(() => {

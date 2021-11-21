@@ -16,7 +16,10 @@ module.exports = {
         "quotes": [2, "double", { "allowTemplateLiterals": true }],
         "no-console": [2, { allow: ["warn", "error"] }],
         "no-case-declarations": 1,
-        "import/first": 0
+        "import/first": 0,
+	    "vue/multi-word-component-names": ["error", {
+		    "ignores": ["Dodexc"]
+	    }], 
     },
     "globals": {
         "cy": true,

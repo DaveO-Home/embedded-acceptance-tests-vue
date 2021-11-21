@@ -1,7 +1,7 @@
 {{#if all}}
 <br/>
 
-<!--<i id='table_info' class='fa fa-info-circle float-left' aria-hidden='true' data-toggle='modal' data-target='#table_modal'></i>-->
+<!--<i id='table_info' class='fa fa-info-circle float-left' aria-hidden='true' data-bs-toggle='modal' data-target='#table_modal'></i>-->
 <i id='table_info' class='fa fa-info-circle fa-2x float-left' style="font-size: 14px;color: #99bfe6;cursor: pointer;" aria-hidden='true' data-toggle='tooltip' title="To filter rows enter a value from the Tool column. To filter a group of rows enter one of the values that is in parentheses."></i>
 
 <table id="tools" class="tablesorter">
@@ -61,14 +61,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <h3>Filter Hint:</h3>
             <div class="modal-body">
                 <p>To filter rows enter a value from the Tool column. To filter a group of rows enter one of the values that is in parentheses.</p>
             </div>
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal">Close</button>
+                <button class="btn" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

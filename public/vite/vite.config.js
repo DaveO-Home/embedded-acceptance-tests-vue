@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-const path = require("path");
+var path = require("path");
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,7 +23,6 @@ export default defineConfig({
       { find: "pdf", replacement: modResolve("appl/js/controller/pdf") },
       { find: "table", replacement: modResolve("appl/js/controller/table") },
       { find: "pager", replacement: "tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js" },
-      { find: "popper", replacement: "popper.js/dist/esm/popper.js" },
       { find: "handlebars", replacement: "handlebars/dist/handlebars.min.js" },
       { find: "bootstrap", replacement: "bootstrap/dist/js/bootstrap.min.js" },
       { find: "apptest", replacement: "appl/jasmine/apptest.js" },

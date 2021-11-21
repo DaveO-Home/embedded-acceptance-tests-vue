@@ -79,7 +79,8 @@ const esLint = function (cb) {
     var stream = src(["../appl/**/*.js", "../appl/**/*.vue"])
         .pipe(eslint({
             configFile: "../../.eslintrc.js", // 'eslintConf.json',
-            quiet: 0
+            quiet: 0,
+            fix: true
         }))
         .pipe(eslint.format())
         .pipe(eslint.result(() => {
@@ -325,10 +326,10 @@ const rollup_watch = function (cb) {
     });
 };
 
-const testCopyRun = series(copy_test, parallel(copy_images, /*copy_node_css,*/ copy_css));
+const testCopyRun = series(copy_test, parallel(copy_images, copy_css));
 const testRun = series(cleant, testCopyRun, build_development);
 const lintRun = parallel(esLint, cssLint, bootLint);
-const prodCopyRun = series(copyprod, parallel(copyprod_images, /*copyprod_node_css,*/ copyprod_css));
+const prodCopyRun = series(copyprod, parallel(copyprod_images, copyprod_css));
 const prodRun = series(cleant, testCopyRun, build_development, pat, lintRun, clean, prodCopyRun, build);
 prodRun.displayName = "prod";
 
@@ -372,7 +373,8 @@ async function rollupBuild(cb) {
                     ],
                     "babel-preset-vue",
                 ],
-                babelHelpers: "bundled"
+                "plugins": ["@babel/plugin-transform-runtime"],
+                babelHelpers: "runtime"
             }),
             buble({ modules: false }),
             image({
@@ -501,21 +503,6 @@ function copyCss() {
     return src(["../appl/css/site.css"])
         .pipe(copy("../../" + dist + "/appl"));
 }
-
-// function copyNodeCss() {
-//     return src(["../../node_modules/bootstrap/dist/css/bootstrap.min.css", "../../node_modules/font-awesome/css/font-awesome.css",
-//         "../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", "../../node_modules/tablesorter/dist/css/theme.blue.min.css"])
-//         .pipe(copy("../../" + dist + "/appl"));
-// }
-
-// function copyFonts() {
-//     return src(["../../node_modules/font-awesome/fonts/**/*"])
-//         .pipe(copy("../../" + dist + "/appl"));
-// }
-// function copyFonts2() {
-//     return src(["../../node_modules/font-awesome/fonts/**/*"])
-//         .pipe(copy("../../" + dist + "/fonts"));
-// }
 
 function karmaServer(done, singleRun = false, watch = true) {
     const parseConfig = karma.config.parseConfig;

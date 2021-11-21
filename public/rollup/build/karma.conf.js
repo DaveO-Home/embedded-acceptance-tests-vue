@@ -29,10 +29,9 @@ module.exports = function (config) {
             startupHtml,
             //Jasmine tests
             bundler + "/tests/unit_tests*.js",
-            //'node_modules/promise-polyfill/promise.js',
+            //"node_modules/promise-polyfill/promise.js",
             {pattern: "node_modules/jquery/**/*.js", watched: false, served: true, included: false},
             {pattern: "node_modules/bootstrap/**/*.js", watched: false, included: false},
-            {pattern: "node_modules/popper.js/dist/umd/*", watched: false, included: false},
             {pattern: "node_modules/handlebars/dist/handlebars.min.js", watched: false, included: true, served: true},
             {pattern: bundler + "/appl/**/*.*", included: false, watched: false},
             {pattern: "node_modules/tablesorter/**/*.js", watched: false, served: true, included: false},
@@ -41,7 +40,6 @@ module.exports = function (config) {
             //Looking for changes to the client bundle
             {pattern: "dist_test/" + bundler + "/bundle.js", included: false, watched: true, served: true},
             {pattern: bundler + "/images/*", included: false, watched: false},
-            {pattern: "node_modules/font-awesome/**/*", watched: false, included: false},
             {pattern: "node_modules/dodex/dist/dodex.min.css", watched: false, included: false},
             //Jasmine/Loader tests and starts Karma
             bundler + "/build/karma.bootstrap.js"

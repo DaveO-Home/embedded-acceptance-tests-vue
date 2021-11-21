@@ -17,7 +17,7 @@ describe("Application Unit test suite - AppTest", () => {
     cy.visit("/"); // .debug();
     cy.contains("h1", "Welcome To");
     cy.get("#vue-embedded-acceptance-testing-with-karma-and-jasmine").should("exist"); // markdown loaded
-    cy.get("[data-testid=main_container]").find("div").its("length").should("be.gte", 3);
+    cy.get("#content").find("div").its("length").should("be.gte", 3);
   });
 
   it("Is Welcome Page Loaded from component", (done) => {
@@ -39,7 +39,7 @@ describe("Application Unit test suite - AppTest", () => {
 
   it("Is Tools Table Loaded from server", () => {
     cy.visit("/#table/tools");
-    cy.get("[data-testid=main_container]").find("div").its("length").should("be.gte", 3);
+    cy.get("#content").find("div").its("length").should("be.gte", 3);
     cy.get("[data-testid=tools-data]").find("h4").contains("Tools - Count Combined"); // .should("have.text", "Tools - Count");
     cy.get("[data-testid=tools-data]").find(".dropdown-menu").find(".dropdown-item").its("length").should("be.gt", 2);
     cy.get(".tablesorter").find("tbody").find("[role=row]").should("exist");
@@ -47,11 +47,11 @@ describe("Application Unit test suite - AppTest", () => {
 
   it("Is Pdf Loaded from server", () => {
     cy.visit("/#pdf/test");
-    cy.get("[data-testid=main_container]").find("div").its("length").should("be.gte", 1);
+    cy.get("#data").its("length").should("be.gte", 1);
     cy.get("#data[src$='Test.pdf']").its("length").should("be.gt", 0);
   });
 
-  it("Is Tools Table Loaded from component", async () => {
+  it("Is Pdf Loaded from component", async () => {
     const wrapper = await mount(PdfC);
 
     expect(wrapper.find("#data[src$='Test.pdf']").exists()).to.be.true;

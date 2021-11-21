@@ -59,7 +59,8 @@ const esLint = function (cb) {
     var stream = src(["../appl/**/*.js", "../appl/**/*.vue"])
         .pipe(eslint({
             configFile: "../../.eslintrc.js", // 'eslintConf.json',
-            quiet: 0
+            quiet: 0,
+            fix: true
         }))
         .pipe(eslint.format())
         .pipe(eslint.result(() => {

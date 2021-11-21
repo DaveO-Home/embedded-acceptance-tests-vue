@@ -5,7 +5,7 @@
 <script>
 import start from "start";
 import helpers from "helpers";
-import "setglobals";
+// import "setglobals";
 import { defineAsyncComponent } from "vue";
 
 const AsyncComp = defineAsyncComponent(() => {

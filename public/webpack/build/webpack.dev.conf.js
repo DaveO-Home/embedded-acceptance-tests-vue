@@ -3,12 +3,12 @@ const path = require("path");
 const { VueLoaderPlugin } = require("vue-loader");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const { DefinePlugin, ProgressPlugin } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const PreloadPlugin = require("preload-webpack-plugin");
 const rules = require("./dev_rules");
-
+const HOST = process.env.HOST || "localhost";
+const PORT = process.env.PORT || "3080";
 const isWatch = process.env.USE_WATCH === "true";
 
 function resolve(dir) {
@@ -28,7 +28,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "../..", "dist_test/webpack"),
     filename: "js/[name].js",
-    publicPath: "../",
+    publicPath: "/dist_test/webpack/", // "../",
     chunkFilename: "js/[name].js"
   },
   target: "web",
@@ -115,8 +115,6 @@ module.exports = {
     ),
     /* config.plugin("case-sensitive-paths") */
     new CaseSensitivePathsPlugin(),
-    /* config.plugin("friendly-errors") */
-    new FriendlyErrorsWebpackPlugin(),
     /* config.plugin("html") */
     new HtmlWebpackPlugin(
       {
@@ -190,5 +188,42 @@ module.exports = {
     app: [
       "./appl/main.js"
     ]
-  }
+  },
+  devServer: {
+      historyApiFallback: {
+          rewrites: [
+              { from: /.*/, to: path.join("/dist_test/webpack/", "index.html") }
+          ]
+      },
+      compress: false,
+      host: HOST,
+      port: PORT,
+      open: false,
+      devMiddleware: {
+          index: true,
+          // mimeTypes: { "text/plain": ["md"] },
+          publicPath: "/dist_test/webpack/",
+          serverSideRender: false,
+          writeToDisk: false,
+      },
+      client: {
+          logging: "info",
+          overlay: {
+              errors: true,
+              warnings: false,
+          },
+          overlay: true,
+          progress: true,
+      },
+      static: {
+          directory: path.resolve(__dirname, "../../dist_test"),
+          staticOptions: {},
+          publicPath: ["/dist_test/"],
+          // serveIndex: true,
+          // watch: {} (options for the `watch` option you can find https://github.com/paulmillr/chokidar)
+          watch: true,
+      },
+      allowedHosts: "all",
+      proxy: {},
+  },
 }

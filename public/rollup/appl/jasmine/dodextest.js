@@ -1,4 +1,4 @@
-
+import "bootstrap";
 export default function (dodex, input, mess, content, Start, timer) {
     /* 
      * Test Dodex operation.
@@ -201,7 +201,9 @@ export default function (dodex, input, mess, content, Start, timer) {
             const numbers = timer(100, 10);
             const observable = numbers.subscribe(timer => {
                 modal = $("#modalTemplate");
+
                 if ((typeof modal[0] !== "undefined" && modal[0].length !== 0) || timer === 100) {
+                    observable.unsubscribe();
                     nameObject = document.querySelector("#inputUsername");
                     modal.on("shown.bs.modal", function (/* html */) {
                         modal.modal("toggle");
@@ -209,7 +211,6 @@ export default function (dodex, input, mess, content, Start, timer) {
                     expect(modal[0]).toHaveClass("modal");
                     expect(nameObject).toHaveClass("form-control");
                     modal.modal("hide");
-                    observable.unsubscribe();
                     done();
                 }
             });

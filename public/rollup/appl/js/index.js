@@ -1,4 +1,5 @@
-import vm from "./entry";
+import "setglobals";
+import { dodexApp, login, sidebar, content, footer } from "./entry";
 import "config";
 import app from "app";
 import Default from "default";
@@ -12,9 +13,15 @@ import "pager";
 app.init(Default);
 setup.init();
 
-vm._component.router.isReady()
+dodexApp._component.router.isReady()
     .then(() => {
-        vm.mount("#app");
+        if (typeof testit === "undefined" || !testit) {
+            dodexApp.mount("#dodex");
+            login.mount("#login");
+            sidebar.mount("#sidebar");
+            content.mount("#content");
+            footer.mount("#footer");
+        }
     }).catch(e => console.error(e));
 
 /* develblock:start */
@@ -27,7 +34,7 @@ if (typeof testit !== "undefined" && testit) {
         }, 500);
     }).then(() => {
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
-        apptest(app, vm);
+        apptest(app, dodexApp, login, sidebar, content, footer);
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         __karma__.start();
     }).catch(rejected => {

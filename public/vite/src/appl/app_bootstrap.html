@@ -1,117 +1,45 @@
-<!-- The app main page - imported in the App.vue component -->
 <span>
-    <nav id="top-nav" class="navbar-expand-md navbar-light fixed-top rounded nav-bar-bg" hidden="hidden">
-        <div class="nav-login" v-on:click="loginModal">
-            <small>
-                <a href="#" class="login">Log in</a>
-            </small>
+    <nav id="top-nav" class="navbar navbar-expand-sm navbar-light fixed-top rounded nav-bar-bg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Test</a>
+            <ul class="navbar-nav me-auto mb-md-0">
+                <div id="dodex"></div>
+            </ul>
+            <div id="login"></div>
         </div>
-        <div class="navbar navbar-toggler" aria-controls="navbarTools" aria-expanded="false" aria-label="Toggle navigation">
-            <div class="container-fluid">
-                <button class="navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTools">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarTools">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <router-link to="/">
-                                Home
-                                <span class="sr-only">(current)</span>
-                            </router-link>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="tools01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tools</a>
-                            <div class="dropdown-menu" aria-labelledby="tools01">
-                                <a class="dropdown-item">
-                                    <router-link to="/pdf/test">
-                                        PDF View
-                                    </router-link>
-                                </a>
-                                <a class="dropdown-item">
-                                    <router-link to="/table/tools">
-                                        Tabular View
-                                    </router-link>
-                                </a>
-                            </div>
-                        </li>
+    </nav>
+    <main class="container-fluid pb-1 flex-grow-1 d-flex flex-column flex-sm-row overflow-auto">
+        <div class="row flex-grow-sm-1 flex-grow-0 w-100">
+            <div class="col-sm-2 flex-grow-sm-1 flex-shrink-1 flex-grow-0 pb-sm-0 pb-3">
+                <div class="bg-light border rounded-3 p-1 h-100">
+                    <h6 class="d-none d-sm-block text-muted">Views</h6>
+                    <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate">
+                        <div id="sidebar"></div>
                     </ul>
                 </div>
             </div>
-        </div>
-        <a class="pl-2 navbar-brand mr-auto" href="#">Test</a>
-        <div class="pl-2 navbar-brand mr-auto">
-            <DodexC />
-        </div>
-    </nav>
-
-    <div class="container-fluid">
-        <div id="side-nav" class="row" hidden="hidden">
-            <nav class="col-md-2 bg-light rounded sidebar" id="top-menu">
-                <hr/>
-                <a>
-                    <strong>
-                        <i class="fa fa-eye"></i> Views</strong>
-                </a>
-                <hr/>
-                <div class="nav flex-column nav-side-menu">
-                    <ul class="nav navbar-collapse">
-                        <li class="nav-header nav-item">
-                            <a class="nav-link collapsed py-0 show" href="#submenu1sub1" data-toggle="collapse" data-target="#submenu1" aria-expanded="true">Test Menu
-                                <i class="fa fa-chevron-down"></i>
-                            </a>
-                            <div class="collapse small show" id="submenu1" aria-expanded="true">
-                                <ul class="flex-column nav pl-4">
-                                    <li class="nav-item">
-                                        <router-link to="/">
-                                            <i class="fa fa-fw fa-home"></i> Home
-                                        </router-link>
-                                    </li>
-                                    <li class="nav-item">
-                                        <router-link to="/pdf/test">
-                                            <i class="fa fa-fw fa-file-pdf"></i> PDF View
-                                        </router-link>
-
-                                    </li>
-                                    <li class="nav-header nav-item">Statistics</li>
-                                    <li class="nav-item">
-                                        <router-link to="/table/tools">
-                                            <i class="fa fa-fw fa-table"></i> Tabular View
-                                        </router-link>
-                                    </li>
-                                    <li class="nav-header nav-item">Vue</li>
-                                    <li class="nav-item">
-                                        <router-link to="/welcome">
-                                            <i class="fa fa-fw fa-hand-paper"></i> Vue Welcome
-                                        </router-link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
+            <div class="col-sm overflow-auto h-100">
+                <div class="page-bg border rounded-3 p-3">
+                    <div id="container"></div>
+                    <div id="main_container">
+                        <div class="loading-page"></div>
+                        <span>
+                            <div id="content"></div>
+                        </span>
+                    </div>
                 </div>
-                <hr />
-            </nav>
-            <main class="col-md-9 ml-md-auto col-md-10 pt-3">
-                <div id="main_container" data-testid="main_container">
-                    <div class="loading-page"></div>
-                    <router-view></router-view>
-                </div>
-            </main>
+            </div>
         </div>
-        <!--/row-->
-    </div>
-    <!--/container-->
-
-    <hr>
-    <footer class="footer">
+    </main>
+    <footer class="footer py-lg-3 bg-light">
         <div class="container">
-            <span class="ml-5 small text-muted">Karma, Jasmine, Webpack and Vue Acceptance Test and Build Demo</span>
-            <span class="contact pull-right">
-                <router-link to="/contact">
-                    <small class="grey">Contact</small>
-                </router-link>
+            <span class="ml-lg-3 small text-muted">Karma, Jasmine, Rollup and Vue Acceptance Test and Build
+                Demo</span>
+            <span class="contact float-end">
+                <div id="footer"></div>
             </span>
         </div>
     </footer>
+
+    <div id="jsoneditor" class="editor" style="z-index: -1"></div>
 </span>
