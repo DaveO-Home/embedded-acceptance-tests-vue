@@ -10,3 +10,9 @@
 * Removed external css for SPA - designed with Bootstrap 5
 * Upgraded Webpack-Dev-Server to v4 - configuration changes
 * Added esbuild bundler for V3
+
+## [v2.1.1](https://github.com/DaveO-Home/dodex/tree/v2.1.1) (2021-11-22)
+
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/2.1.0...v2.1.1)
+
+* Added hack to fix bootstrap modal. Copied bootstrap.esm.js into app.

@@ -1,13 +1,13 @@
 /* eslint "comma-style": [0, "last"] */
-
 import capitalize from "lodash-es/capitalize";
 import { fas } from "@fortawesome/fontawesome-free-solid";
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import { createPopper } from "@popperjs/core";
 import jQuery from "jquery";
-import "bootstrap";
+import "./bootstrap.esm";
 
-window.jQuery = window.$ = jQuery;
+window.$ = jQuery;
+
 
 library.add(fas);
 dom.watch();

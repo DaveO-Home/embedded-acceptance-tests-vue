@@ -24,7 +24,7 @@ export default defineConfig({
       { find: "table", replacement: modResolve("appl/js/controller/table") },
       { find: "pager", replacement: "tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js" },
       { find: "handlebars", replacement: "handlebars/dist/handlebars.min.js" },
-      { find: "bootstrap", replacement: "bootstrap/dist/js/bootstrap.min.js" },
+      { find: "bootstrap", replacement: "bootstrap/dist/js/bootstrap.esm.js" },
       { find: "apptest", replacement: "appl/jasmine/apptest.js" },
       { find: "contacttest", replacement: "./contacttest.js" },
       { find: "domtest", replacement: "./domtest.js" },

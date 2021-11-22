@@ -407,7 +407,7 @@ At this point you can start a browser and enter `localhost:3080/dist_test/parcel
 6. Execute `npm run integration` to run `karma` embedded tests. __Note;__ The `karma` tests run against the production build.
 7. Execute `npm run integrationp` to run the `karma` test against an existing production bundle.
 
-__Note:__ Vite has an issue with `bootstrap 5` and jQuery. The `modal (jQuery.fn)` fails in production mode.
+__Note:__ Vite has an issue with `bootstrap 5` and jQuery. The `modal (jQuery.fn)` fails in production mode. A hack was made by copying `bootstrap.esm.js` from node_modules into the app. Now `jQuery` is loaded before `Bootstrap`.
 
 ***Developemnt*** -
 
