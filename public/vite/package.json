@@ -38,7 +38,7 @@
     "jquery": "^3.6.0",
     "jsoneditor": "^9.5.7",
     "lodash-es": "^4.17.21",
-    "marked": "^4.0.4",
+    "marked": "^4.0.10",
     "moment": "^2.29.1",
     "tablesorter": "^2.31.3",
     "vue": "^3.2.22",
