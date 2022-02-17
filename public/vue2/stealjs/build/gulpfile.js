@@ -197,8 +197,8 @@ const web_server = function (cb) {
 
 const runLint = parallel(esLint, cssLint, bootLint);
 
-exports.default = series(pat, runLint, build);
-exports.prod = series(pat, runLint, build);
+exports.default = series(steal_test, runLint, build);
+exports.prod = series(steal_test, runLint, build);
 exports.prd = build;
 exports.test = steal_test;
 exports.tdd = steal_tdd;

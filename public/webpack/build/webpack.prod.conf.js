@@ -5,11 +5,9 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCssnanoPlugin = require("optimize-css-assets-webpack-plugin");
 const { DefinePlugin, ProgressPlugin } = require("webpack");
-const { /* HashedModuleIdsPlugin, */ NamedChunkIdsPlugin } = require("webpack").ids;
+const { NamedChunkIdsPlugin } = require("webpack").ids;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const PreloadPlugin = require("preload-webpack-plugin");
 const resolveClientEnv = require("./resolveClientEnv");
 const utils = require("./utils");
 const rules = require("./prod_rules");
@@ -20,7 +18,6 @@ rules.push(utils.stripBlock());
 function resolve(dir) {
   return path.join(__dirname, "..", dir);
 }
-
 module.exports =  {
   mode: "production",
   stats: {
@@ -80,10 +77,6 @@ module.exports =  {
       path.resolve(__dirname, "../..", "node_modules"),
       path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules")
     ],
-    // plugins: [
-    //   /* config.resolve.plugin("pnp") */
-    //   {}
-    // ]
   },
   resolveLoader: {
     modules: [
@@ -91,10 +84,6 @@ module.exports =  {
       path.resolve(__dirname, "../..", "node_modules"),
       path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules")
     ],
-    // plugins: [
-    //   /* config.resolve.plugin("pnp-loaders") */
-    //   {}
-    // ]
   },
   module: {
     exprContextCritical: false,
@@ -190,27 +179,6 @@ module.exports =  {
         chunkFilename: "css/[name].[contenthash:8].css"
       }
     ),
-    /* config.plugin("optimize-css") */
-    new OptimizeCssnanoPlugin(
-      {
-        sourceMap: false,
-        cssnanoOptions: {
-          preset: [
-            "default",
-            {
-              mergeLonghand: false,
-              cssDeclarationSorter: false
-            }
-          ]
-        }
-      }
-    ),
-    /* config.plugin("hash-module-ids") */
-    // new HashedModuleIdsPlugin(
-    //   {
-    //     hashDigest: "hex"
-    //   }
-    // ),
     /* config.plugin("named-chunks") */
     new NamedChunkIdsPlugin(
       chunk => {
@@ -255,25 +223,6 @@ module.exports =  {
         filename: "./appl/testapp.html"
       }
     ),
-    /* config.plugin("preload") */
-    new PreloadPlugin(
-      {
-        rel: "preload",
-        include: "initial",
-        fileBlacklist: [
-          /\.map$/,
-          /hot-update\.js$/
-        ]
-      }
-    ),
-    /* config.plugin("prefetch") */
-    new PreloadPlugin(
-      {
-        rel: "prefetch",
-        include: "asyncChunks"
-      }
-    ),
-    // copy custom static assets
     new CopyWebpackPlugin({ patterns: [
       {
         from: path.resolve(__dirname, "../static"),

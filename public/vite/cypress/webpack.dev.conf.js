@@ -1,7 +1,7 @@
 const path = require("path");
 const { VueLoaderPlugin } = require("vue-loader");
 const { DefinePlugin } = require("webpack");
-const PreloadPlugin = require("preload-webpack-plugin");
+// const PreloadPlugin = require("@vue/preload-webpack-plugin");
 
 function resolve(dir) {
   return path.join(__dirname, "../src", dir);

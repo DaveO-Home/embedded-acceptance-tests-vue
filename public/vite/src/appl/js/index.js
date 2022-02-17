@@ -9,7 +9,6 @@ import apptest from "../jasmine/apptest";
 /* develblock:end */
 import "tablesorter";
 import "../../../node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"; // "pager";
-
 app.init(Default);
 setup.init();
 

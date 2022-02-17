@@ -88,9 +88,9 @@ const build = function (cb) {
 
     const webpackConfig = webpack(require("./webpack.prod.conf"), (err, stats) => {
         if (err) {
-            console.error(err.stack || err);
+            log.error(err.stack || err);
             if (err.details) {
-                console.error(err.details);
+                log.error(err.details);
             }
             cb();
             return;
@@ -99,10 +99,10 @@ const build = function (cb) {
         const info = stats.toJson();
 
         if (stats.hasErrors()) {
-            console.error(info.errors);
+            log.error(info.errors);
         } else {
             if (stats.hasWarnings()) {
-                console.warn(info.warnings);
+                log.warn(info.warnings);
             }
 
             process.stdout.write(stats.toString(

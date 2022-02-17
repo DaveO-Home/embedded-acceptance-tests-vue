@@ -5,7 +5,6 @@ const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { DefinePlugin, ProgressPlugin } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const PreloadPlugin = require("preload-webpack-plugin");
 const rules = require("./dev_rules");
 const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || "3080";
@@ -73,10 +72,6 @@ module.exports = {
       path.resolve(__dirname, "../..", "node_modules"),
       path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules")
     ],
-    // plugins: [
-    //   /* config.resolve.plugin("pnp") */
-    //   {}
-    // ]
   },
   resolveLoader: {
     modules: [
@@ -84,10 +79,6 @@ module.exports = {
       path.resolve(__dirname, "../..", "node_modules"),
       path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules")
     ],
-    // plugins: [
-    //   /* config.resolve.plugin("pnp-loaders") */
-    //   {}
-    // ]
   },
   module: {
     exprContextCritical: false,
@@ -123,34 +114,9 @@ module.exports = {
         filename: "./appl/testapp_dev.html"
       }
     ),
-    /* config.plugin("preload") */
-    new PreloadPlugin(
-      {
-        rel: "preload",
-        include: "initial",
-        fileBlacklist: [
-          /\.map$/,
-          /hot-update\.js$/
-        ]
-      }
-    ),
-    /* config.plugin("prefetch") */
-    new PreloadPlugin(
-      {
-        rel: "prefetch",
-        include: "asyncChunks"
-      }
-    ),
     new CopyWebpackPlugin({ patterns: [
       { from: "./appl/index.html", to: "" },
       { from: "./appl/index.html", to: "./appl" },
-      // {
-      //   from: path.resolve(__dirname, "../static"),
-      //   globOptions: {
-      //     dot: false
-      //   },
-      //   to: ""
-      // },
       { from: "../README.md", to: "../" },
       {
         from: "./appl/templates/**/*",

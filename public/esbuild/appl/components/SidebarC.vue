@@ -1,5 +1,5 @@
 <template>
-  <div id="root">
+  <div id="root" class="nav-side-menu">
     <ul class="flex-column nav pl-4">
       <li class="nav-item">
         <router-link to="/">

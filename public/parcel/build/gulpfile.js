@@ -136,6 +136,7 @@ const copyprod_images = function () {
     isProduction = true;
     dist = prodDist;
     copyImages2();
+    copyImages3();
     return copyImages();
 };
 /**
@@ -149,6 +150,7 @@ const copy_images = function () {
     isProduction = false;
     dist = testDist;
     copyImages2();
+    copyImages3();
     return copyImages();
 };
 /**
@@ -286,6 +288,10 @@ function copyImages() {
 function copyImages2() {
     return src(["../image*/**/*"])
         .pipe(dest("../../" + dist + "/appl/"));
+}
+function copyImages3() {
+    return src(["../images/more_horiz.png"])
+        .pipe(dest("../../" + dist + "/images/"));
 }
 
 function copyReadmeForTest() {

@@ -66,7 +66,7 @@ The basic idea is to build a production application ensuring consistent and stab
   `cd` to top level directory `<install>/acceptance-tests-vue`
 
 ```bash
-  npm install or npm install --force
+  npm install or npm install --legacy-peer-deps( or --force)
 ```
 
   This will install a small Node/Koa setup to view the results of a production/test builds.
@@ -74,20 +74,21 @@ The basic idea is to build a production application ensuring consistent and stab
   `cd <install>/acceptance-tests-vue/public`
 
 ```bash
-  npm install or npm install --force
+  npm install or npm install --legacy-peer-deps( or --force)
 ```
-
+  To view the vulnerabilities that are actually bundled, execute `npm audit --omit dev`.
+  
   To install required dependencies. Currently this will install Vue3 for Parcel, Rollup and Webpack.
 
   `cd <install>/acceptance-tests-vue/public/vue2`
 
   To install required dependencies for Browserify, Brunch, FuseBox and Stealjs for Vue2. If trying Brunch, install the global package for Brunch, `npm install brunch -g`.
 
-  __Note;__ To fix many of the javascript vulnerabilities, execute `npm audit fix`.
+  __Note;__ To fix some of the javascript vulnerabilities, execute `npm audit fix`. To view the vulnerabilities that are actually bundled, execute `npm audit --omit dev`.
 
 **Client:**
 
-Test builds will generate bundles in `dist_test` and production in the `dist` directory at the root level, `public` for Vue3 bundlers. The distribution directories for Vue2 are under the `public/vue2` directory.
+Test builds will generate bundles in `dist_test` and production in the `dist` directory at the root level, `public` for Vue3 bundlers. The distribution directories for Vue2 are under the `public/vue2` directory. The dodex message client works out of the box, however with vue it may take a few seconds before the connect is made. Just `ctrl-double click` a dodex dial or the static page to initiate the dodex message client.
 
 ## Vue Production Build
 

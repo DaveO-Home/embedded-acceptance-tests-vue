@@ -2,12 +2,7 @@
 
 import capitalize from "lodash-es/capitalize";
 import "bootstrap";
-import { fas } from "@fortawesome/fontawesome-free-solid";
-import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import { createPopper } from "@popperjs/core";
-
-library.add(fas);
-dom.watch();
 
 /* develblock:start */
 // Specs can be inserted at initialization(before karma is started).

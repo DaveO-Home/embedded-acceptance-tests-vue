@@ -26,9 +26,10 @@ const pat = function (done) {
     }
 
     var osCommands = "cd ../..; export NODE_ENV=development; export USE_KARMA=true; export USE_HMR=false; ";
-
+    osCommands = osCommands + "export NODE_NO_WARNINGS=1; ";
     if (isWindows) {
         osCommands = "cd ..\\..\\ & set NODE_ENV=development & set USE_KARMA=true & set USE_HMR=false & ";
+	    osCommands = osCommands + "set NODE_NO_WARNINGS=1 & ";
     }
     log(chalk.cyan("E2E Testing - please wait......"));
 
@@ -108,9 +109,10 @@ const cssLint = function (cb) {
  */
 const build = function (cb) { // ['boot'],
     var osCommands = "cd ..; export NODE_ENV=production; export USE_KARMA=false; export USE_HMR=false; ";
-
+    osCommands = osCommands + "export NODE_NO_WARNINGS=1; ";
     if (isWindows) {
         osCommands = "cd ..\\ & set NODE_ENV=production & set USE_KARMA=false & set USE_HMR=false & ";
+        osCommands = osCommands + "set NODE_NO_WARNINGS=1 & ";
     }
     log(chalk.cyan("Building Production - please wait......"));
     return exec(osCommands + "npm run bp", function (err, stdout, stderr) {
@@ -144,9 +146,10 @@ const bootLint = function (cb) {
  */
 const brunch_watch = function (cb) {
     var osCommands = "cd ../..; export NODE_ENV=development; export USE_KARMA=false; export USE_HMR=true; USE_WATCH=true; ";
-
+    osCommands = osCommands + "export NODE_NO_WARNINGS=1; ";
     if (isWindows) {
         osCommands = "cd ..\\..\\ & set NODE_ENV=development & set USE_KARMA=false & set USE_HMR=true & set USE_WATCH=true & ";
+	osCommands = osCommands + "set NODE_NO_WARNINGS=1 & ";
     }
     let cmd = exec(osCommands + "npm run bw");
     cmd.stdout.on("data", (data) => {
@@ -168,9 +171,10 @@ const brunch_watch = function (cb) {
  */
 const brunch_rebuild = function (cb) {
     var osCommands = "cd ../..; export NODE_ENV=development; unset USE_TDD; export USE_KARMA=false; export USE_HMR=false; ";
-
+    osCommands = osCommands + "export NODE_NO_WARNINGS=1; ";
     if (isWindows) {
         osCommands = "cd ..\\..\\ & set NODE_ENV=development & set USE_TDD & set USE_KARMA=false & set USE_HMR=false & ";
+	osCommands = osCommands + "set NODE_NO_WARNINGS=1 & ";
     }
     log(chalk.cyan("Re-building Development - please wait......"));
     return exec(osCommands + "brunch build", function (err, stdout, stderr) {
@@ -194,8 +198,10 @@ const brunch_tdd = function (done) {
     }
 
     var osCommands = "cd ../..; export NODE_ENV=development; export USE_TDD=true; export USE_KARMA=true; export USE_HMR=false; ";
+    osCommands = osCommands + "export NODE_NO_WARNINGS=1; ";
     if (isWindows) {
         osCommands = "cd ..\\..\\ & set NODE_ENV=development & set USE_TDD=true; set USE_KARMA=true & set USE_HMR=false & ";
+	osCommands = osCommands + "set NODE_NO_WARNINGS=1 & ";
     }
 
     log(chalk.cyan("Test Driven Development - please wait......"));

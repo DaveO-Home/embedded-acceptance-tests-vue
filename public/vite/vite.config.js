@@ -42,8 +42,12 @@ export default defineConfig({
   },
   plugins: [vue()],
   server: {
-    port: 4080
+    port: 4080,
+    fs: {
+      allow: ["./"],
+    }
   },
+  logLevel: "info",
   build: {
     target: "es2015",
     outDir: "dist",

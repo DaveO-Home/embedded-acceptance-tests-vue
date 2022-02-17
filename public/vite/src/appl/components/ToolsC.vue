@@ -1,10 +1,16 @@
 <template>
-  <span id="data" data-testid="tools-data">
+  <span
+    id="data"
+    data-testid="tools-data"
+  >
     <h4>
       Tools - Count {{ text }} selected {{ count }} times (from Vuex store)
     </h4>
     <section class="float-left">
-      <div id="dropdown1" class="dropdown">
+      <div
+        id="dropdown1"
+        class="dropdown"
+      >
         <button
           id="dropdown0"
           class="dropdown-bs-toggle smallerfont"
@@ -15,16 +21,22 @@
         >
           Select Job Type
         </button>
-        <div class="dropdown-menu pointer" aria-labelledby="dropdown0">
-          <a class="dropdown-item smallerfont pointer" @click="addSelection"
-            >Combined</a
-          >
-          <a class="dropdown-item smallerfont pointer" @click="addSelection"
-            >Category1</a
-          >
-          <a class="dropdown-item smallerfont pointer" @click="addSelection"
-            >Category2</a
-          >
+        <div
+          class="dropdown-menu pointer"
+          aria-labelledby="dropdown0"
+        >
+          <a
+            class="dropdown-item smallerfont pointer"
+            @click="addSelection"
+          >Combined</a>
+          <a
+            class="dropdown-item smallerfont pointer"
+            @click="addSelection"
+          >Category1</a>
+          <a
+            class="dropdown-item smallerfont pointer"
+            @click="addSelection"
+          >Category2</a>
         </div>
       </div>
     </section>
