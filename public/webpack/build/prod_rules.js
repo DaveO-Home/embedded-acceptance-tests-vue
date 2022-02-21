@@ -6,13 +6,15 @@ module.exports = [
         test: /\.vue$/,
         use: [
           /* config.module.rule("vue").use("cache-loader") */
+	  /*
           {
-            loader: path.resolve(__dirname, "../..", "node_modules/cache-loader/dist/cjs.js"),
+            loader: path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js"),
             options: {
               cacheDirectory: path.resolve(__dirname, "../..", "node_modules/.cache/vue-loader"),
               cacheIdentifier: "20f668de"
             }
           },
+	  */
           /* config.module.rule("vue").use("vue-loader") */
           {
             loader: path.resolve(__dirname, "../..", "node_modules/vue-loader-v16/dist/index.js"),
@@ -34,11 +36,11 @@ module.exports = [
         use: [
           /* config.module.rule("images").use("url-loader") */
           {
-            loader: path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules/url-loader/dist/cjs.js"),
+            loader: path.resolve(__dirname, "../..", "node_modules/url-loader/dist/cjs.js"),
             options: {
               limit: 4096,
               fallback: {
-                loader: path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules/file-loader/dist/cjs.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/file-loader/dist/cjs.js"),
                 options: {
                   name: "img/[name].[hash:8].[ext]"
                 }
@@ -53,7 +55,7 @@ module.exports = [
         use: [
           /* config.module.rule("svg").use("file-loader") */
           {
-            loader: path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules/file-loader/dist/cjs.js"),
+            loader: path.resolve(__dirname, "../..", "node_modules/file-loader/dist/cjs.js"),
             options: {
               name: "img/[name].[hash:8].[ext]"
             }
@@ -66,11 +68,11 @@ module.exports = [
         use: [
           /* config.module.rule("media").use("url-loader") */
           {
-            loader: path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules/url-loader/dist/cjs.js"),
+            loader: path.resolve(__dirname, "../..", "node_modules/url-loader/dist/cjs.js"),
             options: {
               limit: 4096,
               fallback: {
-                loader: path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules/file-loader/dist/cjs.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/file-loader/dist/cjs.js"),
                 options: {
                   name: "media/[name].[hash:8].[ext]"
                 }
@@ -85,11 +87,11 @@ module.exports = [
         use: [
           /* config.module.rule("fonts").use("url-loader") */
           {
-            loader: path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules/url-loader/dist/cjs.js"),
+            loader: path.resolve(__dirname, "../..", "node_modules/url-loader/dist/cjs.js"),
             options: {
               limit: 4096,
               fallback: {
-                loader: path.resolve(__dirname, "../..", "node_modules/@vue/cli-service/node_modules/file-loader/dist/cjs.js"),
+                loader: path.resolve(__dirname, "../..", "node_modules/file-loader/dist/cjs.js"),
                 options: {
                   name: "fonts/[name].[hash:8].[ext]"
                 }

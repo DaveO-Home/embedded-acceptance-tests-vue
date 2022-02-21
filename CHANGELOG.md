@@ -1,8 +1,16 @@
 # Changelog
 
+## [v2.2.1](https://github.com/DaveO-Home/dodex/tree/v2.2.1) (2022-02-21)
+
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/master...v2.2.1)
+
+* Upgraded dependencies
+* Fixed Webpack Config
+* Still having issues with Parcel 2, stuck at 2.0.1
+
 ## [v2.2.0](https://github.com/DaveO-Home/dodex/tree/v2.2.0) (2022-02-15)
 
-[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/master...v2.1.1)
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/master...v2.2.0)
 
 * Upgraded dependencies
 * Added dodex message server as the dev server - dodex message client should work out of the box.
