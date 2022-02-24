@@ -239,9 +239,6 @@ function parcelBuild(watch, serve=false, cb) {
             sourceMaps: isProduction,
             publicUrl: "./",
             distDir: "../../" + dist + "/appl",
-            engines: {
-                browsers: ["> 0.2%, not dead, not op_mini all"]
-            }
           }
     };
 

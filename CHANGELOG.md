@@ -1,8 +1,17 @@
 # Changelog
 
+## [v2.2.2](https://github.com/DaveO-Home/dodex/tree/v2.2.2) (2022-02-24)
+
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/2.2,1...v2.2.2)
+
+* Upgraded parcel -> 2.3.2
+* Custom @metahubt/karama-jasmine-jquery to remove deprecations
+* Fixed vite failing test - pageload.spec.js
+* Upgraded vite dependencies
+
 ## [v2.2.1](https://github.com/DaveO-Home/dodex/tree/v2.2.1) (2022-02-21)
 
-[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/master...v2.2.1)
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/2.2,0...v2.2.1)
 
 * Upgraded dependencies
 * Fixed Webpack Config
