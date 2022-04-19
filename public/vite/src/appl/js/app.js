@@ -4,7 +4,7 @@ import { fas } from "@fortawesome/fontawesome-free-solid";
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import { createPopper } from "@popperjs/core";
 import jQuery from "jquery";
-import "./bootstrap.esm";
+import "bootstrap";
 
 window.$ = jQuery;
 
