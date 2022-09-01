@@ -38,7 +38,7 @@
     "jquery": "^3.6.0",
     "lodash-es": "^4.17.21",
     "marked": "^4.0.14",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "popper": "^1.0.1",
     "popper.js": "^1.16.1",
     "tablesorter": "^2.31.3",
