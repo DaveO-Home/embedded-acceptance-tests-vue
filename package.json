@@ -45,7 +45,7 @@
     "koa-router": "^10.1.1",
     "koa-static": "^5.0.0",
     "koa2-cors": "^2.0.6",
-    "node-fetch": "^3.2.3",
+    "node-fetch": "^3.2.10",
     "pg": "^8.7.3",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
