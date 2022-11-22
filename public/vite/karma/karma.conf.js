@@ -5,7 +5,8 @@ const startupHtml = "http://localhost:3080/vite/dist/index.html";
 module.exports = function (config) {
     // whichBrowser to use from gulp task.su
     if (!global.whichBrowser) {
-        global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
+       // global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
+    	global.whichBrowser = ["Chrome"];
     }
 
     config.set({
