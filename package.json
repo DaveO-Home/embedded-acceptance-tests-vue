@@ -1,6 +1,6 @@
 {
   "name": "acceptance-test",
-  "version": "2.2.3",
+  "version": "2.2.5",
   "description": "Karma/Jasmine/Bundlers Testing",
   "scripts": {
     "start": "node koa",
