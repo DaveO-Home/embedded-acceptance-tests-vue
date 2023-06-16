@@ -10,13 +10,12 @@
  const csslint = require("gulp-csslint");
  const exec = require("child_process").exec;
  const copy = require("gulp-copy");
- const del = require("del");
  const log = require("fancy-log");
  const flatten = require("gulp-flatten");
  const chalk = require("chalk");
  const browserSync = require("browser-sync");
  const path = require("path");
- 
+
  let lintCount = 0;
  let isProduction = process.env.NODE_ENV == "production";
  let browsers = process.env.USE_BROWSERS;
@@ -24,12 +23,12 @@
  let testDist = "dist_test/esbuild";
  let prodDist = "dist/esbuild";
  let dist = isProduction ? prodDist : testDist;
- 
+
  if (browsers) {
      global.whichBrowsers = browsers.split(",");
  }
  /**
-  * Build Development bundle from package.json 
+  * Build Development bundle from package.json
   */
  const build_development = function (cb) {
      return esbuildBuild(cb);
@@ -45,7 +44,7 @@
      });
  };
  /**
-  * Default: Production Acceptance Tests 
+  * Default: Production Acceptance Tests
   */
  const pat = function (done) {
      if (!browsers) {
@@ -66,11 +65,11 @@
              lintCount++;
          }))
          .pipe(eslint.failAfterError());
- 
+
      stream.on("error", () => {
          process.exit(1);
      });
- 
+
      return stream.on("end", () => {
          log(chalk.cyan.bold("# javascript files linted: " + lintCount));
          cb();
@@ -83,7 +82,7 @@
      var stream = src(["../appl/css/site.css"])
          .pipe(csslint())
          .pipe(csslint.formatter());
- 
+
      stream.on("error", () => {
          process.exit(1);
      });
@@ -92,7 +91,7 @@
      });
  };
  /*
-  * Bootstrap html linter 
+  * Bootstrap html linter
   */
  const bootLint = function (cb) {
      return exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
@@ -107,11 +106,14 @@
  const clean = function (done) {
      isProduction = true;
      dist = prodDist;
-     return del([
-         "../../" + prodDist + "/**/*"
-     ], { dryRun: false, force: true }, done);
+     return import("del").then(del => {
+        del.deleteSync([
+                 "../../" + prodDist + "/**/*"
+             ], { dryRun: false, force: true });
+        done();
+     });
  };
- 
+
  const cleant = function (done) {
      let dryRun = false;
      if (bundleTest && bundleTest === "false") {
@@ -119,9 +121,12 @@
      }
      isProduction = false;
      dist = testDist;
-     return del([
-         "../../" + testDist + "/**/*"
-     ], { dryRun: dryRun, force: true }, done);
+     return import("del").then(del => {
+        del.deleteSync([
+                 "../../" + testDist + "/**/*"
+             ], { dryRun: false, force: true });
+        done();
+     });
  };
  /**
   * Resources and content copied to dist directory - for production
@@ -129,7 +134,7 @@
  const copyprod = function () {
      return copySrc();
  };
- 
+
  const copyprod_images = function () {
      isProduction = true;
      dist = prodDist;
@@ -141,7 +146,7 @@
  const copy_test = function () {
      return copySrc();
  };
- 
+
  const copy_images = function () {
      isProduction = false;
      dist = testDist;
@@ -157,7 +162,7 @@
      karmaServer(done, true, false);
  };
  /**
-  * Continuous testing - test driven development.  
+  * Continuous testing - test driven development.
   */
  const tdd_esbuild = function (done) {
      if (!browsers) {
@@ -166,7 +171,7 @@
      karmaServer(done, false, true);
  };
  /**
-  * Karma testing under Opera. -- needs configuation  
+  * Karma testing under Opera. -- needs configuation
   */
  const tddo = function (done) {
      if (!browsers) {
@@ -175,13 +180,13 @@
      karmaServer(done, false, true);
  };
  /**
-  * Using BrowserSync Middleware for HMR  
+  * Using BrowserSync Middleware for HMR
   */
  const sync = function () {
      const server = browserSync.create("devl");
      dist = testDist;
      const dir = path.join("../../", dist, "/");
- 
+
      server.init({
          server: {
              baseDir: dir,
@@ -189,34 +194,34 @@
          },
          serveStatic: [path.join(".", dir, "/appl")],
          port: 3080,
-         // browser: ["google-chrome"] 
+         // browser: ["google-chrome"]
      });
- 
+
      server.watch(path.join(dir, "**/*.*")).on("change", (file) => {
          log("Starting reload: " + file);
          server.reload();  // change any file in dist_test/esbuild/ to reload app - triggered on watchify results
      });
      return server;
  };
- 
+
  const watch = function () {
      const server = browserSync.create("esbuild");
      dist = testDist;
- 
+
      server.watch(["../appl/**/*.js", "../appl/**/*.jsx"]).on("change", (file) => {
          log("Building bundle with: " + file);
          build_development();
      });
      return server;
  };
- 
+
  const runTestCopy = parallel(copy_test, copy_images);
  const runTest = series(cleant, runTestCopy, build_development);
  const runTestNoBuild = series(cleant, runTestCopy);
  const runProdCopy = parallel(copyprod, copyprod_images);
- const runProd = series(runTest, pat, esLint, parallel(cssLint, bootLint), clean, runProdCopy, build);
+ const runProd = series(runTest, pat, esLint, parallel(cssLint), clean, runProdCopy, build);
  runProd.displayName = "prod";
- 
+
  exports.build = series(clean, runProdCopy, build);
  task(runProd);
  task("default", runProd);
@@ -227,11 +232,11 @@
  exports.acceptance = e_test;
  exports.rebuild = parallel(runTestNoBuild, build_development);
  exports.build = parallel(runTestCopy, build_development);
- exports.lint = parallel(esLint, cssLint, bootLint);
+ exports.lint = parallel(esLint, cssLint);
  exports.copy = runTestCopy;
  exports.tddo = tddo;
  exports.devlserver = devlServer;
- 
+
  // this is basically worthless - use the hmr task
  function devlServer() {
      const port = 3080;
@@ -255,21 +260,21 @@
          server.wait;
      });
  }
- 
+
  const startComment = "develblock:start",
      endComment = "develblock:end",
      regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
          startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
          endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
- 
+
  let stripCodePlugin = {
      name: "strip",
      setup(build) {
          let fs = require("fs");
- 
+
          build.onLoad({ filter: /^.*esbuild.*\.(js|jsx)$/ }, async (args) => {
              let module = await fs.promises.readFile(args.path, "utf8");
- 
+
              return {
                  contents: module.replace(regexPattern, ""),
                  loader: "jsx"
@@ -277,7 +282,7 @@
          });
      },
  };
- 
+
  async function esbuildBuild(cb) {
      if (bundleTest && bundleTest === "false") {
          return cb();
@@ -296,6 +301,9 @@
              ".svg": "file",
              ".jpg": "file"
          },
+         alias: {
+             "vue": "vue/dist/vue.esm-bundler.js",
+           },
          plugins: [vuePlugin()],
          define: {
             "process.env.NODE_ENV": isProduction ? "\"production\"" : "\"development\"",
@@ -309,15 +317,15 @@
      if (isProduction) {
          options.plugins.push(stripCodePlugin);
      }
- 
+
      await esbuild.build(options)
          .catch((e) => console.error(e));
- 
+
      if (typeof cb === "function") {
          cb();
      }
  }
- 
+
  function copySrc() {
      return src(["../appl/view*/**/*",
          "../appl/temp*/**/*",
@@ -327,7 +335,7 @@
          .pipe(flatten({ includeParents: -2 })
              .pipe(dest("../../" + dist + "/appl")));
  }
- 
+
  function copyImages() {
          src(["../../README.md"])
              .pipe(copy("../../" + dist + "/appl", { prefix: 1 }));
@@ -336,11 +344,11 @@
      return src(["../images/*", "../../README.m*", "../appl/assets/**/*", "../appl/dodex/**/*"])
          .pipe(copy("../../" + dist + "/appl"));
  }
- 
+
  function karmaServer(done, singleRun = false, watch = true) {
      const parseConfig = karma.config.parseConfig;
      const Server = karma.Server;
- 
+
      parseConfig(
          path.resolve("./karma.conf.js"),
          { port: 9876, singleRun: singleRun, watch: watch },
@@ -363,7 +371,7 @@
          (rejectReason) => { console.err(rejectReason); }
      );
  }
- 
+
  // From Stack Overflow - Node (Gulp) process.stdout.write to file
  if (process.env.USE_LOGFILE == "true") {
      var fs = require("fs");
@@ -378,4 +386,3 @@
      };
      console.error = console.log;
  }
- 

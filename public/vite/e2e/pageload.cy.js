@@ -7,7 +7,7 @@ import { mount,
     // VueWrapper,
     // DOMWrapper,
     // config,
-    // flushPromises 
+    // flushPromises
   } from "@vue/test-utils";
 import StartC from "startc";
 import PdfC from "pdfc";
@@ -16,7 +16,7 @@ describe("Application Unit test suite - AppTest", () => {
   it("Is Welcome Page Loaded from server", () => {
     cy.visit("/"); // .debug();
     cy.contains("h1", "Welcome To");
-    cy.get("#vue-embedded-acceptance-testing-with-karma-and-jasmine").should("exist"); // markdown loaded
+    cy.contains(".mx-auto > h1", "Vue Embedded Acceptance Testing with Karma and Jasmine").should("exist"); // markdown loaded
     cy.get("#content").find("div").its("length").should("be.gte", 3);
   });
 

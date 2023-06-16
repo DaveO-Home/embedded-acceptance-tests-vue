@@ -1,8 +1,16 @@
 # Changelog
 
-## [v2.2.3](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/tree/v2.2.3) (2022-11-22)
+## [v2.2.5](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/tree/v2.2.5) (2023-06-15)
 
-[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/compare/2.2.2...v2.2.3)
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/compare/2.2.4...v2.2.5)
+
+* Upgraded dependencies - koa server, vue3, vite, vue2
+* Convertered (orm) bookshelf to objection.js for dodex server
+* Major upgrade changes to vite.
+
+## [v2.2.4](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/tree/v2.2.4) (2022-11-22)
+
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/compare/2.2.2...v2.2.4)
 
 * Upgraded dependencies - eliminated many vulnerablilities
     * acceptance-tests-vue/ - koa/knex/bookshelf/sqlite3 updates

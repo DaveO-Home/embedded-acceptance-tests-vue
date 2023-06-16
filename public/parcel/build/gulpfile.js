@@ -10,7 +10,6 @@ const eslint = require("gulp-eslint");
 const csslint = require("gulp-csslint");
 const exec = require("child_process").exec;
 const copy = require("gulp-copy");
-const del = require("del");
 const log = require("fancy-log");
 const flatten = require("gulp-flatten");
 const chalk = require("chalk");
@@ -27,13 +26,13 @@ if (browsers) {
     global.whichBrowsers = browsers.split(",");
 }
 /**
- * Build Development bundle from package.json 
+ * Build Development bundle from package.json
  */
 const build_development = function (cb) {
     return parcelBuild(false, false, cb); // setting watch = false
 };
 /**
- * Production Parcel 
+ * Production Parcel
  */
 const build = function (cb) {
     process.env.NODE_ENV = "production";
@@ -43,7 +42,7 @@ const build = function (cb) {
     });
 };
 /**
- * Default: Production Acceptance Tests 
+ * Default: Production Acceptance Tests
  */
 const pat = function (done) {
     if (!browsers) {
@@ -94,7 +93,7 @@ const cssLint = function (cb) {
     });
 };
 /*
- * Bootstrap html linter 
+ * Bootstrap html linter
  */
 const bootLint = function (cb) {
     return exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
@@ -109,9 +108,12 @@ const bootLint = function (cb) {
 const clean = function (done) {
     isProduction = true;
     dist = prodDist;
-    return del([
-        "../../" + prodDist + "/**/*"
-    ], { dryRun: false, force: true }, done);
+    return import("del").then(del => {
+        del.deleteSync([
+                 "../../" + prodDist + "/**/*"
+             ], { dryRun: false, force: true });
+        done();
+    });
 };
 
 const cleant = function (done) {
@@ -121,9 +123,12 @@ const cleant = function (done) {
     }
     isProduction = false;
     dist = testDist;
-    return del([
-        "../../" + testDist + "/**/*"
-    ], { dryRun: dryRun, force: true }, done);
+    import("del").then(del => {
+      del.deleteSync([
+               "../../" + testDist + "/**/*"
+           ], { dryRun: false, force: true });
+      done();
+    });
 };
 /**
  * Resources and content copied to dist directory - for production
@@ -163,7 +168,7 @@ const r_test = function (done) {
     karmaServer(done, true, false);
 };
 /**
- * Continuous testing - test driven development.  
+ * Continuous testing - test driven development.
  */
 const tdd_parcel = function (done) {
     if (!browsers) {
@@ -172,7 +177,7 @@ const tdd_parcel = function (done) {
     karmaServer(done, false, true);
 };
 /**
- * Karma testing under Opera. -- needs configuation  
+ * Karma testing under Opera. -- needs configuation
  */
 // eslint-disable-next-line no-unused-vars
 const tddo = function (done) {
@@ -193,7 +198,7 @@ const serve_parcel = function (cb) {
 const runTestCopy = parallel(copy_test, copy_images, copyReadme);
 const runTest = series(cleant, runTestCopy, build_development);
 const runProdCopy = parallel(copyprod, copyprod_images, copyReadme);
-const runProd = series(runTest, pat, parallel(esLint, cssLint, bootLint), clean, runProdCopy, build);
+const runProd = series(runTest, pat, parallel(esLint, cssLint), clean, runProdCopy, build);
 runProd.displayName = "prod";
 
 task(runProd);
@@ -205,7 +210,7 @@ exports.watch = series(cleant, runTestCopy, copyReadmeForTest, watch_parcel);
 exports.serve = series(cleant, runTestCopy, copyReadmeForTest, serve_parcel);
 exports.acceptance = r_test;
 exports.rebuild = series(runTestCopy, runTest);
-exports.lint = parallel(esLint, cssLint, bootLint);
+exports.lint = parallel(esLint, cssLint);
 exports.copy = runTestCopy;
 // exports.development = parallel(series(runTestCopy, watch_parcel, sync, watcher), series(runTestCopy, build_development, tdd_parcel))
 

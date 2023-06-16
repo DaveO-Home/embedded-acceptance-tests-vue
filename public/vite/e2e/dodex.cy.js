@@ -1,7 +1,7 @@
 /*eslint no-unused-vars: "warn"*/
 
 describe("Load new tools page", () => {
-  /* 
+  /*
      * Test Dodex operation.
      */
   let dodexElement,

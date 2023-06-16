@@ -11,6 +11,14 @@ module.exports = {
   context: resolve("."), //path.resolve(__dirname),
   node: false,
   target: "web",
+  cache: false,
+  stats: false,
+//      {
+//        children: true,
+//        warningsFilter: [
+//          /\-\-underline\-color/,
+//        ]
+//      },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "../appl"),
@@ -64,7 +72,7 @@ module.exports = {
   module: {
     exprContextCritical: false,
     noParse: /^(vue|vue-router|vuex|vuex-router-sync|dodex(.?))$/,
-    rules: require("./dev_rules") 
+    rules: require("./dev_rules")
   },
   plugins: [
     /* config.plugin("vue-loader") */

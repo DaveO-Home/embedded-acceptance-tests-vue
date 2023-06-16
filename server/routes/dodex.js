@@ -1,7 +1,7 @@
 /**
  * This is the websocket route. Does all messaging and database calls.
  */
-const database = require("../db/database");
+const database = require("../db/database-obj");
 const orm = database.orm;
 const Router = require("koa-router");
 const Url = require("url").URL;
@@ -55,9 +55,7 @@ function socketServer(server) {
    *        server defaults to localhost - server:port can be changed in the dodex config. 
    */
   wss.on("connection", async (ws, request) => {
-    if(request.url.startsWith("/socket.io/")) {
-      return;
-    }
+    if(!request.url.startsWith("/dodex")) process.exit(0);
     const parameters = new Url(request.headers.origin + request.url).searchParams;
     const handle = parameters.get("handle");
     const id = parameters.get("id");
@@ -77,7 +75,7 @@ function socketServer(server) {
     ws.handle = handle;
 
     await orm.getUser(ws).then(async (record) => {
-      if (typeof record === "undefined" || record === null) {
+      if (typeof record === "undefined" || record === null || record.length === 0) {
         await orm.addUser(ws, user)
           .catch((err) => {
             utils.log("error", err.stack, __filename);
@@ -86,7 +84,8 @@ function socketServer(server) {
             throw err.message;
           });
       }
-      else if (record.get("password") !== id) {
+//      else if (record.get("password") !== id) {
+      else if (record[0].password !== id) {
         ws.send(userErrorMessage);
         throw `ID does not match - ${id} for ${handle}`;
       }
@@ -187,7 +186,8 @@ function undeliveredPrivateMessages(ws, disconnectedUsers, data) {
     return;
   }
   orm.addMessage(ws, data).then(async (message) => {
-    await orm.addUndelivered(ws, disconnectedUsers, message.get("id"));
+//    await orm.addUndelivered(ws, disconnectedUsers, message.get("id"));
+    await orm.addUndelivered(ws, disconnectedUsers, message.id);
   })
     .catch((err) => {
       utils.log("error", err.message, __filename);

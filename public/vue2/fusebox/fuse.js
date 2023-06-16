@@ -5,7 +5,7 @@ const {
     QuantumPlugin,
     WebIndexPlugin,
     CSSPlugin,
-    CSSResourcePlugin, 
+    CSSResourcePlugin,
     UglifyJSPlugin,
     HMRPlugin,
     EnvPlugin,
@@ -101,7 +101,8 @@ const fuse = FuseBox.init({
                 {from: "appl/assets/*", to: distDir + "/appl/assets"},
                 {from: "../README.md", to: distDir}
             ]
-        })
+        }),
+        UglifyJSPlugin({compress: false, mangle: true})
     ],
     homeDir: src,
     output: distDir + "/$name.js",
@@ -133,7 +134,7 @@ if (!isProduction) {
             .target("browser")
             .instructions(`~ main.js`);
 
-    var acceptance = fuse.bundle("acceptance") 
+    var acceptance = fuse.bundle("acceptance")
             .target("browser")
             .instructions(`> [main.js]`);
 
@@ -148,7 +149,7 @@ if (!isProduction) {
             .sourceMaps(true)
             .instructions(`~ main.js`);
 
-    fuse.bundle('acceptance') 
+    fuse.bundle('acceptance')
             .target('browser')
             .sourceMaps(false)
             .instructions(`!> [main.js]`)

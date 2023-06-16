@@ -4,8 +4,9 @@ const socketClient = io.connect('http://localhost:3080');
 
 socketClient.on('connect', () => {
   socketClient.emit('npmStop');
-  setTimeout(() => {
-    process.exit(0);
-  }, 1000);
 });
+
+setTimeout(() => {
+  process.exit(0);
+}, 1000);
 

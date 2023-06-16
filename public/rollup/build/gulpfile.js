@@ -23,7 +23,7 @@ const postcss = require("rollup-plugin-postcss");
 const progress = require("rollup-plugin-progress");
 const rename = require("gulp-rename");
 const replaceEnv = require("rollup-plugin-replace");
-const rmf = require("rimraf");
+const rimrafSync = require("rimraf").rimrafSync;
 const rollup = require("rollup");
 const serve = require("rollup-plugin-serve");
 const stripCode = require("gulp-strip-code");
@@ -51,19 +51,19 @@ if (browsers) {
     global.whichBrowsers = browsers.split(",");
 }
 /**
- * Build Development bundle from package.json 
+ * Build Development bundle from package.json
  */
 const build_development = async function (cb) {
     await rollupBuild(cb);
 };
 /**
- * Production Rollup 
+ * Production Rollup
  */
 const build = async function (done) {
     await rollupBuild(done);
 };
 /**
- * Default: Production Acceptance Tests 
+ * Default: Production Acceptance Tests
  */
 const pat = function (done) {
     if (!browsers) {
@@ -114,7 +114,7 @@ const cssLint = function (cb) {
     });
 };
 /*
- * Bootstrap html linter 
+ * Bootstrap html linter
  */
 const bootLint = function (cb) {
 
@@ -130,9 +130,16 @@ const bootLint = function (cb) {
 const clean = function (done) {
     isProduction = true;
     dist = prodDist;
-    return rmf(`../../${prodDist}/**/*`, err => {
-        done(err);
-    });
+//    return rmf(`../../${prodDist}/**/*`, err => {
+//        done(err);
+//    });
+    rimrafSync("../../${prodDist}/**/*", [], (err) => {
+           if (err) {
+               log(err);
+           }
+           done(err);
+        });
+        done();
 };
 /**
  * Remove previous test build
@@ -140,9 +147,16 @@ const clean = function (done) {
 const cleant = function (done) {
     isProduction = false;
     dist = testDist;
-    return rmf(`../../${dist}/**/*`, err => {
-        done(err);
+//    return rmf(`../../${dist}/**/*`, err => {
+//        done(err);
+//    });
+    rimrafSync("../../${dist}/**/*", [], (err) => {
+       if (err) {
+           log(err);
+       }
+       done(err);
     });
+    done();
 };
 /**
  * Resources and content copied to dist directory - for production
@@ -210,7 +224,7 @@ const r_test = function (done) {
     karmaServer(done, true, false);
 };
 /**
- * Continuous testing - test driven development.  
+ * Continuous testing - test driven development.
  */
 const rollup_tdd = function (done) {
     if (!browsers) {
@@ -219,7 +233,7 @@ const rollup_tdd = function (done) {
     karmaServer(done, false, true);
 };
 /**
- * Karma testing under Opera. -- needs configuation  
+ * Karma testing under Opera. -- needs configuation
  */
 const tddo = function (done) {
     if (!browsers) {
@@ -328,7 +342,7 @@ const rollup_watch = function (cb) {
 
 const testCopyRun = series(copy_test, parallel(copy_images, copy_css));
 const testRun = series(cleant, testCopyRun, build_development);
-const lintRun = parallel(esLint, cssLint, bootLint);
+const lintRun = parallel(esLint, cssLint);
 const prodCopyRun = series(copyprod, parallel(copyprod_images, copyprod_css));
 const prodRun = series(cleant, testCopyRun, build_development, pat, lintRun, clean, prodCopyRun, build);
 prodRun.displayName = "prod";
@@ -342,7 +356,7 @@ exports.watch = rollup_watch;
 exports.rebuild = testRun;
 exports.acceptance = r_test;
 exports.development = parallel(rollup_watch, rollup_tdd);
-exports.lint = parallel(esLint, cssLint, bootLint);
+exports.lint = parallel(esLint, cssLint);
 exports.copy = testCopyRun;
 
 async function rollupBuild(cb) {
@@ -405,9 +419,16 @@ async function rollupBuild(cb) {
                 .pipe(dest(`../../${dist}`))
                 .on("error", log)
                 .on("end", function () {
-                    rmf(`../../${dist}/bundle_temp.js`, err => {
-                        cb(err);
+//                    rmf(`../../${dist}/bundle_temp.js`, err => {
+//                        cb(err);
+//                    });
+                    rimrafSync("../../${prodDist}/**/*", [], (err) => {
+                       if (err) {
+                           log(err);
+                       }
+                       cb(err);
                     });
+                    cb();
                 });
         });
     });

@@ -4,7 +4,7 @@
  */
 const { src, dest, series, parallel, task } = require("gulp");
 const log = require("fancy-log");
-const rmf = require("rimraf");
+const rimrafSync = require("rimraf").rimrafSync;
 const copy = require("gulp-copy");
 const exec = require("child_process").exec;
 const noop = require("gulp-noop");
@@ -45,34 +45,34 @@ if (browsers) {
 }
 
 /**
- * Build bundle from package.json 
+ * Build bundle from package.json
  */
 const build = function (cb) {
     isWatchify = false;
     return browserifyBuild(cb);
 };
 /**
- * Build Development bundle from package.json 
- */  
+ * Build Development bundle from package.json
+ */
 const build_development = function (cb) {
     return isSplitBundle ? browserifyBuild(cb) : noop();
 };
 /**
- * Production Browserify 
+ * Production Browserify
  */
 const application = function (cb) {
     isWatchify = false;
     return applicationBuild(cb);
 };
 /**
- * Development Browserify - optional watchify and reload 
+ * Development Browserify - optional watchify and reload
  */
 const application_development = function (cb) {
-    //Set isWatchify=true via env USE_WATCH for tdd/test   
+    //Set isWatchify=true via env USE_WATCH for tdd/test
     return applicationBuild(cb);
 };
 /**
- * Default: Production Acceptance Tests 
+ * Default: Production Acceptance Tests
  */
 const pat = function (done) {
     if (!browsers) {
@@ -126,7 +126,7 @@ const set_development = function (cb) {
     cb();
 };
 /*
- * Bootstrap html linter 
+ * Bootstrap html linter
  */
 const bootLint = function (cb) {
     exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
@@ -141,29 +141,30 @@ const bootLint = function (cb) {
 const clean = function (done) {
     isProduction = true;
     dist = prodDist;
-    return rmf("../../" + prodDist, [], (err) => {
+    rimrafSync("../../${dist}", [], (err) => {
         if (err) {
             log(err);
         }
-        done();
     });
+    return done();
 };
 /**
  * Remove previous browserify test build
  */
 const cleant = function (done) {
     isProduction = false;
-    rmf("../../" + testDist + "/node_modules", [], (err) => {
+
+    rimrafSync("../../${testDist}/node_modules", [], (err) => {
         if (err) {
             log(err);
         }
     });
-    return rmf("../../" + testDist + "/browserify", [], (err) => {
-        if (err) {
-            log(err);
-        }
-        done();
-    });
+    rimrafSync("../../${testDist}/browserify", [], (err) => {
+         if (err) {
+             log(err);
+         }
+     });
+     return done();
 };
 /**
  * Resources and content copied to dist directory - for production
@@ -220,7 +221,7 @@ const b_watchify = function (cb) {
     cb();
 };
 /**
- * Continuous testing - test driven development.  
+ * Continuous testing - test driven development.
  */
 const tdd_browserify = function (done) {
     if (!browsers) {
@@ -229,7 +230,7 @@ const tdd_browserify = function (done) {
     karmaServer(done, false, true);
 };
 /**
- * Karma testing under Opera. -- needs configuation  
+ * Karma testing under Opera. -- needs configuation
  */
 const tddo = function (done) {
     if (!browsers) {

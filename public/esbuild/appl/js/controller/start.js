@@ -137,7 +137,7 @@ export default App.controllers.Start ||
         finish (options) {
             me = this;
             const mdFunction = data => {
-                me.html = `${App.html} <div class="mx-auto" style="width: 90%">${marked.parse(data)}</div>`;
+                me.html = `${App.html} <div class="mx-auto" style="width: 90%">${marked.parse(data, {mangle: false, headerIds: false})}</div>`;
             };
             $.get(options.urlMd, mdFunction, "text")
             .fail(err => {

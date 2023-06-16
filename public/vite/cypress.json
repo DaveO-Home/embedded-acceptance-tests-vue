@@ -1,7 +1,0 @@
-{
-  "baseUrl": "http://localhost:4080",
-  "integrationFolder": "e2e",
-  "env": {"DEBUG": "cypress:webpack:stats"},
-  "support": false,
-  "video": false
-}

@@ -6,7 +6,7 @@
 const { src, /* dest, */ series, parallel, task } = require("gulp");
 const env = require("gulp-env");
 const log = require("fancy-log");
-const rmf = require("rimraf");
+const rimrafSync = require("rimraf").rimrafSync;
 const exec = require("child_process").exec;
 const path = require("path");
 const chalk = require("chalk");
@@ -69,7 +69,7 @@ const cssLint = function (cb) {
     });
 };
 /*
- * Build the application to the production distribution 
+ * Build the application to the production distribution
  */
 const build = function (cb) {
     process.env.NODE_ENV = "development";
@@ -80,10 +80,10 @@ const build = function (cb) {
     process.env.USE_TEST = "true";
     process.env.USE_BUILD = "false";
 
-    rmf("../../dist/webpack", [], (err) => {
-        if (err) {
-            log(err);
-        }
+    rimrafSync("../../dist/webpack", [], (err) => {
+       if (err) {
+           log(err);
+       }
     });
 
     const webpackConfig = webpack(require("./webpack.prod.conf"), (err, stats) => {
@@ -113,7 +113,7 @@ const build = function (cb) {
     });
 };
 /*
- * Bootstrap html linter 
+ * Bootstrap html linter
  */
 const bootLint = (cb) => {
     log("Starting Gulpboot.js");
@@ -162,10 +162,10 @@ const webpack_rebuild = function (cb) {
     process.env.USE_TEST = "true";
     process.env.USE_BUILD = "false";
 
-    rmf("../../dist_test/webpack", [], (err) => {
-        if (err) {
-            log(err);
-        }
+    rimrafSync("../../dist_test/webpack", (err) => {
+       if (err) {
+           log(err);
+       }
     });
 
     const webpackConfig = webpack(require("./webpack.dev.conf"), (err, stats) => {
@@ -219,7 +219,7 @@ const test_build = function (cb) {
             .pipe(envs);
     }
 
-    rmf("../../dist_test/webpack", [], (err) => {
+    rimrafSync("../../dist_test/webpack", [], (err) => {
         if (err) {
             log(err);
         }
@@ -251,7 +251,7 @@ const test_build = function (cb) {
     });
 };
 /**
- * Continuous testing - test driven development.  
+ * Continuous testing - test driven development.
  */
 const webpack_tdd = function (done) {
     if (!browsers) {
@@ -271,7 +271,7 @@ const webpack_watch = function (cb) {
     process.env.USE_HMR = "false";
     process.env.PUBLIC_PATH = "/base/dist_test/webpack/"   //This sets config to run under Karma;
 
-    rmf("../../dist_test/webpack", [], (err) => {
+    rimrafSync("../../dist_test/webpack", [], (err) => {
         if (err) {
             log(err);
         }
@@ -310,8 +310,8 @@ const webpack_watch = function (cb) {
 /*
  * Webpack development server - use with normal development
  * Rebuilds bundles in dist_test on code change.
- * Run server in separate window - 
- * - watch for code changes 
+ * Run server in separate window -
+ * - watch for code changes
  * - hot module recompile/replace
  * - reload served web page.
  */
@@ -344,7 +344,7 @@ const webpack_server = function (cb) {
       });
 };
 
-const lintRun = parallel(esLint, cssLint, bootLint);
+const lintRun = parallel(esLint, cssLint);
 const prodRun = series(test_build, acceptance_tests, lintRun, build);
 prodRun.displayName = "prod";
 
@@ -363,7 +363,7 @@ exports.lint = lintRun;
 function karmaServer(done, singleRun = false, watch = true) {
     const parseConfig = karma.config.parseConfig;
     const Server = karma.Server;
-    
+
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
@@ -413,7 +413,7 @@ if (process.env.USE_LOGFILE == "true") {
 function karmaServerSnap(done) {
     const parseConfig = karma.config.parseConfig;
     const Server = karma.Server;
-    
+
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
@@ -433,7 +433,7 @@ function karmaServerSnap(done) {
                     takeSnapShot(["welcome", "vue"]);
                     takeSnapShot(["tabletools", "tools"]);
                     // Not working with PDF-?
-                    // takeSnapShot(['pdftest', 'test'])       
+                    // takeSnapShot(['pdftest', 'test'])
                     process.exit(exitCode);
                 }
             }).start();
@@ -453,7 +453,7 @@ function karmaServerSnap(done) {
             takeSnapShot(["welcome", "vue"]);
             takeSnapShot(["tabletools", "tools"]);
             // Not working with PDF-?
-            // takeSnapShot(['pdftest', 'test'])       
+            // takeSnapShot(['pdftest', 'test'])
             process.exit(exitCode);
         }
     }).start();

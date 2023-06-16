@@ -27,7 +27,7 @@ export default App.controllers.Start ||
         location: "#/",
         index (options) {
             const indexUrl = "views/prod/index.html";
-           
+
             const markdownUrl = "README.md"; // "../../README.md";
             this.view({
                 url: indexUrl,
@@ -138,7 +138,7 @@ export default App.controllers.Start ||
 //            const marked = require('../utils/marked')
             me = this;
             const mdFunction = data => {
-                me.html = `${App.html} <div class="mx-auto" style="width: 90%">${marked.parse(data)}</div>`;
+                me.html = `${App.html} <div class="mx-auto" style="width: 90%">${marked.parse(data, {mangle: false, headerIds: false})}</div>`;
             };
             $.get(options.urlMd, mdFunction, "text")
             .fail(err => {

@@ -56,16 +56,16 @@ describe("Contact Form Validation", () => {
   });
 
   it("Contact form - validate form submission.", done => {
-    submitObject.click();
+      submitObject.click();
 
-    const numbers = timer(1000, 50);
-    const observable = numbers.subscribe(timer => {
-      if (typeof contact[0] === "undefined" || timer === 50) {
-        observable.unsubscribe();
-        expect(contact).not.to.be.visible;
-        expect(contact).not.to.exist;
-        done();
-      }
+      const numbers = timer(750, 50);
+      const observable = numbers.subscribe(timer => {
+        if (typeof contact[0] === "undefined" || timer === 50) {
+          observable.unsubscribe();
+          expect(contact).not.to.be.visible;
+          expect(contact).not.to.exist;
+          done();
+        }
+      });
     });
   });
-});

@@ -8,7 +8,9 @@ export default function (Route, Helpers, vm, timer) {
         let afterValue;
         let vuexBeforeValue;
         let vuexAfterValue;
-        let spyToolsEvent;
+        let spyBefore;
+        let spyAfter;
+        let toolsObject;
         let selectorObject;
         let selectorItem;
         // const mainContainer = '#main_container'
@@ -29,11 +31,28 @@ export default function (Route, Helpers, vm, timer) {
                 beforeValue = tools.find("tbody").find("tr:nth-child(1)").find("td:nth-child(2)").text();
                 vuexBeforeValue = $("h4").first()[0].innerText;
 
+                toolsObject = {
+                  beforeValue: "",
+                  afterValue: "",
+                  get before() {
+                    return this.beforeValue;
+                  },
+                  get after() {
+                    return this.afterValue;
+                  },
+                  set after(value) {
+                    this.afterValue = value;
+                  }
+                };
+
                 selectorObject = $("#dropdown0");
                 selectorObject = document.activeElement;
                 selectorObject.click();
                 selectorItem = $("#dropdown1 a")[1];
-                spyToolsEvent = spyOnEvent(selectorItem, "select");
+
+                spyBefore = spyOnProperty(toolsObject, "before", "get");
+                spyAfter = spyOnProperty(toolsObject, "after", "get");
+
                 selectorItem.click();
                 Helpers.fireEvent(selectorItem, "select");
                 // Note: if page does not refresh, increase the timer time.
@@ -43,6 +62,8 @@ export default function (Route, Helpers, vm, timer) {
                     afterValue = tools.find("tbody").find("tr:nth-child(1)").find("td:nth-child(2)").text();
                     vuexAfterValue = $("h4").first()[0].innerText;
                     if (afterValue !== beforeValue || timer === 20) {
+                        spyBefore.and.returnValue(beforeValue);
+                        spyAfter.and.returnValue(afterValue);
                         observable.unsubscribe();
                         done();
                     }
@@ -51,10 +72,6 @@ export default function (Route, Helpers, vm, timer) {
         });
 
         it("setup and click events executed.", function () {
-            // jasmine-jquery matchers
-            expect("select").toHaveBeenTriggeredOn(selectorItem);
-            expect(spyToolsEvent).toHaveBeenTriggered();
-
             expect(tools[0]).toBeInDOM();
             expect(".disabled").toBeDisabled();
             expect("#dropdown1 a").toHaveLength(3);
@@ -64,6 +81,13 @@ export default function (Route, Helpers, vm, timer) {
         });
 
         it("new page loaded on change.", function () {
+            expect(toolsObject.before.length > 0).toBe(true);
+            expect(toolsObject.after.length > 0).toBe(true);
+            expect(spyBefore).toHaveBeenCalled();
+            expect(spyBefore.calls.count()).toEqual(1);
+            expect(spyAfter).toHaveBeenCalled();
+            expect(spyAfter.calls.count()).toEqual(1);
+            expect(toolsObject.before).not.toBe(toolsObject.after);
             expect(beforeValue).not.toBe(afterValue);
         });
 

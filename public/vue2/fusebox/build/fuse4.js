@@ -139,7 +139,8 @@ const run = function (mode, configure, debug, cb) {
         await exec("copytable");
         await exec("copyhello");
         const fuse = context.getConfig();
-        await fuse.runProd({ uglify: true });
+        console.log("***************************starting prod******************8")
+        await fuse.runProd({ uglify: false });
         if (typeof cb === "function") {
             cb();
         }
@@ -151,7 +152,7 @@ const run = function (mode, configure, debug, cb) {
                 exec("preview");
                 break;
             case "prod":
-                exec("prod");
+//                exec("prod");
                 break;
             case "copy":
                 copyDir = path.join(__dirname, "../../dist_test/fusebox/appl");
