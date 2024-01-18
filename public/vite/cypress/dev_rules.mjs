@@ -1,11 +1,16 @@
-const path = require("path");
+import path from "path";
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+//const path = require("path");
 
-module.exports = [
+// module.exports = [
+export default [
       /* config.module.rule("vue") */
       {
         test: /\.vue$/,
         use: [
-          // config.module.rule("vue").use("cache-loader") 
+          // config.module.rule("vue").use("cache-loader")
           {
             loader: path.resolve(__dirname, "../..", "node_modules/cache-loader/dist/cjs.js"),
             options: {
@@ -13,7 +18,7 @@ module.exports = [
               cacheIdentifier: "6b2e3ffb"
             }
           },
-          // config.module.rule("vue").use("vue-loader") 
+          // config.module.rule("vue").use("vue-loader")
           {
             loader: path.resolve(__dirname, "../..", "node_modules/vue-loader-v16/dist/index.js"),
             options: {

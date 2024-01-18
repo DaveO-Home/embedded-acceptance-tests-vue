@@ -1,5 +1,12 @@
 # Changelog
 
+## [v2.3.0](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/tree/v2.3.0) (2024-01-17)
+
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/compare/2.2.5...v2.3.0)
+
+* Upgraded dependencies - koa server, vue3, vite
+* Upgraded to latest Cypress and made configuration esm compliant.
+
 ## [v2.2.5](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/tree/v2.2.5) (2023-06-15)
 
 [Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/compare/2.2.4...v2.2.5)

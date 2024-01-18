@@ -1,12 +1,22 @@
-const path = require("path");
-const { VueLoaderPlugin } = require("vue-loader");
-const { DefinePlugin } = require("webpack");
+import path from "path";
+import { fileURLToPath } from 'url';
+import { VueLoaderPlugin } from "vue-loader";
+//import { DefinePlugin } from "webpack";
+import pkg from 'webpack';
+import rules from "./dev_rules.mjs"
+const { DefinePlugin } = pkg;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+//const path = require("path");
+//const { VueLoaderPlugin } = require("vue-loader");
+//const { DefinePlugin } = require("webpack");
 // const PreloadPlugin = require("@vue/preload-webpack-plugin");
 
 function resolve(dir) {
   return path.join(__dirname, "../src", dir);
 }
-module.exports = {
+// module.exports = {
+export default {
   mode: "development",
   context: resolve("."), //path.resolve(__dirname),
   node: false,
@@ -72,7 +82,7 @@ module.exports = {
   module: {
     exprContextCritical: false,
     noParse: /^(vue|vue-router|vuex|vuex-router-sync|dodex(.?))$/,
-    rules: require("./dev_rules")
+    rules: rules // require("./dev_rules")
   },
   plugins: [
     /* config.plugin("vue-loader") */
@@ -81,7 +91,8 @@ module.exports = {
     new DefinePlugin(
       {
         __VUE_OPTIONS_API__: "true",
-        __VUE_PROD_DEVTOOLS__: "false"
+        __VUE_PROD_DEVTOOLS__: "false",
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false"
       }
     ),
     /* config.plugin("define") */

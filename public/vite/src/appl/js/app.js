@@ -1,13 +1,14 @@
 /* eslint "comma-style": [0, "last"] */
 import capitalize from "lodash-es/capitalize";
-import { fas } from "@fortawesome/fontawesome-free-solid";
+
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+
 import { createPopper } from "@popperjs/core";
 import jQuery from "jquery";
 import "bootstrap";
 
 window.$ = jQuery;
-
 
 library.add(fas);
 dom.watch();
@@ -135,8 +136,8 @@ export default {
                         const tbody = tbodyTemplate(data);
                         $(".tablesorter tbody").html(tbody).trigger("update");
                         $("#dropdown1 a i").each(function () { this.remove(); });
-                        $("#dropdown1 a svg").each(function () { 
-                            this.remove(); 
+                        $("#dropdown1 a svg").each(function () {
+                            this.remove();
                         });
                         $("#dropdown1 a").contents().filter(function() {
                             return this.nodeType == 8;

@@ -6,7 +6,7 @@ module.exports = function (config) {
     // whichBrowser to use from gulp task.su
     if (!global.whichBrowser) {
        // global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
-    	global.whichBrowser = ["Chrome"];
+    	global.whichBrowser = ["Chrome", "Firefox"];
     }
 
     config.set({

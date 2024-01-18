@@ -1,8 +1,13 @@
-const vitePreprocessor = require("cypress-vite");
-const { defineConfig } = require("cypress");
-const webpackConfig = require("./cypress/webpack.dev.conf");
+import vitePreprocessor from "cypress-vite";
+import { defineConfig } from "cypress";
+import webpackConfig from "./cypress/webpack.dev.conf.mjs";
 
-module.exports = defineConfig({
+//const vitePreprocessor = require("cypress-vite");
+//const { defineConfig } = require("cypress");
+//const webpackConfig = require("./cypress/webpack.dev.conf");
+
+//module.exports = defineConfig({
+ export default defineConfig({
   env: {
     DEBUG: "cypress:webpack:stats",
   },

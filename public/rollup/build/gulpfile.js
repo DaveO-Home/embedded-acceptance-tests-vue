@@ -22,7 +22,7 @@ const path = require("path");
 const postcss = require("rollup-plugin-postcss");
 const progress = require("rollup-plugin-progress");
 const rename = require("gulp-rename");
-const replaceEnv = require("rollup-plugin-replace");
+const replaceEnv = require("@rollup/plugin-replace");
 const rimrafSync = require("rimraf").rimrafSync;
 const rollup = require("rollup");
 const serve = require("rollup-plugin-serve");
@@ -254,7 +254,8 @@ const rollup_watch = function (cb) {
                 "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
                 "process.env.VUE_ENV": JSON.stringify("browser"),
                 __VUE_PROD_DEVTOOLS__: false,
-                __VUE_OPTIONS_API__: true
+                __VUE_OPTIONS_API__: true,
+                __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false"
             }),
             alias(aliases()),
             vue(),
@@ -369,7 +370,8 @@ async function rollupBuild(cb) {
                 "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
                 "process.env.VUE_ENV": JSON.stringify("browser"),
                 __VUE_PROD_DEVTOOLS__: false,
-                __VUE_OPTIONS_API__: true
+                __VUE_OPTIONS_API__: true,
+                __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false"
             }),
             alias(aliases()),
             vue(),

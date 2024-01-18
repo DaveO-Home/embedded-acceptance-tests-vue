@@ -92,7 +92,8 @@ module.exports = {
     new DefinePlugin(
       {
         __VUE_OPTIONS_API__: "true",
-        __VUE_PROD_DEVTOOLS__: "false"
+        __VUE_PROD_DEVTOOLS__: "false",
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false"
       }
     ),
     /* config.plugin("define") */
@@ -120,25 +121,25 @@ module.exports = {
       { from: "../README.md", to: "../" },
       {
         from: "./appl/templates/**/*",
-        globOptions: { 
+        globOptions: {
           dot: false
         },
         to: ""
       },
       {
-        from: "./appl/views/**/*", 
+        from: "./appl/views/**/*",
         to: ""
       },
       {
         from: "./appl/dodex/**/*",
-        globOptions: { 
+        globOptions: {
           dot: false
         },
         to: ""
       },
       {
         from: "./images/**/*",
-        globOptions: { 
+        globOptions: {
           dot: false
         },
         to: ""

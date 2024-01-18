@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-var path = require("path");
+import path from "path";
+//var path = require("path");
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -55,7 +56,10 @@ export default defineConfig({
     assetsInlineLimit: 4096,
     minify: process.env.INTEGRATION !== "true",
     root_level: "./"
-  }
+  },
+  define: {
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: process.env.INTEGRATION !== "true" ? "true" : "false"
+    }
 });
 
 function modResolve(dir) {
