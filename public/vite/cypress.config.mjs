@@ -8,6 +8,7 @@ import webpackConfig from "./cypress/webpack.dev.conf.mjs";
 
 //module.exports = defineConfig({
  export default defineConfig({
+  projectId: 'jweaaw',
   env: {
     DEBUG: "cypress:webpack:stats",
   },

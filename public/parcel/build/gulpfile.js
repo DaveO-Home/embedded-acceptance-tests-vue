@@ -141,8 +141,8 @@ const copyprod_images = function () {
     isProduction = true;
     dist = prodDist;
     copyImages2();
-    copyImages3();
-    return copyImages();
+    return copyImages3();
+    // return copyImages();
 };
 /**
  * Resources and content copied to dist_test directory - for development
@@ -155,8 +155,8 @@ const copy_images = function () {
     isProduction = false;
     dist = testDist;
     copyImages2();
-    copyImages3();
-    return copyImages();
+    return copyImages3();
+    // return copyImages();
 };
 /**
  * Run karma/jasmine tests once and exit without rebuilding(requires a previous build)
@@ -283,10 +283,11 @@ function copyReadme() {
         .pipe(copy("../../" + dist , {prefix: 2}));
 }
 
-function copyImages() {
-    return src(["../appl/assets/**/*", "../appl/dodex/**/*"])
-        .pipe(copy("../../" + dist + "/appl"));
-}
+// function copyImages() {
+//     return src(["../appl/assets/**/*", "../appl/dodex/**/*"])
+//         .pipe(copy("../../" + dist + "/appl"));
+//}
+
 function copyImages2() {
     return src(["../image*/**/*"])
         .pipe(dest("../../" + dist + "/appl/"));

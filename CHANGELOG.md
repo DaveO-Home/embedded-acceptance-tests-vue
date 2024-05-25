@@ -1,5 +1,12 @@
 # Changelog
 
+## [v2.4.0](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/tree/v2.4.0) (2024-05-25)
+
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/compare/2.3.0...v2.4.0)
+
+* Upgraded dependencies - koa server, vue3, vite
+* Fixed copy error for esbuild & parcel
+
 ## [v2.3.0](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/tree/v2.3.0) (2024-01-17)
 
 [Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-vue/compare/2.2.5...v2.3.0)
